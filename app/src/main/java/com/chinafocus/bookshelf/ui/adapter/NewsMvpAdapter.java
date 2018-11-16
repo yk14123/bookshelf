@@ -22,7 +22,7 @@ public class NewsMvpAdapter extends RecyclerView.Adapter<NewsMvpAdapter.NewsMvpH
     @NonNull
     @Override
     public NewsMvpHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new NewsMvpHolder(parent, R.layout.bookshelf_layout_news_mvp_item);
+        return new NewsMvpHolder(parent, R.layout.bookshelf_recycle_item_news);
     }
 
     @Override

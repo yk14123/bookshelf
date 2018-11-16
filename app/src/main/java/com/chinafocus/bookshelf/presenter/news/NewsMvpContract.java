@@ -8,20 +8,20 @@ import java.util.List;
 
 public interface NewsMvpContract {
 
-    public static final int REFRESH_AUTO = 0;
-    public static final int REFRESH_CACHE = 1;
+    int REFRESH_AUTO = 0;
+    int REFRESH_CACHE = 1;
 
     @IntDef({REFRESH_AUTO, REFRESH_CACHE})
-    public @interface RefreshType {
+    @interface RefreshType {
     }
 
-    public interface View {
+    interface View {
         void onRefreshFinished(@RefreshType int refreshType, List<NewsBean> newsEntity);
 
         void showTips(String message);
     }
 
-    public interface Presenter {
+    interface Presenter {
         void refresh(@RefreshType int refreshType);
 
         void destroy();

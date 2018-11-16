@@ -7,16 +7,15 @@ import com.chinafocus.bookshelf.model.network.NewsApi;
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RemoteNewsSource {
+public class RemoteNewsSource implements IRemoteNewsSourceData<NewsEntity> {
 
     private NewsApi mNewsApi;
 
     public RemoteNewsSource() {
         mNewsApi = new Retrofit.Builder()
                 .baseUrl("http://gank.io")
-                .addConverterFactory(GsonConverterFactory.create())
+//                .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build().create(NewsApi.class);
     }

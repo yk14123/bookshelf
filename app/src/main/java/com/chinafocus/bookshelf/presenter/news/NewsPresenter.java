@@ -1,20 +1,21 @@
 package com.chinafocus.bookshelf.presenter.news;
 
 
-import android.util.Log;
-
 import com.chinafocus.bookshelf.model.bean.NewsBean;
 import com.chinafocus.bookshelf.model.bean.NewsEntity;
 import com.chinafocus.bookshelf.model.bean.NewsResultEntity;
-import com.chinafocus.bookshelf.model.lru.LruMap;
 import com.chinafocus.bookshelf.model.repository.NewsRepository;
+import com.chinafocus.bookshelf.model.repository.forstring.NewsRepositoryForString;
+import com.google.gson.Gson;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -26,10 +27,15 @@ public class NewsPresenter implements NewsMvpContract.Presenter {
     private List<NewsBean> mNewsBeans;
     private long mLastNetUpdateTime;
 
+    private WeakReference<NewsMvpContract.View> mViewWeakReference;
+    private final Gson mGson;
+
     public NewsPresenter(NewsMvpContract.View view) {
-        mView = view;
+        mViewWeakReference = new WeakReference<>(view);
+//        mView = view;
         mCompositeDisposable = new CompositeDisposable();
         mNewsBeans = new ArrayList<>();
+        mGson = new Gson();
     }
 
     @Override
@@ -41,6 +47,7 @@ public class NewsPresenter implements NewsMvpContract.Presenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new RefreshObserver(refreshType));
 
+
         } else if (refreshType == NewsMvpContract.REFRESH_AUTO) {
 //            if (System.currentTimeMillis() - mLastNetUpdateTime > AUTO_REFRESH_TIME) { //自动刷新的间隔时间为十分钟。
 //            NewsRepository.getInstance()
@@ -49,28 +56,55 @@ public class NewsPresenter implements NewsMvpContract.Presenter {
 //                    .observeOn(AndroidSchedulers.mainThread())
 //                    .subscribe(new RefreshObserver(refreshType));
 
-            Observable<NewsEntity> cacheNews = NewsRepository.getInstance().getCacheNews("Android");
-            Observable<NewsEntity> netNews = NewsRepository.getInstance().getNetNews("Android");
+
+//            Observable<NewsEntity> cacheNews = NewsRepository.getInstance().getCacheNews("Android");
+//            Observable<NewsEntity> netNews = NewsRepository.getInstance().getNetNews("Android");
+
+
+//            RefreshObserver refreshObserver = new RefreshObserver(refreshType);
+//            mCompositeDisposable.add(refreshObserver);
 
             RefreshObserver refreshObserver = new RefreshObserver(refreshType);
             mCompositeDisposable.add(refreshObserver);
 
-            if (LruMap.getInstance().get("newsEntity") != null) {
+            Observable<String> cacheNews = NewsRepositoryForString.getInstance().getCacheNews("Android");
+            Observable<String> netNews = NewsRepositoryForString.getInstance().getNetNews("Android");
 
-                Log.i("MyLog","开启三级缓存啦！！");
+            Observable.concat(cacheNews, netNews)
+                    .map(new Function<String, NewsEntity>() {
+                        @Override
+                        public NewsEntity apply(String s) throws Exception {
 
-                Observable.concat(cacheNews, netNews)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(refreshObserver);
+                            NewsEntity newsEntity = mGson.fromJson(s, NewsEntity.class);
 
-            } else {
+                            return newsEntity;
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(refreshObserver);
 
-                Log.i("MyLog","首次加载从网络获取！！");
-                netNews.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(refreshObserver);
-            }
+//            cacheNews.switchIfEmpty(netNews)
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(refreshObserver);
+
+//            if (LruMap.getInstance().get("newsEntity") != null) {
+//
+//                Log.i("MyLog", "开启三级缓存啦！！");
+//
+//            Observable.concat(cacheNews, netNews)
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(refreshObserver);
+//
+//            } else {
+//
+//                Log.i("MyLog", "首次加载从网络获取！！");
+//                netNews.subscribeOn(Schedulers.io())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe(refreshObserver);
+//            }
 
 
         }
@@ -79,7 +113,10 @@ public class NewsPresenter implements NewsMvpContract.Presenter {
     @Override
     public void destroy() {
         mCompositeDisposable.clear();
-        mView = null;
+        if (mViewWeakReference != null) {
+            mViewWeakReference.clear();
+            mViewWeakReference = null;
+        }
     }
 
     private void updateNewsBeans(@NewsMvpContract.RefreshType int refreshType, NewsEntity newsEntity) {
@@ -117,12 +154,12 @@ public class NewsPresenter implements NewsMvpContract.Presenter {
         @Override
         public void onNext(NewsEntity newsEntity) {
             updateNewsBeans(mRefreshType, newsEntity);
-            mView.onRefreshFinished(mRefreshType, mNewsBeans);
+            mViewWeakReference.get().onRefreshFinished(mRefreshType, mNewsBeans);
         }
 
         @Override
         public void onError(Throwable throwable) {
-            mView.showTips("刷新错误");
+            mViewWeakReference.get().showTips("刷新错误");
         }
 
         @Override

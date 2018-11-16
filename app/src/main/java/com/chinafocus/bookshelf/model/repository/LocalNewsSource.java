@@ -1,15 +1,14 @@
 package com.chinafocus.bookshelf.model.repository;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import com.chinafocus.bookshelf.model.bean.NewsEntity;
 import com.chinafocus.bookshelf.model.lru.LruMap;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class LocalNewsSource {
@@ -18,14 +17,22 @@ public class LocalNewsSource {
     public LocalNewsSource() {
     }
 
-    public Observable<NewsEntity> getNews(String category) {
-        return Observable.just(category).flatMap(new Function<String, ObservableSource<NewsEntity>>() {
+    public Observable<NewsEntity> getNews(final String category) {
+
+
+        return Observable.create(new ObservableOnSubscribe<NewsEntity>() {
+
             @Override
-            public ObservableSource<NewsEntity> apply(String category) throws Exception {
+            public void subscribe(ObservableEmitter<NewsEntity> emitter) throws Exception {
+
                 NewsEntity newsEntity = (NewsEntity) LruMap.getInstance().get("newsEntity");
 
-                Log.i("MyThread", "LocalNewsSource getNews Thread name = " + Thread.currentThread().getName());
-                return Observable.just(newsEntity);
+                if (newsEntity != null) {
+                    emitter.onNext(newsEntity);
+                }
+
+                emitter.onComplete();
+
             }
         });
     }

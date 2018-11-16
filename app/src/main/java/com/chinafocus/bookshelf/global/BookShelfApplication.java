@@ -2,6 +2,8 @@ package com.chinafocus.bookshelf.global;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import java.io.File;
 
 public class BookShelfApplication extends Application {
@@ -12,5 +14,8 @@ public class BookShelfApplication extends Application {
 
         Global.serializableFileDir = getFilesDir().getAbsolutePath() + File.separator + "Ser";
         Global.serializableFileDirNotDelete = getFilesDir().getAbsolutePath() + File.separator + "SerNotDelete";
+
+        LeakCanary.install(this);
+
     }
 }

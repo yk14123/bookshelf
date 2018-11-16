@@ -1,6 +1,7 @@
 package com.chinafocus.bookshelf.model.repository;
 
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.chinafocus.bookshelf.model.bean.NewsEntity;
@@ -31,8 +32,9 @@ public class NewsRepository {
                 .doOnNext(new Consumer<NewsEntity>() {
                     @Override
                     public void accept(NewsEntity newsEntity) throws Exception {
-                        Log.i("MyLog", "getNetNews-->saveNews");
+                        Log.i("MyLog", "从网络取数据getNetNews-->saveNews");
 
+                        SystemClock.sleep(3000);
 //                        Log.i("MyThread", "NewsRepository getNews Thread name = " + Thread.currentThread().getName());
 
                         mLocalNewsSource.saveNews(newsEntity);
@@ -42,6 +44,7 @@ public class NewsRepository {
 
     public Observable<NewsEntity> getCacheNews(String category) {
         Log.i("MyThread", "NewsRepository getCacheNews Thread name = " + Thread.currentThread().getName());
+        Log.i("MyLog", "取缓存缓存啦！！");
         return mLocalNewsSource.getNews(category);
     }
 
