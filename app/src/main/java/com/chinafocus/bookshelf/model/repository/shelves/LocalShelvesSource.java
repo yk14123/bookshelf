@@ -11,13 +11,13 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class LocalShelvesSource {
+class LocalShelvesSource {
 
 
     public LocalShelvesSource() {
     }
 
-    public Observable<String> getShelves(final String key) {
+    public Observable<String> get(final String key) {
 //        Observable.just(key).flatMap(new Function<String, ObservableSource<String>>() {
 //            @Override
 //            public ObservableSource<String> apply(String key) throws Exception {
@@ -48,7 +48,7 @@ public class LocalShelvesSource {
     }
 
     @SuppressLint("CheckResult")
-    public void saveShelves(final String key, String rawResult) {
+    public void save(final String key, String rawResult) {
         Observable.just(rawResult).observeOn(Schedulers.io()).subscribe(new Consumer<String>() {
 
             @Override

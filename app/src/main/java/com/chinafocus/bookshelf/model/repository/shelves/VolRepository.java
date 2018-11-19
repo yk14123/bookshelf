@@ -6,12 +6,12 @@ import android.util.Log;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 
-class ShelvesRepository extends AbstractShelvesRepository {
+class VolRepository implements IShelvesRepository {
 
     private LocalShelvesSource mLocalShelvesSource;
     private RemoteShelvesSourceData mRemoteShelvesSourceData;
 
-    private ShelvesRepository() {
+    private VolRepository() {
         mLocalShelvesSource = new LocalShelvesSource();
         mRemoteShelvesSourceData = new RemoteShelvesSourceData();
     }
@@ -21,9 +21,8 @@ class ShelvesRepository extends AbstractShelvesRepository {
 //    }
 
     static class Holder {
-        static IShelvesRepository INSTANCE = new ShelvesRepository();
+        static IShelvesRepository INSTANCE = new VolRepository();
     }
-
 
     @Override
     public Observable<String> getNetShelves(final String category, String[] parms) {

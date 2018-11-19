@@ -9,18 +9,18 @@ import android.support.v7.widget.RecyclerView;
 
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.model.bean.ShelvesRawBean;
-import com.chinafocus.bookshelf.presenter.news.ShelvesMvpContract;
-import com.chinafocus.bookshelf.presenter.news.ShelvesPresenter;
+import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
+import com.chinafocus.bookshelf.presenter.shelves.ShelvesPresenter;
 
 import java.util.List;
 
-public class ShelvesActivity extends AppCompatActivity implements ShelvesMvpContract.View {
+public class ShelvesActivity extends AppCompatActivity implements IShelvesMvpContract.IView {
 
     private CoordinatorLayout mRootLayout;
     private RecyclerView mRecyclerView;
 //    private NewsMvpAdapter mRecyclerAdapter;
 //    private List<NewsBean> mNewsBeans = new ArrayList<>();
-    private ShelvesMvpContract.Presenter mPresenter;
+    private IShelvesMvpContract.IPresenter mPresenter;
     private LinearLayoutManager mLayoutMgr;
 
     @Override
@@ -28,7 +28,7 @@ public class ShelvesActivity extends AppCompatActivity implements ShelvesMvpCont
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bookshelf_activity_mvp);
         initView();
-//        dispatchRefresh(ShelvesMvpContract.REFRESH_CACHE);
+//        dispatchRefresh(IShelvesMvpContract.REFRESH_CACHE);
     }
 
     private void initView() {
@@ -46,15 +46,15 @@ public class ShelvesActivity extends AppCompatActivity implements ShelvesMvpCont
     @Override
     protected void onResume() {
         super.onResume();
-        dispatchRefresh(ShelvesMvpContract.REFRESH_AUTO);
+        dispatchRefresh(IShelvesMvpContract.REFRESH_AUTO);
     }
 
-    private void dispatchRefresh(@ShelvesMvpContract.RefreshType int refreshType) {
+    private void dispatchRefresh(@IShelvesMvpContract.RefreshType int refreshType) {
         mPresenter.refresh(refreshType);
     }
 
     @Override
-    public void onRefreshFinished(@ShelvesMvpContract.RefreshType int refreshType, List<ShelvesRawBean> newsBeans) {
+    public void onRefreshFinished(@IShelvesMvpContract.RefreshType int refreshType, List<ShelvesRawBean> newsBeans) {
 //        mNewsBeans.clear();
 //        mNewsBeans.addAll(newsBeans);
 //        mRecyclerAdapter.notifyDataSetChanged();

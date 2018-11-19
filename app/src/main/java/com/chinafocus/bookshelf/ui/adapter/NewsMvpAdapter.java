@@ -37,7 +37,7 @@ package com.chinafocus.bookshelf.ui.adapter;
 //            super(LayoutInflater.from(holder.getContext()).inflate(layoutId, holder, false));
 //        }
 //
-//        <T extends View> T getView(@IdRes int resId) {
+//        <T extends IView> T getView(@IdRes int resId) {
 //            Object childView = itemView.getTag(resId);
 //            if (childView == null) {
 //                childView = itemView.findViewById(resId);
