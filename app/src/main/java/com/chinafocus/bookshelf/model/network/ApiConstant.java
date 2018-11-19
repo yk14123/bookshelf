@@ -16,4 +16,10 @@ public class ApiConstant {
      * 测试base_ip
      */
     public static final String BASE_URL_TEST = "http://47.95.229.112:9002";
+
+    /**
+     * 测试书柜Base_Url
+     */
+    public static final String BASE_URL_SHELVES = " https://book.expressreader.cn/";
+
 }

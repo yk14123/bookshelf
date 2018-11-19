@@ -1,45 +1,66 @@
 package com.chinafocus.bookshelf.model.network;
 
-
-import com.chinafocus.bookshelf.model.bean.Person;
-
-import java.util.List;
-
 import io.reactivex.Observable;
-import retrofit2.http.POST;
-import retrofit2.http.Query;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Path;
 
-/**
- * @author create by HUANG JIN on 18/11/6
- * @version 1.0
- * @description 项目API service相关接口定义管理类
- */
 public interface ApiService {
 
     /**
-     * 取得热点新闻资讯
+     * 获取相关书柜
+     *
+     * @return 获取相关书柜
      */
-    @POST("/api/HotSpot/hotspot")
-    Observable<List<Person>> getHotSpot(@Query("LCID") String LCID, @Query("pageIndex") int pageIndex, @Query("pageSize") int pageSize);
+    @GET("api/shelves")
+    @Headers("corigin:expressreader")
+    Observable<String> getShelves();
 
     /**
-     * 获取指定国家码所有的2018年后的杂志
+     * 获取具体书柜展示信息
+     *
+     * @param id 书柜id
+     * @return 书柜展示内容
      */
-    @POST("/api/Magazine/GetMagazineList")
-    Observable<List<Person>> getMagazineList(@Query("LCID") String LCID);
+    @GET("api/shelves/{shelfId}/categories")
+    @Headers("corigin:expressreader")
+    Observable<String> getShelvesDetail(@Path("shelfId") String id);
 
     /**
-     * 获取单本杂志内容
+     * 获取分类书种类的信息
+     *
+     * @param id         书柜id
+     * @param categoryId 书的类别id
+     * @return 图书种类细节
      */
-    @POST("/api/Magazine/GetIssueLite")
-    Observable<Person> getIssueLite(@Query("IssueId") String IssueId);
+    @GET("api/shelves/{shelfId}/categories/{categoryId}/books")
+    @Headers("corigin:expressreader")
+    Observable<String> getBookCategoryDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId);
+
+    /**
+     * 书的大纲目录展示
+     *
+     * @param id         书柜id
+     * @param categoryId 书的类别id
+     * @param bookId     具体书的id
+     * @return 书的大纲目录展示
+     */
+    @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/metadata")
+    @Headers("corigin:expressreader")
+    Observable<String> getBookMetadata(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId);
 
 
     /**
-     * 获取杂志章节内容
+     * 书的每一页具体内容
+     *
+     * @param id         书柜id
+     * @param categoryId 书的类别id
+     * @param bookId     具体书的id
+     * @param page       书的内容页
+     * @return 书的每一页具体内容
      */
-    @POST("/api/Magazine/GetIssueUnit")
-    Observable<Person> getIssueUnit(@Query("MnID") String MnID);
-
+    @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/page/{page}")
+    @Headers("corigin:expressreader")
+    Observable<String> getBookContentDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Path("page") String page);
 
 }

@@ -1,11 +1,15 @@
 package com.chinafocus.bookshelf.model.network;
 
 
-import java.util.concurrent.TimeUnit;
+import com.chinafocus.bookshelf.global.BookShelfApplication;
+import com.chinafocus.bookshelf.utils.HttpsUtils;
+
+import javax.net.ssl.SSLSocketFactory;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
 public class ApiManager {
@@ -18,18 +22,33 @@ public class ApiManager {
 
     private ApiManager() {
         //初始化OkHttpClient+Retrofit
-        OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
-                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
-                .followRedirects(true)
-//                .sslSocketFactory(HttpsUtils.initSSLSocketFactory(), HttpsUtils.initTrustManager())
+//        OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+//                .connectTimeout(CONNECT_TIME_OUT, TimeUnit.MILLISECONDS)
+//                .readTimeout(READ_TIME_OUT, TimeUnit.MILLISECONDS)
+//                .writeTimeout(WRITE_TIME_OUT, TimeUnit.MILLISECONDS)
+//                .followRedirects(true)
+////                .sslSocketFactory(HttpsUtils.initSSLSocketFactory(), HttpsUtils.initTrustManager())
+//                .build();
+//        sRetrofit = new Retrofit.Builder()
+//                .baseUrl(ApiConstant.BASE_URL_TEST)
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+////                .addConverterFactory(GsonConverterFactory.create())
+//                .client(mOkHttpClient)
+//                .build();
+
+        SSLSocketFactory sslSocketFactory = HttpsUtils.setCertificatesFromFile(BookShelfApplication.mContext, "expressreader.cn.crt");
+
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .sslSocketFactory(sslSocketFactory)
+                .hostnameVerifier(HttpsUtils.hostnameVerifier)
                 .build();
+
         sRetrofit = new Retrofit.Builder()
-                .baseUrl(ApiConstant.BASE_URL_TEST)
+                .baseUrl(ApiConstant.BASE_URL_SHELVES)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//                .addConverterFactory(GsonConverterFactory.create())
-                .client(mOkHttpClient)
+                .client(client)
                 .build();
     }
 

@@ -2,11 +2,11 @@ package com.chinafocus.bookshelf.presenter.news;
 
 import android.support.annotation.IntDef;
 
-import com.chinafocus.bookshelf.model.bean.NewsBean;
+import com.chinafocus.bookshelf.model.bean.ShelvesRawBean;
 
 import java.util.List;
 
-public interface NewsMvpContract {
+public interface ShelvesMvpContract {
 
     int REFRESH_AUTO = 0;
     int REFRESH_CACHE = 1;
@@ -16,7 +16,7 @@ public interface NewsMvpContract {
     }
 
     interface View {
-        void onRefreshFinished(@RefreshType int refreshType, List<NewsBean> newsEntity);
+        void onRefreshFinished(@RefreshType int refreshType, List<ShelvesRawBean> newsEntity);
 
         void showTips(String message);
     }
