@@ -9,9 +9,7 @@ import java.io.File;
 
 public class BookShelfApplication extends Application {
 
-//    public static IShelvesApi mIShelvesApi;
-
-    public static Context mContext;
+    public static Context sContext;
 
     @Override
     public void onCreate() {
@@ -22,33 +20,8 @@ public class BookShelfApplication extends Application {
 
         LeakCanary.install(this);
 
-        mContext = getApplicationContext();
-//        initNetWork();
+        sContext = getApplicationContext();
 
-    }
-
-    public Context getContext() {
-        return mContext;
-    }
-
-    private void initNetWork() {
-
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .sslSocketFactory(HttpsUtils.getSLLContext().getSocketFactory())
-//                .hostnameVerifier(HttpsUtils.hostnameVerifier)
-//                .build();
-
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .sslSocketFactory(HttpsUtils.setCertificatesFromFile(getApplicationContext(), "expressreader.cn.crt"))
-//                .hostnameVerifier(HttpsUtils.hostnameVerifier)
-//                .build();
-//
-//        mIShelvesApi = new Retrofit.Builder()
-//                .baseUrl("https://book.expressreader.cn/")
-//                .addConverterFactory(ScalarsConverterFactory.create())
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//                .client(client)
-//                .build().create(IShelvesApi.class);
     }
 
 }

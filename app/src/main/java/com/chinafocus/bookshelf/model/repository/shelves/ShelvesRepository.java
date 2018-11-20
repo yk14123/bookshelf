@@ -16,9 +16,6 @@ class ShelvesRepository extends AbstractShelvesRepository {
         mRemoteShelvesSourceData = new RemoteShelvesSourceData();
     }
 
-//    public static IShelvesRepository getInstance() {
-//        return Holder.INSTANCE;
-//    }
 
     static class Holder {
         static IShelvesRepository INSTANCE = new ShelvesRepository();
@@ -36,8 +33,6 @@ class ShelvesRepository extends AbstractShelvesRepository {
                          * 只能操作一次，okhttp就关流
                          */
                         String string = rawResult;
-
-//                        SystemClock.sleep(3000);
 
                         mLocalShelvesSource.save(category, string);
                     }

@@ -1,6 +1,8 @@
 package com.chinafocus.bookshelf.model.bean;
 
-public class ShelvesCategoryRawBean {
+import java.io.Serializable;
+
+public class ShelvesCategoryRawBean implements Serializable {
 
     /**
      * code : 200

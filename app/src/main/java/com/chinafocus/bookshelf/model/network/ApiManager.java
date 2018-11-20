@@ -2,7 +2,6 @@ package com.chinafocus.bookshelf.model.network;
 
 
 import com.chinafocus.bookshelf.global.BookShelfApplication;
-import com.chinafocus.bookshelf.utils.HttpsUtils;
 
 import javax.net.ssl.SSLSocketFactory;
 
@@ -17,8 +16,8 @@ public class ApiManager {
     private static final int READ_TIME_OUT = 5000;
     private static final int WRITE_TIME_OUT = 5000;
     //采用单例模式封装Retrofit
-    private static ApiManager sApiManager;
-    private static Retrofit sRetrofit;
+//    private static ApiManager sApiManager;
+    private Retrofit mRetrofit;
 
     private ApiManager() {
         //初始化OkHttpClient+Retrofit
@@ -29,22 +28,23 @@ public class ApiManager {
 //                .followRedirects(true)
 ////                .sslSocketFactory(HttpsUtils.initSSLSocketFactory(), HttpsUtils.initTrustManager())
 //                .build();
-//        sRetrofit = new Retrofit.Builder()
-//                .baseUrl(ApiConstant.BASE_URL_TEST)
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-////                .addConverterFactory(GsonConverterFactory.create())
-//                .client(mOkHttpClient)
-//                .build();
 
-        SSLSocketFactory sslSocketFactory = HttpsUtils.setCertificatesFromFile(BookShelfApplication.mContext, "expressreader.cn.crt");
+        SSLSocketFactory sslSocketFactory = HttpsUtils.setCertificatesFromFile(BookShelfApplication.sContext, "expressreader.cn.crt");
 
+        OkHttpClient client;
+        if (sslSocketFactory != null) {
+            client = new OkHttpClient.Builder()
+                    .sslSocketFactory(sslSocketFactory)
+                    .hostnameVerifier(HttpsUtils.hostnameVerifier)
+                    .build();
+        } else {
+            client = new OkHttpClient.Builder()
+                    .sslSocketFactory(HttpsUtils.getSLLContext().getSocketFactory())
+                    .hostnameVerifier(HttpsUtils.hostnameVerifier)
+                    .build();
+        }
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .sslSocketFactory(sslSocketFactory)
-                .hostnameVerifier(HttpsUtils.hostnameVerifier)
-                .build();
-
-        sRetrofit = new Retrofit.Builder()
+        mRetrofit = new Retrofit.Builder()
                 .baseUrl(ApiConstant.BASE_URL_SHELVES)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -52,22 +52,18 @@ public class ApiManager {
                 .build();
     }
 
-
     //静态方法提供ApiManager实例 --->内部封装ApiManager访问实例
     public static ApiManager getInstance() {
-        if (sApiManager == null) {
-            synchronized (ApiManager.class) {
-                if (sApiManager == null) {
-                    sApiManager = new ApiManager();
-                }
-            }
-        }
-        return sApiManager;
+        return Holder.INSTANCE;
+    }
+
+    static class Holder {
+        static ApiManager INSTANCE = new ApiManager();
     }
 
     //获取ApiService接口调用对象
     public ApiService getService() {
-        return sRetrofit.create(ApiService.class);
+        return mRetrofit.create(ApiService.class);
     }
 
 }

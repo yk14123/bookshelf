@@ -1,4 +1,4 @@
-package com.chinafocus.bookshelf.utils;
+package com.chinafocus.bookshelf.model.network;
 
 import android.content.Context;
 
@@ -18,17 +18,17 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-public class HttpsUtils {
+class HttpsUtils {
 
 
-    public static HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+    static HostnameVerifier hostnameVerifier = new HostnameVerifier() {
         @Override
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
     };
 
-    public static SSLContext getSLLContext() {
+    static SSLContext getSLLContext() {
         SSLContext sslContext = null;
         try {
             sslContext = SSLContext.getInstance("TLS");
@@ -54,11 +54,11 @@ public class HttpsUtils {
         return sslContext;
     }
 
-    public static SSLSocketFactory setCertificatesFromFile(Context context, String fileName) {
+    static SSLSocketFactory setCertificatesFromFile(Context context, String fileName) {
 
         try {
             InputStream inputStream = context.getResources().getAssets().open(fileName);
-            return setCertificates(inputStream);
+            return setCertificatesFromStream(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,7 +67,7 @@ public class HttpsUtils {
     }
 
 
-    public static SSLSocketFactory setCertificates(InputStream... certificates) {
+    static SSLSocketFactory setCertificatesFromStream(InputStream... certificates) {
         try {
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             //使用默认证书
@@ -96,26 +96,6 @@ public class HttpsUtils {
             //算法工厂初始化证书
             trustManagerFactory.init(keyStore);
 
-//            //双向认证：客户端生成bks证书，然后加载bks后，给服务端认证
-//            //服务器端需要验证的客户端证书，其实就是客户端的keystore
-//            KeyStore clientKeyStore = KeyStore.getInstance("BKS");
-//            //加载本地的bks流
-//            clientKeyStore.load(new FileInputStream(new File("xx")),"1234".toCharArray());
-//            //生成KeyManagerFactory
-//            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("X509");
-//            //通过初始化KeyManagerFactory，来配置客户端
-//            keyManagerFactory.init(clientKeyStore,"1234".toCharArray());
-//            keyManagerFactory.getKeyManagers();
-//            /**
-//             * 第一个参数keyManagerFactory：当开启双向认证，需要加载客户端本地的Bks的时候，使用。如果是单向认证传null即可
-//             * 第二个参数TrustManager，管理单向认证，信任服务端的策略，这个必须要配置！
-//             * 第三个参数SecureRandom 随机安全码，安全要求不高，可以传null
-//             */
-//            sslContext.init(keyManagerFactory.getKeyManagers(),
-//                            trustManagerFactory.getTrustManagers(),
-//                            new SecureRandom()
-//                            );
-
             sslContext.init
                     (
                             null,
@@ -124,7 +104,7 @@ public class HttpsUtils {
                     );
 
             return sslContext.getSocketFactory();
-//            mOkHttpClient.setSslSocketFactory(sslContext.getSocketFactory());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
