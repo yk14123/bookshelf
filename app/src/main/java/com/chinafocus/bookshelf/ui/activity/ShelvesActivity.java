@@ -1,11 +1,11 @@
 package com.chinafocus.bookshelf.ui.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +16,8 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
+import com.chinafocus.bookshelf.base.BaseActivity;
+import com.chinafocus.bookshelf.base.PermissionListener;
 import com.chinafocus.bookshelf.model.bean.BookContentRawBean;
 import com.chinafocus.bookshelf.model.bean.ShelvesResultBean;
 import com.chinafocus.bookshelf.model.network.ApiManager;
@@ -31,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 
 //import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 
-public class ShelvesActivity extends AppCompatActivity implements IShelvesMvpContract.IView<ShelvesResultBean> {
+public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract.IView<ShelvesResultBean> {
 
     private CoordinatorLayout mRootLayout;
     private RecyclerView mRecyclerView;
@@ -47,6 +49,9 @@ public class ShelvesActivity extends AppCompatActivity implements IShelvesMvpCon
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bookshelf_activity_mvp);
+
+        requestRuntimePermission();
+
         initView();
 
         ApiManager.getInstance().getService()
@@ -71,6 +76,26 @@ public class ShelvesActivity extends AppCompatActivity implements IShelvesMvpCon
                 });
 
         initWebView();
+    }
+
+    private void requestRuntimePermission() {
+        requestRuntimePermission(new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED,Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_SMS}, new PermissionListener() {
+            @Override
+            public void onGranted() {
+                //在这个里面写权限申请完毕后要做的事情。。。
+                Toast.makeText(ShelvesActivity.this, "权限全部搞定了！！", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDenied(List<String> deniedPermission) {
+
+                for (String s : deniedPermission) {
+                    Toast.makeText(ShelvesActivity.this, "权限：" + s + "被拒绝了", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+//                Toast.makeText(MainActivity.this, "权限：被拒绝了", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initWebView() {
