@@ -1,7 +1,6 @@
 package com.chinafocus.bookshelf.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -12,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
@@ -33,17 +31,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import retrofit2.Retrofit;
 
 public class SplashActivity extends BaseActivity {
 
     private static final int INSTALL_SUCCESS = 0;
     private String mVersionName;
-    private NetService mNetService;
+//    private NetService mNetService;
     private int mVersionCode;
     private String mInstallApp;
     private File mFile;
@@ -178,68 +172,68 @@ public class SplashActivity extends BaseActivity {
                 }
 
 
-                Retrofit retrofit = RetrofitManager.getRetrofitInstance("http://192.168.0.104:8080/");
-                mNetService = retrofit.create(NetService.class);
-                mNetService.getVersion("update.json")
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<VersionBean>() {
-                            @Override
-                            public void accept(final VersionBean versionBean) {
-
-                                String ServiceVersion = versionBean.getVersionCode();
-
-                                int versionCodeService = Integer.valueOf(ServiceVersion);
-
-                                if (mVersionCode >= versionCodeService) {
-                                    //已经是最新版本
-                                    //直接进入
-
-                                    delayEnterHome();
-
-
-                                } else {
-                                    //下载安装最新版本
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
-                                    builder.setTitle("升级提醒")
-                                            .setMessage(versionBean.getVersionDes())
-                                            .setPositiveButton("下次", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-
-                                                    //直接进入
-                                                    enterHome();
-
-                                                }
-                                            })
-                                            .setNegativeButton("升级", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-
-
-                                                    String downLoadUri = versionBean.getDownLoadUri();
-                                                    //http://192.168.0.104:8080/app-release.apk
-                                                    String[] split = downLoadUri.split("//");
-                                                    String[] split1 = split[1].split("/");
-                                                    mInstallApp = split1[1];
-                                                    Log.i("MyLog", split1[1]);
-
-                                                    installApp(mInstallApp);
-
-
-                                                }
-                                            })
-                                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                                @Override
-                                                public void onCancel(DialogInterface dialog) {
-                                                    enterHome();
-                                                }
-                                            })
-                                            .show();
-                                }
-
-                            }
-                        });
+//                Retrofit retrofit = RetrofitManager.getRetrofitInstance("http://192.168.0.104:8080/");
+//                mNetService = retrofit.create(NetService.class);
+//                mNetService.getVersion("update.json")
+//                        .subscribeOn(Schedulers.io())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe(new Consumer<VersionBean>() {
+//                            @Override
+//                            public void accept(final VersionBean versionBean) {
+//
+//                                String ServiceVersion = versionBean.getVersionCode();
+//
+//                                int versionCodeService = Integer.valueOf(ServiceVersion);
+//
+//                                if (mVersionCode >= versionCodeService) {
+//                                    //已经是最新版本
+//                                    //直接进入
+//
+//                                    delayEnterHome();
+//
+//
+//                                } else {
+//                                    //下载安装最新版本
+//                                    AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
+//                                    builder.setTitle("升级提醒")
+//                                            .setMessage(versionBean.getVersionDes())
+//                                            .setPositiveButton("下次", new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialog, int which) {
+//
+//                                                    //直接进入
+//                                                    enterHome();
+//
+//                                                }
+//                                            })
+//                                            .setNegativeButton("升级", new DialogInterface.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(DialogInterface dialog, int which) {
+//
+//
+//                                                    String downLoadUri = versionBean.getDownLoadUri();
+//                                                    //http://192.168.0.104:8080/app-release.apk
+//                                                    String[] split = downLoadUri.split("//");
+//                                                    String[] split1 = split[1].split("/");
+//                                                    mInstallApp = split1[1];
+//                                                    Log.i("MyLog", split1[1]);
+//
+//                                                    installApp(mInstallApp);
+//
+//
+//                                                }
+//                                            })
+//                                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                                                @Override
+//                                                public void onCancel(DialogInterface dialog) {
+//                                                    enterHome();
+//                                                }
+//                                            })
+//                                            .show();
+//                                }
+//
+//                            }
+//                        });
             }
 
             @Override
