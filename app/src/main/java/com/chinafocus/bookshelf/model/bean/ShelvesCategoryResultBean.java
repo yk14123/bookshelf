@@ -23,7 +23,7 @@ public class ShelvesCategoryResultBean implements Serializable {
     private String name;
     private int shelfId;
     private int status;
-    private List<ShelvesCategoriesDetailBean> categories;
+    private List<ShelvesCategoriesFinalBean> categories;
 
     public String getBg() {
         return bg;
@@ -81,18 +81,18 @@ public class ShelvesCategoryResultBean implements Serializable {
         this.status = status;
     }
 
-    public List<ShelvesCategoriesDetailBean> getCategories() {
+    public List<ShelvesCategoriesFinalBean> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<ShelvesCategoriesDetailBean> categories) {
+    public void setCategories(List<ShelvesCategoriesFinalBean> categories) {
         this.categories = categories;
     }
 
     public static class MetadataBean implements Serializable {
     }
 
-    public static class ShelvesCategoriesDetailBean implements Serializable {
+    public static class ShelvesCategoriesFinalBean implements Serializable {
         /**
          * shelfId : 2
          * name : 现当代文学

@@ -1,22 +1,35 @@
 package com.chinafocus.bookshelf.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.util.Log;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
+import com.chinafocus.bookshelf.model.bean.BookContentRawBean;
 import com.chinafocus.bookshelf.model.bean.ShelvesResultBean;
+import com.chinafocus.bookshelf.model.network.ApiManager;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesPresenter;
+import com.google.gson.Gson;
 
-import java.lang.reflect.Method;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+//import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 
 public class ShelvesActivity extends AppCompatActivity implements IShelvesMvpContract.IView<ShelvesResultBean> {
 
@@ -26,103 +39,124 @@ public class ShelvesActivity extends AppCompatActivity implements IShelvesMvpCon
 //    private List<NewsBean> mNewsBeans = new ArrayList<>();
     private IShelvesMvpContract.IPresenter mPresenter;
     private LinearLayoutManager mLayoutMgr;
+    private WebView mWebView;
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        hideBottomUIMenu();
-//        int flag = DISABLE_HOME | DISABLE_RECENT | DISABLE_BACK | DISABLE_EXPAND;
-//        setStatusBarDisable(flag);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bookshelf_activity_mvp);
         initView();
 
-        Toast.makeText(this, "哈哈，我成功启动了！", Toast.LENGTH_LONG).show();
+        ApiManager.getInstance().getService()
+                .getBookContentDetail("2", "13", "116", "Chapter1.xhtml#ebookNote_3")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+
+                        BookContentRawBean bookContentRawBean = new Gson().fromJson(s, BookContentRawBean.class);
+
+                        String current = bookContentRawBean.getData().getCurrent();
+                        String css = bookContentRawBean.getData().getCss();
+
+                        Log.i("MyLog", "css-->" + css);
+                        String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + css + "\" />" + current;
+                        // lets assume we have /assets/style.css file
+                        mWebView.loadDataWithBaseURL(css, htmlData, "text/html", "UTF-8", null);
+//                        mWebView.loadUrl("file:///android_asset/bookcaseIntro.html");
+                    }
+                });
+
+        initWebView();
     }
 
-
-    public static final int DISABLE_EXPAND = 0x00010000;//4.2以上的整形标识
-    public static final int DISABLE_EXPAND_LOW = 0x00000001;//4.2以下的整形标识
-    public static final int DISABLE_NONE = 0x00000000;//取消StatusBar所有disable属性，即还原到最最原始状态
-
-    public static final int DISABLE_HOME = 0x00200000; //二进制的值是0x00200000
-    public static final int DISABLE_RECENT = 0x01000000; //二进制的值是 0x01000000
-    public static final int DISABLE_BACK = 0x00400000; //二进制的值是 0x00400000
-
-    private void setStatusBarDisable(int disable_status) {
-        //调用statusBar的disable方法
-        @SuppressLint("WrongConstant")
-        Object service = getSystemService("statusbar");
-        try {
-            Class<?> statusBarManager = Class.forName("android.app.StatusBarManager");
-            Method expand = statusBarManager.getMethod("disable", int.class);
-            expand.invoke(service, disable_status);
-        } catch (Exception e) {
-//            unBanStatusBar();
-            e.printStackTrace();
-        }
-    }
-
-//    // this is to start to be visible!
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus)
-//    {
-//        super.onWindowFocusChanged(hasFocus);
-//
-//        getWindow().getDecorView().setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-//                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-//    }
-
-    /**
-     * 隐藏虚拟按键，并且全屏
-     */
-    protected void hideBottomUIMenu() {
-
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//
-//        //隐藏虚拟按键，并且全屏
-//        //for new api versions.
-//        View decorView = getWindow().getDecorView();
-//        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
-//        decorView.setSystemUiVisibility(uiOptions);
+    private void initWebView() {
+        mWebView = findViewById(R.id.wv_test);
+        WebSettings settings = mWebView.getSettings();
+        settings.setJavaScriptEnabled(true);//启用js功能
+        settings.setSupportZoom(true);//2跟手指头可以自由缩放WebView
+        settings.setBuiltInZoomControls(true);//启用放大缩小按键，已经适配的网页会无法显示这个按键
+        settings.setUseWideViewPort(true);//启用双击缩放，已经适配的网页会无法显示这个按键
+        //设置自适应屏幕  缩小宽度以适合屏幕的内容
+        settings.setLoadWithOverviewMode(true);
+        //设置布局算法,将所有内容移动到视图宽度的一列中。
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 
 
-        final View decorView = getWindow().getDecorView();
-        final int uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        settings.setTextSize(WebSettings.TextSize.NORMAL);//设置字体默认大小
+        settings.setTextZoom(300);//按照具体的设置网页字体大小
 
-        decorView.setSystemUiVisibility(uiOption);
 
-        // This code will always hide the navigation bar
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(uiOption);
-                }
+        //设置webVie监听
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override//开始加载网页的监听
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                Log.i("MyLog", "开始加载");
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override//加载网页完成的监听
+            public void onPageFinished(WebView view, String url) {
+                Log.i("MyLog", "加载结束");
+                super.onPageFinished(view, url);
+            }
+
+            //当WebView被点击，或者内部的超链接被点击的时候，会执行该方法。可以拿到被点击的超链接url。根据url来做相对应的逻辑
+            @Override//跳转链接的监听
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.i("MyLog", "跳转链接");
+                //默认会跳转到其他游览器。这里修改成如下代码，让其不跳转到其他游览器
+                mWebView.loadUrl(url);
+                return true;
             }
         });
 
+        mWebView.setWebChromeClient(new WebChromeClient() {
+
+            @Override//获取网页标题
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+            }
+
+            @Override//获取进度条发生变化
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+            }
+        });
+
+//        mWebView.loadUrl("http://www.itcast.cn/");
+    }
+
+
+    public static void i(String tag, String msg) {  //信息太长,分段打印
+        //因为String的length是字符数量不是字节数量所以为了防止中文字符过多，
+        //  把4*1024的MAX字节打印长度改为2001字符数
+        int max_str_length = 2001 - tag.length();
+        //大于4000时
+        while (msg.length() > max_str_length) {
+            Log.i(tag, msg.substring(0, max_str_length));
+            msg = msg.substring(max_str_length);
+        }
+        //剩余部分
+        Log.i(tag, msg);
     }
 
     private void initView() {
         mRootLayout = findViewById(R.id.cl_root);
-        mRecyclerView = findViewById(R.id.rv_news);
+//        mRecyclerView = findViewById(R.id.rv_news);
 //        mRecyclerAdapter = new NewsMvpAdapter();
 //        mRecyclerAdapter.setNewsResult(mNewsBeans);
 //        mLayoutMgr = new LinearLayoutManager(this);
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 //        mRecyclerView.setLayoutManager(mLayoutMgr);
 //        mRecyclerView.setAdapter(mRecyclerAdapter);
+
+
         mPresenter = new ShelvesPresenter(this);
+//        mPresenter = new ShelvesDetailPresenter(this);
     }
 
     @Override
@@ -132,7 +166,7 @@ public class ShelvesActivity extends AppCompatActivity implements IShelvesMvpCon
     }
 
     private void dispatchRefresh() {
-        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES, null);
+        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES, new String[]{"2"});
     }
 
 
@@ -146,6 +180,19 @@ public class ShelvesActivity extends AppCompatActivity implements IShelvesMvpCon
         }
 
     }
+
+//    @Override
+//    public void onRefreshFinished(String refreshType, List<ShelvesCategoriesFinalBean> resultBean) {
+//        if (resultBean != null) {
+//            ShelvesCategoriesFinalBean shelvesCategoriesDetailBean = resultBean.get(0);
+//
+//            Log.i("MyLog", "shelvesCategoriesDetailBean.getName() --> " + shelvesCategoriesDetailBean.getName());
+//            Log.i("MyLog", "shelvesCategoriesDetailBean.getCategoryId() --> " + shelvesCategoriesDetailBean.getCategoryId());
+//            Log.i("MyLog", "shelvesCategoriesDetailBean.getCustomerId() --> " + shelvesCategoriesDetailBean.getCustomerId());
+//            Log.i("MyLog", "shelvesCategoriesDetailBean.getShelfId() --> " + shelvesCategoriesDetailBean.getShelfId());
+//            Log.i("MyLog", "shelvesCategoriesDetailBean.getLogo() --> " + shelvesCategoriesDetailBean.getLogo());
+//        }
+//    }
 
     @Override
     public void showTips(String message) {

@@ -1,6 +1,5 @@
 package com.chinafocus.bookshelf.presenter.shelves;
 
-import com.chinafocus.bookshelf.model.bean.ShelvesResultBean;
 import com.chinafocus.bookshelf.model.repository.shelves.ShelvesRepositoryFactory;
 import com.google.gson.Gson;
 
@@ -8,35 +7,65 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
-public abstract class AbstractShelvesPresenter implements IShelvesMvpContract.IPresenter {
+abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContract.IPresenter {
 
     private CompositeDisposable mCompositeDisposable;
     private WeakReference<IShelvesMvpContract.IView> mViewWeakReference;
     protected final Gson mGson;
 
-    protected AbstractShelvesPresenter(IShelvesMvpContract.IView view) {
+    AbstractShelvesPresenter(IShelvesMvpContract.IView view) {
         mViewWeakReference = new WeakReference<>(view);
         mCompositeDisposable = new CompositeDisposable();
         mGson = new Gson();
     }
 
     @Override
-    public void refresh(String refreshType, String[] args) {
+    public void refresh(final String refreshType, String[] args) {
 
-        ShelvesPresenter.RefreshObserver refreshObserver = new ShelvesPresenter.RefreshObserver(refreshType, this);
-        mCompositeDisposable.add(refreshObserver);
+        DisposableObserver<TT> disposableObserver = new DisposableObserver<TT>() {
+            @Override
+            public void onNext(TT t) {
+                mViewWeakReference.get().onRefreshFinished(refreshType, (List) t);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                mViewWeakReference.get().showTips("网络不好，刷新错误");
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+
+        mCompositeDisposable.add(disposableObserver);
 
         Observable<String> cacheShelvesSource = ShelvesRepositoryFactory.getInstance().getCacheShelves(refreshType);
         Observable<String> netShelvesSource = ShelvesRepositoryFactory.getInstance().getNetShelves(refreshType, args);
 
-        threeLevelBuffer(refreshObserver, cacheShelvesSource, netShelvesSource);
+        Observable.concat(cacheShelvesSource, netShelvesSource)
+                .distinct()
+                .map(new Function<String, TT>() {
+                    @Override
+                    public TT apply(String s) throws Exception {
+                        return rawToResultFromGson(s);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(disposableObserver);
 
     }
 
-    protected abstract void threeLevelBuffer(RefreshObserver refreshObserver, Observable<String> cacheShelvesSource, Observable<String> netShelvesSource);
+    protected abstract TT rawToResultFromGson(String s);
 
     @Override
     public void destroy() {
@@ -44,36 +73,6 @@ public abstract class AbstractShelvesPresenter implements IShelvesMvpContract.IP
         if (mViewWeakReference != null) {
             mViewWeakReference.clear();
             mViewWeakReference = null;
-        }
-    }
-
-    static class RefreshObserver extends DisposableObserver<List<ShelvesResultBean>> {
-
-        @IShelvesMvpContract.RefreshType
-        String mRefreshType;
-        IShelvesMvpContract.IPresenter mShelvesPresenter;
-
-        RefreshObserver(@IShelvesMvpContract.RefreshType String refreshType, IShelvesMvpContract.IPresenter shelvesPresenter) {
-            mRefreshType = refreshType;
-            this.mShelvesPresenter = shelvesPresenter;
-        }
-
-        @Override
-        public void onNext(List<ShelvesResultBean> shelvesResultBean) {
-            IShelvesMvpContract.IView iView = ((AbstractShelvesPresenter) mShelvesPresenter).mViewWeakReference.get();
-            if (iView != null) {
-                iView.onRefreshFinished(mRefreshType, shelvesResultBean);
-            }
-        }
-
-        @Override
-        public void onError(Throwable throwable) {
-
-            ((AbstractShelvesPresenter) mShelvesPresenter).mViewWeakReference.get().showTips("网络不好，刷新错误");
-        }
-
-        @Override
-        public void onComplete() {
         }
     }
 }

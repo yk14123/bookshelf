@@ -1,17 +1,21 @@
 package com.chinafocus.bookshelf.presenter.shelves;
 
+import com.chinafocus.bookshelf.model.bean.ShelvesCategoryRawBean;
+import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 
-import io.reactivex.Observable;
+import java.util.List;
 
-public class ShelvesDetailPresenter extends AbstractShelvesPresenter {
+public class ShelvesDetailPresenter extends AbstractShelvesPresenter<List<ShelvesCategoryResultBean.ShelvesCategoriesFinalBean>> {
 
-
-    protected ShelvesDetailPresenter(IShelvesMvpContract.IView view) {
+    public ShelvesDetailPresenter(IShelvesMvpContract.IView view) {
         super(view);
     }
 
     @Override
-    protected void threeLevelBuffer(RefreshObserver refreshObserver, Observable<String> cacheShelvesSource, Observable<String> netShelvesSource) {
+    protected List<ShelvesCategoryResultBean.ShelvesCategoriesFinalBean> rawToResultFromGson(String s) {
 
+        ShelvesCategoryRawBean shelvesCategoryRawBean = mGson.fromJson(s, ShelvesCategoryRawBean.class);
+
+        return shelvesCategoryRawBean.getData().getCategories();
     }
 }
