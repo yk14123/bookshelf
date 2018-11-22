@@ -16,6 +16,7 @@ public interface ApiService {
     @Headers("corigin:expressreader")
     Observable<String> getShelves();
 
+
     /**
      * 获取具体书柜展示信息
      *
@@ -37,6 +38,8 @@ public interface ApiService {
     @Headers("corigin:expressreader")
     Observable<String> getBookCategoryDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId);
 
+
+
     /**
      * 书的大纲目录展示
      *
@@ -48,7 +51,6 @@ public interface ApiService {
     @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/metadata")
     @Headers("corigin:expressreader")
     Observable<String> getBookMetadata(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId);
-
 
     /**
      * 书的每一页具体内容
@@ -62,5 +64,4 @@ public interface ApiService {
     @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/page/{page}")
     @Headers("corigin:expressreader")
     Observable<String> getBookContentDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Path("page") String page);
-
 }

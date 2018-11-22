@@ -11,10 +11,31 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+
+    signingConfigs {
+        config {
+            storeFile file(KEY_PATH)
+            storePassword KEY_PASS
+            keyAlias ALIAS_NAME
+            keyPassword ALIAS_PASS
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            // 混淆
+            minifyEnabled true
+            // Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -43,7 +64,7 @@ dependencies {
     //Material design
     implementation 'com.android.support:design:28.0.0'
     //内存泄漏检测
-    //  release版  implementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
-    implementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
+    implementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
+//    implementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
 
 }

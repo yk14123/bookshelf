@@ -20,6 +20,7 @@ import com.chinafocus.bookshelf.BuildConfig;
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.base.PermissionListener;
+import com.chinafocus.bookshelf.presenter.shelves.AbstractShelvesPresenter;
 import com.chinafocus.bookshelf.utils.ConstantValue;
 import com.chinafocus.bookshelf.utils.SpUtil;
 
@@ -63,6 +64,11 @@ public class SplashActivity extends BaseActivity {
 
         initData();
 
+    }
+
+    @Override
+    protected AbstractShelvesPresenter getPresenter() {
+        return null;
     }
 
     @Override
@@ -284,5 +290,15 @@ public class SplashActivity extends BaseActivity {
         if (requestCode == INSTALL_SUCCESS) {
             enterHome();
         }
+    }
+
+    @Override
+    public void onRefreshFinished(String refreshType, List resultBean) {
+
+    }
+
+    @Override
+    public void showTips(String message) {
+
     }
 }

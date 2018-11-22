@@ -1,4 +1,4 @@
-package com.chinafocus.bookshelf.ui.activity;
+package com.chinafocus.bookshelf.model.bean;
 
 public class VersionBean {
 

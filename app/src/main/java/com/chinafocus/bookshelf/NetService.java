@@ -1,6 +1,6 @@
 package com.chinafocus.bookshelf;
 
-import com.chinafocus.bookshelf.ui.activity.VersionBean;
+import com.chinafocus.bookshelf.model.bean.VersionBean;
 
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;

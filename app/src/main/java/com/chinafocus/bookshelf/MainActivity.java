@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -17,7 +18,8 @@ import android.widget.Toast;
 
 import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.base.PermissionListener;
-import com.chinafocus.bookshelf.ui.activity.VersionBean;
+import com.chinafocus.bookshelf.model.bean.VersionBean;
+import com.chinafocus.bookshelf.presenter.shelves.AbstractShelvesPresenter;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -59,12 +61,17 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected AbstractShelvesPresenter getPresenter() {
+        return null;
+    }
+
 
     @SuppressLint("CheckResult")
     public void checkVersion(View view) {
 
         Retrofit mRetrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.123.106:8080/")
+                .baseUrl("http://192.168.0.103:8080/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
@@ -91,6 +98,7 @@ public class MainActivity extends BaseActivity {
 //
                             String downLoadUri = versionBean.getDownLoadUri();
 //                            //http://192.168.0.104:8080/app-release.apk
+                            //http://192.168.0.103:8080/app-release.apk
                             String[] split = downLoadUri.split("//");
                             String[] split1 = split[1].split("/");
                             mInstallApp = split1[1];
@@ -114,6 +122,7 @@ public class MainActivity extends BaseActivity {
         if (requestCode == INSTALL_SUCCESS) {
 //            enterHome();
             initData();
+            Toast.makeText(MainActivity.this, "安全全部搞定了！！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -156,23 +165,20 @@ public class MainActivity extends BaseActivity {
 
     private void installLocalApp() {
 
-
         Intent intent = new Intent(Intent.ACTION_VIEW);
 //判断是否是AndroidN以及更高的版本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.i("MyLog", "系统大于7.0版本，准备安装");
-            intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);//要加这句，不然文件一样解析出错
             Uri contentUri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".fileProvider", mFile);
-
+//上下文，authorities名，文件File
             grantUriPermission(getPackageName(), contentUri,
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);//设置读写权限。不然下载的文件，无法写入手机或读取！
 
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(mFile), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-//        intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(intent, INSTALL_SUCCESS);
 
     }
@@ -181,7 +187,9 @@ public class MainActivity extends BaseActivity {
 
         InputStream inputStream = responseBody.byteStream();
 
-        mFile = new File(getFilesDir().getAbsoluteFile() + File.separator + mInstallApp);
+//        mFile = new File(getFilesDir().getAbsoluteFile() + File.separator + mInstallApp);
+
+        mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mInstallApp);
         try (
 
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(mFile));
@@ -221,4 +229,13 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onRefreshFinished(String refreshType, List resultBean) {
+
+    }
+
+    @Override
+    public void showTips(String message) {
+
+    }
 }

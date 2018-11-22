@@ -22,6 +22,8 @@ import com.chinafocus.bookshelf.base.PermissionListener;
 import com.chinafocus.bookshelf.model.bean.BookContentRawBean;
 import com.chinafocus.bookshelf.model.bean.ShelvesResultBean;
 import com.chinafocus.bookshelf.model.network.ApiManager;
+import com.chinafocus.bookshelf.presenter.shelves.AbstractShelvesPresenter;
+import com.chinafocus.bookshelf.presenter.shelves.INetListener;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesPresenter;
 import com.google.gson.Gson;
@@ -34,13 +36,13 @@ import io.reactivex.schedulers.Schedulers;
 
 //import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 
-public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract.IView<ShelvesResultBean> {
+public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
 
     private CoordinatorLayout mRootLayout;
     private RecyclerView mRecyclerView;
     //    private NewsMvpAdapter mRecyclerAdapter;
 //    private List<NewsBean> mNewsBeans = new ArrayList<>();
-    private IShelvesMvpContract.IPresenter mPresenter;
+//    private IShelvesMvpContract.IPresenter mPresenter;
     private LinearLayoutManager mLayoutMgr;
     private WebView mWebView;
 
@@ -53,7 +55,7 @@ public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract
 
 //        requestRuntimePermission();
 
-        initView();
+//        initView();
 
 
 //        testShelvesCategory();
@@ -70,7 +72,7 @@ public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract
     @SuppressLint("CheckResult")
     private void testBookCategoryDetail() {
         ApiManager.getInstance().getService()
-                .getBookCategoryDetail("2","14")
+                .getBookCategoryDetail("2", "14")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -84,7 +86,7 @@ public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract
     @SuppressLint("CheckResult")
     private void testBookMetadata() {
         ApiManager.getInstance().getService()
-                .getBookMetadata("2","14","175")
+                .getBookMetadata("2", "14", "175")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -120,7 +122,7 @@ public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract
                     @Override
                     public void accept(String s) throws Exception {
 
-                        i("MyLog",s);
+                        i("MyLog", s);
 
                         BookContentRawBean bookContentRawBean = new Gson().fromJson(s, BookContentRawBean.class);
 
@@ -231,7 +233,8 @@ public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract
         Log.i(tag, msg);
     }
 
-    private void initView() {
+    protected void initView() {
+        super.initView();
         mRootLayout = findViewById(R.id.cl_root);
 //        mRecyclerView = findViewById(R.id.rv_news);
 //        mRecyclerAdapter = new NewsMvpAdapter();
@@ -242,8 +245,45 @@ public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract
 //        mRecyclerView.setAdapter(mRecyclerAdapter);
 
 
-        mPresenter = new ShelvesPresenter(this);
+//        mPresenter = new ShelvesPresenter(this, new INetListener<ShelvesResultBean>() {
+//
+//            @Override
+//            public void onNext(ShelvesResultBean shelvesResultBean) {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
 //        mPresenter = new ShelvesDetailPresenter(this);
+    }
+
+    @Override
+    protected AbstractShelvesPresenter getPresenter() {
+        return new ShelvesPresenter(this, new INetListener<ShelvesResultBean>() {
+
+            @Override
+            public void onNext(ShelvesResultBean shelvesResultBean) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     @Override
