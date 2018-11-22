@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,17 +51,76 @@ public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bookshelf_activity_mvp);
 
-        requestRuntimePermission();
+//        requestRuntimePermission();
 
         initView();
 
+
+//        testShelvesCategory();
+
+//        testBookCategoryDetail();
+
+//        testBookMetadata();
+
+//        testBookContentPage();
+
+        initWebView();
+    }
+
+    @SuppressLint("CheckResult")
+    private void testBookCategoryDetail() {
         ApiManager.getInstance().getService()
-                .getBookContentDetail("2", "13", "116", "Chapter1.xhtml#ebookNote_3")
+                .getBookCategoryDetail("2","14")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
+                        i("MyLog", s);
+                    }
+                });
+    }
+
+    @SuppressLint("CheckResult")
+    private void testBookMetadata() {
+        ApiManager.getInstance().getService()
+                .getBookMetadata("2","14","175")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        i("MyLog", s);
+                    }
+                });
+    }
+
+    @SuppressLint("CheckResult")
+    @NonNull
+    private void testShelvesCategory() {
+        ApiManager.getInstance().getService()
+                .getShelvesDetail("2")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        i("MyLog", s);
+                    }
+                });
+    }
+
+    @SuppressLint("CheckResult")
+    private void testBookContentPage() {
+        ApiManager.getInstance().getService()
+                .getBookContentDetail("2", "13", "189", "chapter001.html#a007")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+
+                        i("MyLog",s);
 
                         BookContentRawBean bookContentRawBean = new Gson().fromJson(s, BookContentRawBean.class);
 
@@ -68,18 +128,20 @@ public class ShelvesActivity extends BaseActivity implements IShelvesMvpContract
                         String css = bookContentRawBean.getData().getCss();
 
                         Log.i("MyLog", "css-->" + css);
-                        String htmlData = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + css + "\" />" + current;
+                        String htmlDataFromHttpCss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + css + "\" />" + current;
                         // lets assume we have /assets/style.css file
-                        mWebView.loadDataWithBaseURL(css, htmlData, "text/html", "UTF-8", null);
+                        mWebView.loadDataWithBaseURL(css, htmlDataFromHttpCss, "text/html", "UTF-8", null);
 //                        mWebView.loadUrl("file:///android_asset/bookcaseIntro.html");
+
+//                        String htmlDataFromLocal = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + "StylesheetChange.css" + "\" />" + htmlDataFromHttpCss;
+//                        // lets assume we have /assets/style.css file
+//                        mWebView.loadDataWithBaseURL("file:///android_asset/StylesheetChange.css", htmlDataFromLocal, "text/html", "UTF-8", null);
                     }
                 });
-
-        initWebView();
     }
 
     private void requestRuntimePermission() {
-        requestRuntimePermission(new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED,Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_SMS}, new PermissionListener() {
+        requestRuntimePermission(new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_SMS}, new PermissionListener() {
             @Override
             public void onGranted() {
                 //在这个里面写权限申请完毕后要做的事情。。。
