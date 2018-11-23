@@ -38,7 +38,7 @@ public class SplashActivity extends BaseActivity {
 
     private static final int INSTALL_SUCCESS = 0;
     private String mVersionName;
-//    private NetService mNetService;
+//    private ApkNetService mNetService;
     private int mVersionCode;
     private String mInstallApp;
     private File mFile;
@@ -179,7 +179,7 @@ public class SplashActivity extends BaseActivity {
 
 
 //                Retrofit retrofit = RetrofitManager.getRetrofitInstance("http://192.168.0.104:8080/");
-//                mNetService = retrofit.create(NetService.class);
+//                mNetService = retrofit.create(ApkNetService.class);
 //                mNetService.getVersion("update.json")
 //                        .subscribeOn(Schedulers.io())
 //                        .observeOn(AndroidSchedulers.mainThread())

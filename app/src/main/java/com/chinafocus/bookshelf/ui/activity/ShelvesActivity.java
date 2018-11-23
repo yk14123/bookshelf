@@ -25,6 +25,7 @@ import com.chinafocus.bookshelf.model.network.ApiManager;
 import com.chinafocus.bookshelf.presenter.shelves.AbstractShelvesPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.INetListener;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
+import com.chinafocus.bookshelf.presenter.shelves.ShelvesDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesPresenter;
 import com.google.gson.Gson;
 
@@ -66,7 +67,7 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
 
 //        testBookContentPage();
 
-        initWebView();
+//        initWebView();
     }
 
     @SuppressLint("CheckResult")
@@ -262,7 +263,7 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
 //
 //            }
 //        });
-//        mPresenter = new ShelvesDetailPresenter(this);
+        mPresenter = new ShelvesDetailPresenter(this);
     }
 
     @Override

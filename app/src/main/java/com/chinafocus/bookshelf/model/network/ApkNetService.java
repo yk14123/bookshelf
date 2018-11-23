@@ -1,4 +1,4 @@
-package com.chinafocus.bookshelf;
+package com.chinafocus.bookshelf.model.network;
 
 import com.chinafocus.bookshelf.model.bean.VersionBean;
 
@@ -7,7 +7,7 @@ import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-public interface NetService {
+public interface ApkNetService {
 
     @GET("{content}")
     Observable<VersionBean> getVersion(@Path("content") String content);

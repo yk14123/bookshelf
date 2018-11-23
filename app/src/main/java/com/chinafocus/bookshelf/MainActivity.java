@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.base.PermissionListener;
 import com.chinafocus.bookshelf.model.bean.VersionBean;
+import com.chinafocus.bookshelf.model.network.ApiManager;
+import com.chinafocus.bookshelf.model.network.ApkNetService;
 import com.chinafocus.bookshelf.presenter.shelves.AbstractShelvesPresenter;
 
 import java.io.BufferedInputStream;
@@ -33,15 +36,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends BaseActivity {
 
     private static final int INSTALL_SUCCESS = 0;
+    private static final int INSTALL_SUCCESS_FROM_8 = 1;
     private String mVersionName;
-    private NetService mNetService;
+    private ApkNetService mApkNetService;
     private int mVersionCode;
     private String mInstallApp;
     private File mFile;
@@ -53,11 +54,14 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bookshelf_activity_main);
 
+        mApkNetService = ApiManager.getInstance().getApkService();
+
         initUI();
 
         initData();
 
-        requestRuntimePermission();
+//        requestRuntimePermission();
+        checkIsAndroidO();
 
     }
 
@@ -66,18 +70,38 @@ public class MainActivity extends BaseActivity {
         return null;
     }
 
+    private void checkIsAndroidO() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            boolean b = getPackageManager().canRequestPackageInstalls();
+            if (b) {
+                //安装应用
+                publishNewApk();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, INSTALL_SUCCESS_FROM_8);
+            }
+        }
+
+        requestRuntimePermission();
+    }
+
+
+    public void checkVersion(View view) {
+        publishNewApk();
+//        installApp("app-release.apk");
+    }
 
     @SuppressLint("CheckResult")
-    public void checkVersion(View view) {
+    private void publishNewApk() {
+        //http://192.168.123.106:8080/app-release.apk
+//        Retrofit mRetrofit = new Retrofit.Builder()
+//                .baseUrl("http://192.168.123.106:8080/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                .build();
 
-        Retrofit mRetrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.103:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
+//        mApkNetService = mRetrofit.create(ApkNetService.class);
 
-        mNetService = mRetrofit.create(NetService.class);
-        mNetService.getVersion("update.json")
+        mApkNetService.getVersion("update.json")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<VersionBean>() {
@@ -108,7 +132,6 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                 });
-
     }
 
     private void initUI() {
@@ -122,7 +145,7 @@ public class MainActivity extends BaseActivity {
         if (requestCode == INSTALL_SUCCESS) {
 //            enterHome();
             initData();
-            Toast.makeText(MainActivity.this, "安全全部搞定了！！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "更新最新版本，全部搞定了！！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -131,14 +154,16 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onGranted() {
                 //在这个里面写权限申请完毕后要做的事情。。。
-                Toast.makeText(MainActivity.this, "权限全部搞定了！！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "权限全部申请成功了！！", Toast.LENGTH_SHORT).show();
+//                publishNewApk();
             }
 
             @Override
             public void onDenied(List<String> deniedPermission) {
 
                 for (String s : deniedPermission) {
-                    Toast.makeText(MainActivity.this, "权限：" + s + "被拒绝了", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "重启app再次开启权限！！！权限：" + s + "被拒绝了", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
 //                Toast.makeText(MainActivity.this, "权限：被拒绝了", Toast.LENGTH_SHORT).show();
             }
@@ -147,7 +172,7 @@ public class MainActivity extends BaseActivity {
 
     @SuppressLint("CheckResult")
     private void installApp(final String path) {
-        mNetService.getAPK(path)
+        mApkNetService.getAPK(path)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(new Consumer<ResponseBody>() {
@@ -190,6 +215,9 @@ public class MainActivity extends BaseActivity {
 //        mFile = new File(getFilesDir().getAbsoluteFile() + File.separator + mInstallApp);
 
         mFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mInstallApp);
+
+        Log.i("MyLog", "------->>>" + mFile.getAbsolutePath());
+
         try (
 
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(mFile));

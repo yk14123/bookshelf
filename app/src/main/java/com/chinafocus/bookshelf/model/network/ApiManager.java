@@ -8,6 +8,7 @@ import javax.net.ssl.SSLSocketFactory;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
@@ -18,6 +19,7 @@ public class ApiManager {
     //采用单例模式封装Retrofit
 //    private static ApiManager sApiManager;
     private Retrofit mRetrofit;
+    private Retrofit mRetrofitForApk;
 
     private ApiManager() {
         //初始化OkHttpClient+Retrofit
@@ -50,6 +52,18 @@ public class ApiManager {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build();
+
+        mRetrofitForApk = new Retrofit.Builder()
+                .baseUrl(ApiConstant.BASE_APK_SHELVES)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(new OkHttpClient.Builder()
+                        .sslSocketFactory(HttpsUtils.getSLLContext().getSocketFactory())
+                        .hostnameVerifier(HttpsUtils.hostnameVerifier)
+                        .build())
+                .build();
+
+
     }
 
     //静态方法提供ApiManager实例 --->内部封装ApiManager访问实例
@@ -64,6 +78,11 @@ public class ApiManager {
     //获取ApiService接口调用对象
     public ApiService getService() {
         return mRetrofit.create(ApiService.class);
+    }
+
+    //获取ApkNetService接口调用对象
+    public ApkNetService getApkService() {
+        return mRetrofitForApk.create(ApkNetService.class);
     }
 
 }
