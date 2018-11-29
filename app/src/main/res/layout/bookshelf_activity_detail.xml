@@ -11,11 +11,14 @@
 
     <ImageView
         android:id="@+id/iv_shelf_detail_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/bookshelf_content_description"
-        android:scaleType="fitXY"
+        app:layout_heightPercent="9.17%sh"
+        app:layout_widthPercent="67.5%sw"
+        app:layout_maxHeightPercent="9.17%sh"
+        app:layout_maxWidthPercent="67.5%sw"
         android:src="@drawable/bookshelf_detail_header"
         app:layout_marginTopPercent="13%sh"/>
 
@@ -38,35 +41,39 @@
             android:layout_above="@+id/iv_shelf_detail_copyright"
             android:layout_below="@+id/iv_shelf_detail_logo"/>
 
-        <ScrollView
-            android:id="@+id/nev_shelf_detail_intro"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/iv_shelf_detail_copyright"
-            android:layout_below="@+id/iv_shelf_detail_logo"
-            android:fillViewport="true"
-            android:scrollbars="none"
-            android:visibility="gone">
+        <!--<ScrollView-->
+            <!--android:id="@+id/nev_shelf_detail_intro"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_above="@+id/iv_shelf_detail_copyright"-->
+            <!--android:layout_below="@+id/iv_shelf_detail_logo"-->
+            <!--android:fillViewport="true"-->
+            <!--android:scrollbars="none"-->
+            <!--android:visibility="gone">-->
 
             <WebView
                 android:id="@+id/wv_shelf_detail_intro"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-        </ScrollView>
+        <!--</ScrollView>-->
 
     </com.zhy.android.percent.support.PercentFrameLayout>
 
 
     <ImageView
         android:id="@+id/iv_shelf_detail_copyright"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/bookshelf_content_description"
         android:src="@drawable/bookshelf_detail_copyright"
         android:layout_alignParentBottom="true"
-        app:layout_marginBottomPercent="7%sh"/>
+        app:layout_heightPercent="3.44%sh"
+        app:layout_widthPercent="30.65%sw"
+        app:layout_maxHeightPercent="3.44%sh"
+        app:layout_maxWidthPercent="30.65%sw"
+        app:layout_marginBottomPercent="6.98%sh"/>
 
 
     <!--app:layout_heightPercent="4%sh"-->

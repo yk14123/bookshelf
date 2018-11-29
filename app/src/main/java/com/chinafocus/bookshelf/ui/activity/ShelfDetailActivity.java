@@ -23,7 +23,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -62,7 +61,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     //分类列表
     private RecyclerView mRvCategory;
     //滑动简介
-    private ScrollView mScrollViewIntro;
+//    private ScrollView mScrollViewIntro;
     //内容content
     private WebView mWvIntro;
     //适配器
@@ -104,11 +103,11 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 }
             }
         });
-        mScrollViewIntro = findViewById(R.id.nev_shelf_detail_intro);
+//        mScrollViewIntro = findViewById(R.id.nev_shelf_detail_intro);
         mWvIntro = findViewById(R.id.wv_shelf_detail_intro);
         //初始化WebView
-        mWvIntro.setVerticalScrollBarEnabled(false);//不能垂直滑动
-        mWvIntro.setHorizontalScrollBarEnabled(false);//不能水平滑动
+        mWvIntro.setVerticalScrollBarEnabled(true);//不能垂直滑动
+        mWvIntro.setHorizontalScrollBarEnabled(true);//不能水平滑动
         //設置WebView默認的白色背景為透明色
         mWvIntro.setBackgroundColor(0);
 
@@ -119,12 +118,22 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         webSettings.setUseWideViewPort(true); //将图片调整到适合WebView的大小
         webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
         //缩放操作
-        webSettings.setSupportZoom(false); //支持缩放，默认为true。是下面那个的前提。
+        webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
         webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
         webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
         webSettings.setTextZoom(180);   //设置显示的字体大小
+
+
+
+//        WebSettings settings = mWvIntro.getSettings();
+//        settings.setJavaScriptEnabled(true);//启用js功能
+//        settings.setSupportZoom(true);//2跟手指头可以自由缩放WebView
+//        settings.setBuiltInZoomControls(true);//启用放大缩小按键，已经适配的网页会无法显示这个按键
+//        settings.setUseWideViewPort(true);//启用双击缩放，已经适配的网页会无法显示这个按键
+
         //加载本地文件
         mWvIntro.loadUrl("file:///android_asset/bookcaseIntro.html");
+
         mWvIntro.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -252,9 +261,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mRvCategory.setVisibility(View.GONE);
-                    mScrollViewIntro.setVisibility(View.VISIBLE);
+//                    mScrollViewIntro.setVisibility(View.VISIBLE);
                     Animation translateIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_in);
-                    mScrollViewIntro.startAnimation(translateIn);
+//                    mScrollViewIntro.startAnimation(translateIn);
                     translateIn.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
@@ -280,7 +289,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         } else {
             //隱藏WebView,显示九宫格
             Animation translateOut = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_out);
-            mScrollViewIntro.startAnimation(translateOut);
+//            mScrollViewIntro.startAnimation(translateOut);
             translateOut.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -288,7 +297,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    mScrollViewIntro.setVisibility(View.GONE);
+//                    mScrollViewIntro.setVisibility(View.GONE);
                     mRvCategory.setVisibility(View.VISIBLE);
                     Animation scaleIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_scale_in);
                     mRvCategory.startAnimation(scaleIn);
@@ -340,7 +349,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
         //去除View动画
         mRvCategory.clearAnimation();
-        mScrollViewIntro.clearAnimation();
+//        mScrollViewIntro.clearAnimation();
         super.onDestroy();
     }
 }
