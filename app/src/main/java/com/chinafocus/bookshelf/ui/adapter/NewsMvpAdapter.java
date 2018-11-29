@@ -1,18 +1,18 @@
 package com.chinafocus.bookshelf.ui.adapter;
 
-//public class NewsMvpAdapter extends RecyclerView.Adapter<NewsMvpAdapter.NewsMvpHolder> {
+//public class NewsMvpAdapter extends RecyclerView.Adapter<NewsMvpAdapter.BookCategoryHolder> {
 //
 //
 //    private List<NewsBean> mNewsEntity;
 //
 //    @NonNull
 //    @Override
-//    public NewsMvpHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        return new NewsMvpHolder(parent, R.layout.bookshelf_recycle_item_news);
+//    public BookCategoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//        return new BookCategoryHolder(parent, R.layout.bookshelf_recycle_item_news);
 //    }
 //
 //    @Override
-//    public void onBindViewHolder(NewsMvpHolder holder, int position) {
+//    public void onBindViewHolder(BookCategoryHolder holder, int position) {
 //        if (mNewsEntity != null) {
 //            NewsBean newsBean = mNewsEntity.get(position);
 //            if (newsBean != null) {
@@ -27,13 +27,13 @@ package com.chinafocus.bookshelf.ui.adapter;
 //        return mNewsEntity != null ? mNewsEntity.size() : 0;
 //    }
 //
-//    public void setNewsResult(List<NewsBean> newsEntity) {
+//    public void setCategoryEntity(List<NewsBean> newsEntity) {
 //        mNewsEntity = newsEntity;
 //    }
 //
-//    class NewsMvpHolder extends RecyclerView.ViewHolder {
+//    class BookCategoryHolder extends RecyclerView.ViewHolder {
 //
-//        NewsMvpHolder(ViewGroup holder, @LayoutRes int layoutId) {
+//        BookCategoryHolder(ViewGroup holder, @LayoutRes int layoutId) {
 //            super(LayoutInflater.from(holder.getContext()).inflate(layoutId, holder, false));
 //        }
 //

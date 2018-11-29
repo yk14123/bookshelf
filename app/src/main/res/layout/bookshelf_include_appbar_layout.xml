@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tb_book_category_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bookshelf_book_category_shadow"
+    android:paddingTop="@dimen/dp_10"
+    android:paddingBottom="@dimen/dp_10">
+
+    <ImageView
+        android:id="@+id/iv_bookshelf_left_menu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:background="@drawable/bookshelf_icon_back"
+        android:contentDescription="@string/bookshelf_content_description"
+        app:layout_heightPercent="6%w"
+        app:layout_marginStartPercent="2%w"
+        app:layout_widthPercent="6%w" />
+
+    <TextView
+        android:id="@+id/tv_bookshelf_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/bookshelf_content_text_color"
+        android:textSize="@dimen/sp_18"
+        tools:text="習近平的著作" />
+
+    <ImageView
+        android:id="@+id/iv_bookshelf_right_menu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:background="@drawable/bookshelf_icon_font"
+        android:contentDescription="@string/bookshelf_content_description"
+        app:layout_heightPercent="5.5%w"
+        app:layout_marginRightPercent="3%w"
+        app:layout_widthPercent="5.5%w" />
+
+</com.zhy.android.percent.support.PercentRelativeLayout>

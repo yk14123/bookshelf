@@ -1,6 +1,7 @@
 package com.chinafocus.bookshelf.model.repository.shelves;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.chinafocus.bookshelf.model.lru.LruMap;
 
@@ -25,6 +26,8 @@ class LocalShelvesSource {
 
                 String rawResult = (String) LruMap.getInstance().get(key);
                 if (rawResult != null) {
+                    Log.i("MyLog", "本地有缓存！！！从本地获取！！！");
+                    Log.i("MyLog", "ShelvesRepository  --  getCacheShelves  --  key  -->" + key);
                     emitter.onNext(rawResult);
                 }
                 emitter.onComplete();
@@ -35,6 +38,7 @@ class LocalShelvesSource {
 
     @SuppressLint("CheckResult")
     void save(final String key, String rawResult) {
+
         Observable.just(rawResult).observeOn(Schedulers.io()).subscribe(new Consumer<String>() {
 
             @Override

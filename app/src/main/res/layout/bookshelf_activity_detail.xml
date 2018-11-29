@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_shelf_detail_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@drawable/bookshelf_default_cover_port"
+    tools:context=".ui.activity.ShelfDetailActivity">
+
+    <ImageView
+        android:id="@+id/iv_shelf_detail_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/bookshelf_content_description"
+        android:scaleType="fitXY"
+        android:src="@drawable/bookshelf_detail_header"
+        app:layout_marginTopPercent="13%sh"/>
+
+    <!--app:layout_heightPercent="9%sh"-->
+    <!--app:layout_widthPercent="68%sw"-->
+
+    <com.zhy.android.percent.support.PercentFrameLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        app:layout_heightPercent="60%sh"
+        app:layout_marginTopPercent="26%sh"
+        app:layout_widthPercent="82%sw"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_shelf_detail_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/iv_shelf_detail_copyright"
+            android:layout_below="@+id/iv_shelf_detail_logo"/>
+
+        <ScrollView
+            android:id="@+id/nev_shelf_detail_intro"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/iv_shelf_detail_copyright"
+            android:layout_below="@+id/iv_shelf_detail_logo"
+            android:fillViewport="true"
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <WebView
+                android:id="@+id/wv_shelf_detail_intro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </ScrollView>
+
+    </com.zhy.android.percent.support.PercentFrameLayout>
+
+
+    <ImageView
+        android:id="@+id/iv_shelf_detail_copyright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/bookshelf_content_description"
+        android:src="@drawable/bookshelf_detail_copyright"
+        android:layout_alignParentBottom="true"
+        app:layout_marginBottomPercent="7%sh"/>
+
+
+    <!--app:layout_heightPercent="4%sh"-->
+    <!--app:layout_widthPercent="32%sw"-->
+
+    <TextView
+        android:id="@+id/tv_shelf_detail_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/bookshelf_white"
+        android:visibility="invisible"
+        app:layout_marginBottomPercent="2%w"
+        app:layout_marginRightPercent="4%w"
+        tools:text="1.2.11"/>
+
+</com.zhy.android.percent.support.PercentRelativeLayout>

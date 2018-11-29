@@ -1,9 +1,8 @@
 package com.chinafocus.bookshelf.model.bean;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class ShelvesCategoryResultBean implements Serializable {
+public class ShelvesCategoryResultBean {
 
     /**
      * bg : https://bookcases.oss-cn-beijing.aliyuncs.com/imgs/bg.jpg
@@ -89,10 +88,10 @@ public class ShelvesCategoryResultBean implements Serializable {
         this.categories = categories;
     }
 
-    public static class MetadataBean implements Serializable {
+    public static class MetadataBean  {
     }
 
-    public static class ShelvesCategoriesFinalBean implements Serializable {
+    public static class ShelvesCategoriesFinalBean  {
         /**
          * shelfId : 2
          * name : 现当代文学

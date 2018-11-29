@@ -3,7 +3,7 @@ package com.chinafocus.bookshelf.model.bean;
 import java.io.Serializable;
 import java.util.List;
 
-public class ShelvesResultBean implements Serializable {
+public class ShelvesResultBean  {
 
     /**
      * bg : https://bookcases.oss-cn-beijing.aliyuncs.com/imgs/bg.jpg

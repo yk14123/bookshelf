@@ -8,8 +8,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import com.chinafocus.bookshelf.presenter.shelves.AbstractShelvesPresenter;
-import com.chinafocus.bookshelf.presenter.shelves.INetListener;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 
 import java.util.ArrayList;
@@ -20,28 +18,25 @@ import java.util.List;
  */
 
 public abstract class BaseActivity<T> extends AppCompatActivity implements IShelvesMvpContract.IView<T> {
-    private PermissionListener mListener;
-    protected IShelvesMvpContract.IPresenter mPresenter;
-    protected INetListener<T> mNetListener;
+    private IPermissionListener mListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ActivityCollector.addActivity(this);//父类手动维护activity
 
         initView();
+
     }
 
-    protected void initView() {
-        mPresenter = getPresenter();
-    }
+    /**
+     * 初始化View
+     */
+    protected abstract void initView();
 
-    protected abstract AbstractShelvesPresenter getPresenter();
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        ActivityCollector.removeActivity(this);//父类手动维护activity
     }
 
     /**
@@ -51,7 +46,7 @@ public abstract class BaseActivity<T> extends AppCompatActivity implements IShel
      * @param permissions 需要申请的权限数组
      * @param listener    回调方法
      */
-    protected void requestRuntimePermission(String[] permissions, PermissionListener listener) {
+    protected void requestRuntimePermission(String[] permissions, IPermissionListener listener) {
         //这样的话，可以在其他非activity中使用该方法
 //        Activity topActivity = ActivityCollector.getTopActivity();
 //        if (topActivity == null) {

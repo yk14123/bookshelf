@@ -9,10 +9,6 @@ import java.util.List;
 public class ShelvesPresenter extends AbstractShelvesPresenter<List<ShelvesResultBean>> {
 
 
-    public ShelvesPresenter(IShelvesMvpContract.IView view, INetListener netListener) {
-        super(view, netListener);
-    }
-
     public ShelvesPresenter(IShelvesMvpContract.IView view) {
         super(view);
     }

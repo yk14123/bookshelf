@@ -3,19 +3,20 @@ package com.chinafocus.bookshelf.presenter.shelves;
 import com.chinafocus.bookshelf.model.bean.ShelvesCategoryRawBean;
 import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ShelvesDetailPresenter extends AbstractShelvesPresenter<List<ShelvesCategoryResultBean.ShelvesCategoriesFinalBean>> {
+public class ShelvesDetailPresenter extends AbstractShelvesPresenter<List<ShelvesCategoryResultBean>> {
 
     public ShelvesDetailPresenter(IShelvesMvpContract.IView view) {
         super(view);
     }
 
     @Override
-    protected List<ShelvesCategoryResultBean.ShelvesCategoriesFinalBean> rawToResultFromGson(String s) {
-
+    protected ArrayList<ShelvesCategoryResultBean> rawToResultFromGson(String s) {
         ShelvesCategoryRawBean shelvesCategoryRawBean = mGson.fromJson(s, ShelvesCategoryRawBean.class);
-
-        return shelvesCategoryRawBean.getData().getCategories();
+        ArrayList<ShelvesCategoryResultBean> result = new ArrayList<>(1);
+        result.add(shelvesCategoryRawBean.getData());
+        return result;
     }
 }

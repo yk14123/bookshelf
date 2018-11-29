@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bookshelf_font_setting_shadow"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_8"
+        app:layout_marginLeftPercent="4%w"
+        app:layout_marginRightPercent="4%w"
+        app:layout_marginTopPercent="8%w">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bookshelf_font"
+            android:contentDescription="@string/bookshelf_content_description"
+            android:text="@string/bookshelf_content_description"
+            app:layout_heightPercent="2%w"
+            app:layout_widthPercent="2%w" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bookshelf_font_normal"
+            android:textColor="#BABABA"
+            android:textSize="@dimen/sp_16"
+            app:layout_marginStartPercent="21.5%w" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bookshelf_font"
+            android:contentDescription="@string/bookshelf_content_description"
+            android:text="@string/bookshelf_content_description"
+            app:layout_heightPercent="4%w"
+            app:layout_widthPercent="4%w" />
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+    <com.chinafocus.bookshelf.ui.widgets.PercentSeekBar
+        android:id="@+id/sb_bookshelf_font"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:circleColor="@color/bookshelf_white"
+        app:circleRadius="@dimen/dp_10"
+        app:layout_heightPercent="8%w"
+        app:layout_marginBottomPercent="4%w"
+        app:layout_marginLeftPercent="4%w"
+        app:layout_marginRightPercent="4%w"
+        app:lineColor="#B5B5B5"
+        app:lineWidth="@dimen/dp_0_5"
+        app:totalCount="4" />
+
+</com.zhy.android.percent.support.PercentLinearLayout>

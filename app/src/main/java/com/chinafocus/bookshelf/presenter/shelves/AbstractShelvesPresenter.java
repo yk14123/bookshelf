@@ -4,6 +4,7 @@ import com.chinafocus.bookshelf.model.repository.shelves.ShelvesRepositoryFactor
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -12,27 +13,17 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContract.IPresenter {
+abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContract.IPresenter {
 
     private CompositeDisposable mCompositeDisposable;
     private WeakReference<IShelvesMvpContract.IView> mViewWeakReference;
     protected final Gson mGson;
-    protected INetListener<TT> mNetListener;
 
 
-    public void setNetListener(INetListener netListener) {
-        mNetListener = netListener;
-    }
-
-    AbstractShelvesPresenter(IShelvesMvpContract.IView view, INetListener netListener) {
+    AbstractShelvesPresenter(IShelvesMvpContract.IView view) {
         mViewWeakReference = new WeakReference<>(view);
         mCompositeDisposable = new CompositeDisposable();
         mGson = new Gson();
-        this.mNetListener = netListener;
-    }
-
-    AbstractShelvesPresenter(IShelvesMvpContract.IView view) {
-        this(view, null);
     }
 
     @Override
@@ -41,29 +32,22 @@ public abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContrac
         DisposableObserver<TT> disposableObserver = new DisposableObserver<TT>() {
             @Override
             public void onNext(TT t) {
-//                mViewWeakReference.get().onRefreshFinished(refreshType, (List) t);
-                if (mNetListener != null) {
-                    mNetListener.onNext(t);
-                }
+                mViewWeakReference.get().onRefreshFinished(refreshType, (List) t);
             }
 
             @Override
             public void onError(Throwable e) {
                 mViewWeakReference.get().showTips("网络不好，刷新错误");
-                if (mNetListener != null)
-                    mNetListener.onError(e);
             }
 
             @Override
             public void onComplete() {
-                if (mNetListener != null)
-                    mNetListener.onComplete();
             }
         };
 
         mCompositeDisposable.add(disposableObserver);
 
-        Observable<String> cacheShelvesSource = ShelvesRepositoryFactory.getInstance().getCacheShelves(refreshType);
+        Observable<String> cacheShelvesSource = ShelvesRepositoryFactory.getInstance().getCacheShelves(refreshType,args);
         Observable<String> netShelvesSource = ShelvesRepositoryFactory.getInstance().getNetShelves(refreshType, args);
 
         Observable.concat(cacheShelvesSource, netShelvesSource)
@@ -71,6 +55,7 @@ public abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContrac
                 .map(new Function<String, TT>() {
                     @Override
                     public TT apply(String s) throws Exception {
+
                         return rawToResultFromGson(s);
                     }
                 })

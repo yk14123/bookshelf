@@ -6,9 +6,9 @@ import android.content.Intent;
 
 import com.chinafocus.bookshelf.ui.activity.ShelvesActivity;
 
-public class MyReceiver extends BroadcastReceiver
+public class MyBootReceiver extends BroadcastReceiver
 {
-    public MyReceiver()
+    public MyBootReceiver()
     {
     }
 

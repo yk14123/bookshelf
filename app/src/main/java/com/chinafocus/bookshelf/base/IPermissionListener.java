@@ -6,7 +6,7 @@ import java.util.List;
  * Created by 馒头大人 on 2017/11/3.
  */
 
-public interface PermissionListener {
+public interface IPermissionListener {
     /**
      * 当权限全部申请通过后，调用的方法
      */

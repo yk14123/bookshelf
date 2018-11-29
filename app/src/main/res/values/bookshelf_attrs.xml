@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ExpandableTextView">
+        <attr name="maxCollapsedLines" format="integer" />
+        <attr name="animDuration" format="integer" />
+        <attr name="animAlphaStart" format="float" />
+        <attr name="expandIndicator" format="reference" />
+        <attr name="collapseIndicator" format="reference" />
+        <attr name="expandToggleType" format="enum">
+            <enum name="ImageButton" value="0" />
+            <enum name="TextView" value="1" />
+        </attr>
+        <attr name="expandableTextId" format="reference" />
+        <attr name="expandCollapseToggleId" format="reference" />
+        <attr name="expandToggleOnTextClick" format="boolean" />
+    </declare-styleable>
+
+    <!--设置字体大小控件-->
+    <declare-styleable name="PercentSeekBar">
+        <attr name="lineWidth" format="dimension|reference" />
+        <attr name="lineColor" format="color|reference" />
+        <attr name="totalCount" format="integer" />
+        <attr name="circleColor" format="color|reference" />
+        <attr name="circleRadius" format="dimension|reference" />
+    </declare-styleable>
+
+
+
+    <declare-styleable name="PercentLayout_Layout">
+        <attr name="layout_widthPercent" format="string"/>
+        <attr name="layout_heightPercent" format="string"/>
+
+        <attr name="layout_marginPercent" format="string"/>
+        <attr name="layout_marginLeftPercent" format="string"/>
+        <attr name="layout_marginTopPercent" format="string"/>
+        <attr name="layout_marginRightPercent" format="string"/>
+        <attr name="layout_marginBottomPercent" format="string"/>
+        <attr name="layout_marginStartPercent" format="string"/>
+        <attr name="layout_marginEndPercent" format="string"/>
+
+        <attr name="layout_textSizePercent" format="string"/>
+
+        <attr name="layout_maxWidthPercent" format="string"/>
+        <attr name="layout_maxHeightPercent" format="string"/>
+        <attr name="layout_minWidthPercent" format="string"/>
+        <attr name="layout_minHeightPercent" format="string"/>
+
+        <attr name="layout_paddingPercent" format="string"/>
+        <attr name="layout_paddingTopPercent" format="string"/>
+        <attr name="layout_paddingBottomPercent" format="string"/>
+        <attr name="layout_paddingLeftPercent" format="string"/>
+        <attr name="layout_paddingRightPercent" format="string"/>
+    </declare-styleable>
+
+</resources>

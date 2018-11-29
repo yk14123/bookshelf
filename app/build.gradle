@@ -66,5 +66,7 @@ dependencies {
     //内存泄漏检测
     implementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
 //    implementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
+    //percent Layout
+    implementation 'com.zhy:percent-support-extends:1.1.1'
 
 }
