@@ -23,6 +23,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -61,13 +62,14 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     //分类列表
     private RecyclerView mRvCategory;
     //滑动简介
-//    private ScrollView mScrollViewIntro;
+    private ScrollView mScrollViewIntro;
     //内容content
     private WebView mWvIntro;
     //适配器
     private ShelfCategoryAdapter mShelfCategoryAdapter;
     //copyright
     private ImageView mIvCopyRight;
+
     private BookShelfCopyrightDialog mCopyrightDialog;
 
     @Override
@@ -103,7 +105,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 }
             }
         });
-//        mScrollViewIntro = findViewById(R.id.nev_shelf_detail_intro);
+        mScrollViewIntro = findViewById(R.id.nev_shelf_detail_intro);
         mWvIntro = findViewById(R.id.wv_shelf_detail_intro);
         //初始化WebView
         mWvIntro.setVerticalScrollBarEnabled(true);//不能垂直滑动
@@ -179,6 +181,27 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
         Log.i("MyLog", "mScreenHeight -->" + mScreenHeight);
         Log.i("MyLog", "mScreenWidth -->" + mScreenWidth);
+
+        int intrinsicWidth = mIvLogo.getDrawable().getIntrinsicWidth();
+        int intrinsicHeight = mIvLogo.getDrawable().getIntrinsicHeight();
+
+        Log.i("MyLog", "intrinsicWidth -->" + intrinsicWidth);
+        Log.i("MyLog", "intrinsicHeight -->" + intrinsicHeight);
+
+
+        float xdpi = getResources().getDisplayMetrics().xdpi;
+        float ydpi = getResources().getDisplayMetrics().ydpi;
+
+        Log.i("MyLog", "xdpi -->" + xdpi);
+        Log.i("MyLog", "ydpi -->" + ydpi);
+
+        int mIvCopyRightIntrinsicWidth = mIvCopyRight.getDrawable().getIntrinsicWidth();
+        int mIvCopyRightIntrinsicHeight = mIvCopyRight.getDrawable().getIntrinsicHeight();
+
+        Log.i("MyLog", "mIvCopyRightIntrinsicWidth -->" + mIvCopyRightIntrinsicWidth);
+        Log.i("MyLog", "mIvCopyRightIntrinsicHeight -->" + mIvCopyRightIntrinsicHeight);
+
+
     }
 
     @Override
@@ -261,9 +284,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mRvCategory.setVisibility(View.GONE);
-//                    mScrollViewIntro.setVisibility(View.VISIBLE);
+                    mScrollViewIntro.setVisibility(View.VISIBLE);
                     Animation translateIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_in);
-//                    mScrollViewIntro.startAnimation(translateIn);
+                    mScrollViewIntro.startAnimation(translateIn);
                     translateIn.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
@@ -289,7 +312,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         } else {
             //隱藏WebView,显示九宫格
             Animation translateOut = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_out);
-//            mScrollViewIntro.startAnimation(translateOut);
+            mScrollViewIntro.startAnimation(translateOut);
             translateOut.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -297,7 +320,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-//                    mScrollViewIntro.setVisibility(View.GONE);
+                    mScrollViewIntro.setVisibility(View.GONE);
                     mRvCategory.setVisibility(View.VISIBLE);
                     Animation scaleIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_scale_in);
                     mRvCategory.startAnimation(scaleIn);
@@ -349,7 +372,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
         //去除View动画
         mRvCategory.clearAnimation();
-//        mScrollViewIntro.clearAnimation();
+        mScrollViewIntro.clearAnimation();
         super.onDestroy();
     }
 }

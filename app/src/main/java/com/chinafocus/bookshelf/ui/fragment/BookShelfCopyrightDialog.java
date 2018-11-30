@@ -45,6 +45,7 @@ public class BookShelfCopyrightDialog extends AlertDialog {
         setView(mContentView);
         //設置点击外部可以消失
         setCanceledOnTouchOutside(true);
+        setCancelable(true);
         //设置从底部弹出,设置宽度适配屏幕宽度
         Window window = getWindow();
         if (window != null) {
@@ -57,8 +58,6 @@ public class BookShelfCopyrightDialog extends AlertDialog {
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(lp);
         }
-        //设置点击外部消失
-        setCanceledOnTouchOutside(true);
     }
 
 }

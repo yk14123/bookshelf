@@ -51,7 +51,7 @@ abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContract.IPres
         Observable<String> netShelvesSource = ShelvesRepositoryFactory.getInstance().getNetShelves(refreshType, args);
 
         Observable.concat(cacheShelvesSource, netShelvesSource)
-                .distinct()
+//                .distinct()
                 .map(new Function<String, TT>() {
                     @Override
                     public TT apply(String s) throws Exception {

@@ -2,7 +2,6 @@ package com.chinafocus.bookshelf.model.repository.shelves;
 
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
