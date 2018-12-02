@@ -3,7 +3,6 @@ package com.chinafocus.bookshelf.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.http.SslError;
 import android.support.annotation.NonNull;
@@ -91,21 +90,21 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         GridLayoutManager manager = new GridLayoutManager(mContext, 3);
         mRvCategory.setLayoutManager(manager);
         mRvCategory.setHasFixedSize(true);
-        mRvCategory.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect,
-                                       @NonNull View view,
-                                       @NonNull RecyclerView parent,
-                                       @NonNull RecyclerView.State state) {
-                //不是第一个的格子都设一个左边和底部的间距
-                outRect.left = 10;
-                outRect.bottom = 10; //由于每行都只有3个，所以第一个都是3的倍数，把左边距设为0
-                if (parent.getChildLayoutPosition(view) % 3 == 0) {
-                    outRect.left = 0;
-                }
-            }
-        });
-        mScrollViewIntro = findViewById(R.id.nev_shelf_detail_intro);
+//        mRvCategory.addItemDecoration(new RecyclerView.ItemDecoration() {
+//            @Override
+//            public void getItemOffsets(@NonNull Rect outRect,
+//                                       @NonNull View view,
+//                                       @NonNull RecyclerView parent,
+//                                       @NonNull RecyclerView.State state) {
+//                //不是第一个的格子都设一个左边和底部的间距
+//                outRect.left = 10;
+//                outRect.bottom = 10; //由于每行都只有3个，所以第一个都是3的倍数，把左边距设为0
+//                if (parent.getChildLayoutPosition(view) % 3 == 0) {
+//                    outRect.left = 0;
+//                }
+//            }
+//        });
+//        mScrollViewIntro = findViewById(R.id.nev_shelf_detail_intro);
         mWvIntro = findViewById(R.id.wv_shelf_detail_intro);
         //初始化WebView
         mWvIntro.setVerticalScrollBarEnabled(true);//不能垂直滑动
@@ -124,7 +123,6 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
         webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
         webSettings.setTextZoom(180);   //设置显示的字体大小
-
 
 
 //        WebSettings settings = mWvIntro.getSettings();
@@ -284,9 +282,12 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     mRvCategory.setVisibility(View.GONE);
-                    mScrollViewIntro.setVisibility(View.VISIBLE);
+//                    mScrollViewIntro.setVisibility(View.VISIBLE);
+                    mWvIntro.setVisibility(View.VISIBLE);
+
                     Animation translateIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_in);
-                    mScrollViewIntro.startAnimation(translateIn);
+//                    mScrollViewIntro.startAnimation(translateIn);
+                    mWvIntro.startAnimation(translateIn);
                     translateIn.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
@@ -312,7 +313,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         } else {
             //隱藏WebView,显示九宫格
             Animation translateOut = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_out);
-            mScrollViewIntro.startAnimation(translateOut);
+//            mScrollViewIntro.startAnimation(translateOut);
+            mWvIntro.startAnimation(translateOut);
             translateOut.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -320,7 +322,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    mScrollViewIntro.setVisibility(View.GONE);
+//                    mScrollViewIntro.setVisibility(View.GONE);
+                    mWvIntro.setVisibility(View.GONE);
                     mRvCategory.setVisibility(View.VISIBLE);
                     Animation scaleIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_scale_in);
                     mRvCategory.startAnimation(scaleIn);
@@ -372,7 +375,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
         //去除View动画
         mRvCategory.clearAnimation();
-        mScrollViewIntro.clearAnimation();
+//        mScrollViewIntro.clearAnimation();
+        mWvIntro.clearAnimation();
         super.onDestroy();
     }
 }
