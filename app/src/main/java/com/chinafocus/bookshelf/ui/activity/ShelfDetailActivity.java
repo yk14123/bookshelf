@@ -106,6 +106,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 //        });
 //        mScrollViewIntro = findViewById(R.id.nev_shelf_detail_intro);
         mWvIntro = findViewById(R.id.wv_shelf_detail_intro);
+        //123
         //初始化WebView
         mWvIntro.setVerticalScrollBarEnabled(true);//不能垂直滑动
         mWvIntro.setHorizontalScrollBarEnabled(true);//不能水平滑动
