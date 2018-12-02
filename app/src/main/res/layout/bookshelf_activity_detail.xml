@@ -49,7 +49,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="#f00"
         app:layout_marginTopPercent="26%sh"
         app:layout_widthPercent="82%sw"/>
     <!--android:paddingRight="12dp"-->
