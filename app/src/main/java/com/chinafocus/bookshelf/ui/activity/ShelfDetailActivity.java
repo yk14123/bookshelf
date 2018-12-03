@@ -1,12 +1,13 @@
 package com.chinafocus.bookshelf.ui.activity;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.http.SslError;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -15,19 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestOptions;
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
@@ -41,6 +38,7 @@ import com.chinafocus.bookshelf.utils.ManifestUtils;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 书柜九宮格页面-->习近平的书柜
@@ -70,6 +68,31 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     private ImageView mIvCopyRight;
 
     private BookShelfCopyrightDialog mCopyrightDialog;
+    private boolean isHideRvCategory = true;
+    private ObjectAnimator mObjectAnimator_RvCategory_hide,mObjectAnimator_RvCategory_show;
+    private ObjectAnimator mObjectAnimator_IvCopyRight_hide,mObjectAnimator_IvCopyRight_show;
+    private Drawable mDrawable;
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler(){
+
+
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            mDrawable = (Drawable) msg.obj;
+            mRlShelfRoot.setBackground(mDrawable);
+
+            int mDrawableIntrinsicHeight = mDrawable.getIntrinsicHeight();
+            int mDrawableIntrinsicWidth = mDrawable.getIntrinsicWidth();
+
+            Log.i("MyLog", "mDrawableIntrinsicWidth -->" + mDrawableIntrinsicWidth);
+            Log.i("MyLog", "mDrawableIntrinsicHeight -->" + mDrawableIntrinsicHeight);
+
+        }
+    };
 
     @Override
     protected void initView() {
@@ -85,81 +108,69 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
         mIvLogo = findViewById(R.id.iv_shelf_detail_logo);
         mIvLogo.setOnClickListener(this);
+
+
         mRvCategory = findViewById(R.id.rv_shelf_detail_category);
         //初始化RecyclerView
         GridLayoutManager manager = new GridLayoutManager(mContext, 3);
         mRvCategory.setLayoutManager(manager);
         mRvCategory.setHasFixedSize(true);
-//        mRvCategory.addItemDecoration(new RecyclerView.ItemDecoration() {
+
+//        mWvIntro = findViewById(R.id.wv_shelf_detail_intro);
+//        //123
+//        //初始化WebView
+//        mWvIntro.setVerticalScrollBarEnabled(true);//不能垂直滑动
+//        mWvIntro.setHorizontalScrollBarEnabled(true);//不能水平滑动
+//        //設置WebView默認的白色背景為透明色
+//        mWvIntro.setBackgroundColor(0);
+//
+//        WebSettings webSettings = mWvIntro.getSettings(); //声明WebSettings子类
+//
+//        webSettings.setDomStorageEnabled(true);  //设置适应Html5的一些方法
+//        //设置自适应屏幕，两者合用
+//        webSettings.setUseWideViewPort(true); //将图片调整到适合WebView的大小
+//        webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+//        //缩放操作
+//        webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
+//        webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
+//        webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
+//        webSettings.setTextZoom(180);   //设置显示的字体大小
+//
+//
+////        WebSettings settings = mWvIntro.getSettings();
+////        settings.setJavaScriptEnabled(true);//启用js功能
+////        settings.setSupportZoom(true);//2跟手指头可以自由缩放WebView
+////        settings.setBuiltInZoomControls(true);//启用放大缩小按键，已经适配的网页会无法显示这个按键
+////        settings.setUseWideViewPort(true);//启用双击缩放，已经适配的网页会无法显示这个按键
+//
+//        //加载本地文件
+//        mWvIntro.loadUrl("file:///android_asset/bookcaseIntro.html");
+//
+//        mWvIntro.setWebViewClient(new WebViewClient() {
 //            @Override
-//            public void getItemOffsets(@NonNull Rect outRect,
-//                                       @NonNull View view,
-//                                       @NonNull RecyclerView parent,
-//                                       @NonNull RecyclerView.State state) {
-//                //不是第一个的格子都设一个左边和底部的间距
-//                outRect.left = 10;
-//                outRect.bottom = 10; //由于每行都只有3个，所以第一个都是3的倍数，把左边距设为0
-//                if (parent.getChildLayoutPosition(view) % 3 == 0) {
-//                    outRect.left = 0;
-//                }
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                view.loadUrl(url);
+//                return true;
+//            }
+//
+//            @Override
+//            public void onPageFinished(WebView view, String url) {
+//                Log.d(TAG, "onPageFinished: url >>>" + url);
+//                super.onPageFinished(view, url);
+//            }
+//
+//            @Override
+//            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//                Log.d(TAG, "onPageStarted: url >>>" + url);
+//                super.onPageStarted(view, url, favicon);
+//            }
+//
+//            @Override
+//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+//                handler.proceed();  // 接受所有网站的证书
+//                super.onReceivedSslError(view, handler, error);
 //            }
 //        });
-//        mScrollViewIntro = findViewById(R.id.nev_shelf_detail_intro);
-        mWvIntro = findViewById(R.id.wv_shelf_detail_intro);
-        //123
-        //初始化WebView
-        mWvIntro.setVerticalScrollBarEnabled(true);//不能垂直滑动
-        mWvIntro.setHorizontalScrollBarEnabled(true);//不能水平滑动
-        //設置WebView默認的白色背景為透明色
-        mWvIntro.setBackgroundColor(0);
-
-        WebSettings webSettings = mWvIntro.getSettings(); //声明WebSettings子类
-
-        webSettings.setDomStorageEnabled(true);  //设置适应Html5的一些方法
-        //设置自适应屏幕，两者合用
-        webSettings.setUseWideViewPort(true); //将图片调整到适合WebView的大小
-        webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
-        //缩放操作
-        webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
-        webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
-        webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
-        webSettings.setTextZoom(180);   //设置显示的字体大小
-
-
-//        WebSettings settings = mWvIntro.getSettings();
-//        settings.setJavaScriptEnabled(true);//启用js功能
-//        settings.setSupportZoom(true);//2跟手指头可以自由缩放WebView
-//        settings.setBuiltInZoomControls(true);//启用放大缩小按键，已经适配的网页会无法显示这个按键
-//        settings.setUseWideViewPort(true);//启用双击缩放，已经适配的网页会无法显示这个按键
-
-        //加载本地文件
-        mWvIntro.loadUrl("file:///android_asset/bookcaseIntro.html");
-
-        mWvIntro.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                Log.d(TAG, "onPageFinished: url >>>" + url);
-                super.onPageFinished(view, url);
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.d(TAG, "onPageStarted: url >>>" + url);
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed();  // 接受所有网站的证书
-                super.onReceivedSslError(view, handler, error);
-            }
-        });
 
         mIvCopyRight = findViewById(R.id.iv_shelf_detail_copyright);
         mIvCopyRight.setOnClickListener(this);
@@ -167,6 +178,63 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         mPresenter = new ShelvesDetailPresenter(this);
         //请求数据
 
+
+        //这里的属性随便写什么都可以。但是需要我们手动更新绘制
+        mObjectAnimator_RvCategory_hide = ObjectAnimator.ofFloat(mRvCategory, "scaleX", 1.0f, 0.0f);
+//1.设置动画更新监听
+        mObjectAnimator_RvCategory_hide.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+//2.从监听器里面获取动画值
+                float animatedValue = (float) animation.getAnimatedValue();
+                mRvCategory.setScaleX(animatedValue);//3.手动更新绘制
+                mRvCategory.setScaleY(animatedValue);
+            }
+        });
+        mObjectAnimator_RvCategory_hide.setDuration(1000);
+
+        //这里的属性随便写什么都可以。但是需要我们手动更新绘制
+        mObjectAnimator_RvCategory_show = ObjectAnimator.ofFloat(mRvCategory, "scaleX", 0.0f, 1.0f);
+//1.设置动画更新监听
+        mObjectAnimator_RvCategory_show.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+//2.从监听器里面获取动画值
+                float animatedValue = (float) animation.getAnimatedValue();
+                mRvCategory.setScaleX(animatedValue);//3.手动更新绘制
+                mRvCategory.setScaleY(animatedValue);
+            }
+        });
+        mObjectAnimator_RvCategory_show.setDuration(1000);
+
+
+        //这里的属性随便写什么都可以。但是需要我们手动更新绘制
+        mObjectAnimator_IvCopyRight_hide = ObjectAnimator.ofFloat(mIvCopyRight, "scaleX", 1.0f, 0.0f);
+//1.设置动画更新监听
+        mObjectAnimator_IvCopyRight_hide.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+//2.从监听器里面获取动画值
+                float animatedValue = (float) animation.getAnimatedValue();
+                mIvCopyRight.setScaleX(animatedValue);//3.手动更新绘制
+                mIvCopyRight.setScaleY(animatedValue);
+            }
+        });
+        mObjectAnimator_IvCopyRight_hide.setDuration(1000);
+
+        //这里的属性随便写什么都可以。但是需要我们手动更新绘制
+        mObjectAnimator_IvCopyRight_show = ObjectAnimator.ofFloat(mIvCopyRight, "scaleX", 0.0f, 1.0f);
+//1.设置动画更新监听
+        mObjectAnimator_IvCopyRight_show.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+//2.从监听器里面获取动画值
+                float animatedValue = (float) animation.getAnimatedValue();
+                mIvCopyRight.setScaleX(animatedValue);//3.手动更新绘制
+                mIvCopyRight.setScaleY(animatedValue);
+            }
+        });
+        mObjectAnimator_IvCopyRight_show.setDuration(1000);
     }
 
     @Override
@@ -221,13 +289,34 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             String bg = resultBean.getBg();
             if (!TextUtils.isEmpty(bg)) {
                 LogUtil.veryLongForI(TAG, "resultBean bg>>> " + bg);
-                Glide.with(this).load(bg).into(new SimpleTarget<Drawable>() {
+
+                new Thread(new Runnable() {
                     @Override
-                    public void onResourceReady(@NonNull Drawable resource,
-                                                @Nullable Transition<? super Drawable> transition) {
-                        mRlShelfRoot.setBackground(resource);
+                    public void run() {
+                        RequestOptions requestOptions = new RequestOptions();
+                        FutureTarget<Drawable> into = Glide.with(ShelfDetailActivity.this).load(bg).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE)).into(1080, 1920);
+
+                        Message message = Message.obtain();
+
+                        try {
+                            message.obj = into.get();
+                            mHandler.sendMessage(message);
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                });
+                }).start();
+
+//                        .into(new SimpleTarget<Drawable>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Drawable resource,
+//                                                @Nullable Transition<? super Drawable> transition) {
+//                        mRlShelfRoot.setBackground(resource);
+//                    }
+//                });
+
             }
             if (mShelfCategoryAdapter == null) {
                 mShelfCategoryAdapter = new ShelfCategoryAdapter(this, resultBean.getCategories());
@@ -271,85 +360,167 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
      * 设置View的进场动画
      */
     private void startViewAnimation() {
-        if (mRvCategory.getVisibility() == View.VISIBLE) {
+//        if (mRvCategory.getVisibility() == View.VISIBLE) {
+        if (isHideRvCategory) {
+            mObjectAnimator_RvCategory_hide.start();
+            mObjectAnimator_IvCopyRight_hide.start();
+//            //1.设置每个属性动画效果
+//            PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat("scaleX", 1, 0);
+//            PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat("scaleY", 1, 0);
+////2.在ofPropertyValuesHolder()方法里面把动画添加进去即可
+//            ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mRvCategory, scaleX, scaleY);
+//            objectAnimator.setInterpolator(new LinearInterpolator());
+//            objectAnimator.setDuration(1000);
+//            objectAnimator.start();
+
+
+//            mObjectAnimator_IvCopyRight.start();
+
+
+
+//            mRvCategory.animate().scaleX(0.0f).scaleY(0.0f).setDuration(1000).setListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    super.onAnimationEnd(animation);
+//                    mRvCategory.setVisibility(View.GONE);
+//                }
+//            });
+
+//            mIvCopyRight.animate().scaleX(0.0f).scaleY(0.0f).setDuration(1000).setListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    super.onAnimationEnd(animation);
+//                    mIvCopyRight.setVisibility(View.GONE);
+//                }
+//            });
+
             //隐藏九宫格,显示书柜简介
-            Animation scaleOut = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_scale_out);
-            mRvCategory.startAnimation(scaleOut);
-            scaleOut.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    mRvCategory.setVisibility(View.GONE);
-//                    mScrollViewIntro.setVisibility(View.VISIBLE);
-                    mWvIntro.setVisibility(View.VISIBLE);
-
-                    Animation translateIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_in);
-//                    mScrollViewIntro.startAnimation(translateIn);
-                    mWvIntro.startAnimation(translateIn);
-                    translateIn.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
+//            Animation scaleOut = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_scale_out);
+//            scaleOut.setFillAfter(true);
+//            mRvCategory.startAnimation(scaleOut);
+            isHideRvCategory = false;
+//            scaleOut.setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    mRvCategory.setVisibility(View.GONE);
+////                    mScrollViewIntro.setVisibility(View.VISIBLE);
+////                    mWvIntro.setVisibility(View.VISIBLE);
+////
+////                    Animation translateIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_in);
+//////                    mScrollViewIntro.startAnimation(translateIn);
+////                    mWvIntro.startAnimation(translateIn);
+////                    translateIn.setAnimationListener(new Animation.AnimationListener() {
+////                        @Override
+////                        public void onAnimationStart(Animation animation) {
+////
+////                        }
+////
+////                        @Override
+////                        public void onAnimationEnd(Animation animation) {
+////
+////                        }
+////
+////                        @Override
+////                        public void onAnimationRepeat(Animation animation) {
+////
+////                        }
+////                    });
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//                }
+//            });
         } else {
-            //隱藏WebView,显示九宫格
-            Animation translateOut = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_out);
-//            mScrollViewIntro.startAnimation(translateOut);
-            mWvIntro.startAnimation(translateOut);
-            translateOut.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-//                    mScrollViewIntro.setVisibility(View.GONE);
-                    mWvIntro.setVisibility(View.GONE);
-                    mRvCategory.setVisibility(View.VISIBLE);
-                    Animation scaleIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_scale_in);
-                    mRvCategory.startAnimation(scaleIn);
-                    scaleIn.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                        }
+            mObjectAnimator_RvCategory_show.start();
+            mObjectAnimator_IvCopyRight_show.start();
+//            //1.设置每个属性动画效果
+//            PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat("scaleX", 0, 1);
+//            PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat("scaleY", 0, 1);
+////2.在ofPropertyValuesHolder()方法里面把动画添加进去即可
+//            ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mRvCategory, scaleX, scaleY);
+//            objectAnimator.setInterpolator(new LinearInterpolator());
+//            objectAnimator.setDuration(1000);
+//            objectAnimator.start();
 
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
+//            mRvCategory.animate().scaleX(1.0f).scaleY(1.0f).setDuration(1000).setListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationStart(Animator animation) {
+//                    super.onAnimationStart(animation);
+//                    mRvCategory.setVisibility(View.VISIBLE);
+//                }
+//            });
 
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-                        }
-                    });
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
+//            mIvCopyRight.animate().scaleX(1.0f).scaleY(1.0f).setDuration(1000).setListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationStart(Animator animation) {
+//                    super.onAnimationStart(animation);
+//                    mIvCopyRight.setVisibility(View.VISIBLE);
+//                }
+//            });
+//            Animation scaleIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_scale_in);
+//            scaleIn.setFillAfter(true);
+//            mRvCategory.startAnimation(scaleIn);
+            isHideRvCategory = true;
+//            mRvCategory.setLayoutAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    mRvCategory.setVisibility(View.VISIBLE);
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//
+//                }
+//            });
+//            //隱藏WebView,显示九宫格
+//            Animation translateOut = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_translate_out);
+////            mScrollViewIntro.startAnimation(translateOut);
+//            mWvIntro.startAnimation(translateOut);
+//            translateOut.setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+////                    mScrollViewIntro.setVisibility(View.GONE);
+//                    mWvIntro.setVisibility(View.GONE);
+//                    mRvCategory.setVisibility(View.VISIBLE);
+//                    Animation scaleIn = AnimationUtils.loadAnimation(mContext, R.anim.bookshelf_view_scale_in);
+//                    mRvCategory.startAnimation(scaleIn);
+//                    scaleIn.setAnimationListener(new Animation.AnimationListener() {
+//                        @Override
+//                        public void onAnimationStart(Animation animation) {
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animation animation) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animation animation) {
+//                        }
+//                    });
+//
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//
+//                }
+//            });
 
         }
     }
@@ -375,9 +546,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         }
 
         //去除View动画
-        mRvCategory.clearAnimation();
+//        mRvCategory.clearAnimation();
 //        mScrollViewIntro.clearAnimation();
-        mWvIntro.clearAnimation();
+//        mWvIntro.clearAnimation();
         super.onDestroy();
     }
 }
