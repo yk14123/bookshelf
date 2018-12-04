@@ -8,6 +8,9 @@
     <string name="bookshelf_collapse_text">收起</string>
     <string name="bookshelf_more_text">更多</string>
     <string name="bookshelf_font_normal">标准</string>
+    <string name="bookshelf_book_comment">推荐语</string>
+    <string name="bookshelf_book_intro">简介</string>
 
     <string name="app_name">主题书柜</string>
+
 </resources>

@@ -5,134 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_book_meta_data_cover"
+    <!--图片背景-->
+    <com.zhy.android.percent.support.PercentFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/bookshelf_content_description"
-        android:scaleType="fitXY"
-        tools:src="@drawable/bookshelf_default_cover_port" />
+        android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nsv_book_meta_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/bottom_sheet_behavior">
-
-        <com.zhy.android.percent.support.PercentRelativeLayout
+        <ImageView
+            android:id="@+id/iv_book_meta_data_cover"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/bookshelf_content_description"
+            android:scaleType="fitCenter"
+            app:layout_marginTopPercent="7%"
+            tools:src="@drawable/bookshelf_default_cover_port" />
 
+    </com.zhy.android.percent.support.PercentFrameLayout>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="100dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="5dp"
-                app:contentPadding="12dp"
-                app:layout_marginEndPercent="4%w"
-                app:layout_marginStartPercent="4%w">
+    <!--顶层悬浮-->
+    <include layout="@layout/bookshelf_include_book_meta_bottom_sheet" />
 
-                <com.zhy.android.percent.support.PercentLinearLayout
-                    android:id="@+id/rl_book_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_marginEndPercent="4%w"
-                    app:layout_marginStartPercent="4%w">
-
-                    <TextView
-                        android:id="@+id/tv_book_meta_data_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center"
-                        android:textColor="@color/bookshelf_black"
-                        android:textSize="@dimen/font_size_large"
-                        tools:text="诗经" />
-
-                    <TextView
-                        android:id="@+id/tv_book_meta_data_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/bookshelf_recommend_tag_bg"
-                        android:gravity="center"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:textColor="@color/bookshelf_white"
-                        android:textSize="@dimen/font_size_smaller"
-                        tools:text="習近平著作" />
-
-
-                    <com.chinafocus.bookshelf.ui.widgets.ExpandableTextView
-                        android:id="@+id/expand_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_book_meta_data_category"
-                        app:animAlphaStart="1"
-                        app:collapseIndicator="@string/bookshelf_collapse_text"
-                        app:expandIndicator="@string/bookshelf_more_text"
-                        app:expandToggleType="TextView"
-                        app:maxCollapsedLines="4">
-
-                        <TextView
-                            android:id="@+id/expandable_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/rl_book_title"
-                            android:ellipsize="end"
-                            android:textColor="#878787"
-                            android:textSize="@dimen/font_size_small"
-                            tools:text="人是科技创新最关键的因素。创新的事业呼唤创新的人才。尊重人才，是中华民族的悠久传统。“思皇多士，生此王国。王国克生，维周之桢；济济多士，文王以宁。”这是《诗经•大雅•文王》中的话，说的是周文王尊贤礼士，贤才济济，所以国势强盛。千秋基业，人才为先。实现中华民族伟大复兴，人才越多越好，本事越大越好。——摘自“加快从要素驱动、投资规模驱动发展为主向以创新驱动发展为主的转变（2014年6月9日）”，习近平谈治国理政 第一卷" />
-
-                        <TextView
-                            android:id="@+id/expand_collapse"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:paddingTop="10dp"
-                            android:textColor="#5592D5"
-                            android:textSize="@dimen/font_size_normal" />
-                    </com.chinafocus.bookshelf.ui.widgets.ExpandableTextView>
-                </com.zhy.android.percent.support.PercentLinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <com.zhy.android.percent.support.PercentLinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/bookshelf_white"
-                android:orientation="vertical"
-                android:paddingTop="150dp"
-                app:layout_marginTopPercent="5%w">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:drawableStart="@drawable/bookshelf_line"
-                    android:drawablePadding="5dp"
-                    android:gravity="center_vertical|start"
-                    android:text="@string/bookshelf_book_summary"
-                    android:textColor="#000"
-                    android:textSize="@dimen/font_size_large"
-                    android:textStyle="bold" />
-
-                <com.chinafocus.bookshelf.ui.widgets.SubExpandableListView
-                    android:id="@+id/elv_tree_test"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:scrollbars="none" />
-            </com.zhy.android.percent.support.PercentLinearLayout>
-
-        </com.zhy.android.percent.support.PercentRelativeLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
+    <!--标题栏-->
     <com.zhy.android.percent.support.PercentFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -143,18 +35,17 @@
             android:layout_height="0dp"
             android:layout_marginBottom="2dp"
             app:layout_heightPercent="7%" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_back_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/dp_10"
-            android:src="@drawable/bookshelf_back_top"
-            android:visibility="gone"
-            app:backgroundTint="#70000000"
-            app:fabSize="mini" />
-
     </com.zhy.android.percent.support.PercentFrameLayout>
+
+    <!--悬浮按钮-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_back_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/dp_10"
+        android:src="@drawable/bookshelf_back_top"
+        app:backgroundTint="#70000000"
+        app:fabSize="mini" />
 
 </android.support.design.widget.CoordinatorLayout>

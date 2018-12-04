@@ -37,7 +37,16 @@ public class BookMetaParentAdapter extends BaseExpandableListAdapter {
         BookMetadataRawBean.BookMetadataResultBean.TocBean tocBean = mExpandList.get(groupPosition);
         if (tocBean != null) {
             List<BookMetadataRawBean.BookMetadataResultBean.TocBean> children = tocBean.getChildren();
-            return children == null ? 0 : children.size();
+            if (children != null && children.size() != 0) {
+                for (int i = 0; i < children.size(); i++) {
+                    BookMetadataRawBean.BookMetadataResultBean.TocBean tocBean1 = children.get(i);
+                    if (tocBean1.getVisible() == 0) {
+                        children.remove(i);
+                    }
+                }
+                return children.size();
+            }
+            return 0;
         }
         return 0;
     }

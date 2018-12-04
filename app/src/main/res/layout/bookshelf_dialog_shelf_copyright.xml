@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bookshelf_dialog_copyright_bg"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:contentDescription="@string/bookshelf_content_description"
+        android:scaleType="fitXY"
+        android:src="@drawable/bookshelf_dialog_header"
+        app:layout_heightPercent="16.44%sh"
+        app:layout_maxHeightPercent="16.44%sh"/>
+    <!--app:layout_heightPercent="42%w"-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="@string/bookshelf_dialog_copyright_info"-->
+    <!--android:textColor="@color/bookshelf_content_text_color"-->
+    <!--android:textSize="@dimen/sp_14"-->
+    <!--app:layout_heightPercent="30%w"-->
+    <!--app:layout_marginPercent="5%w" />-->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:background="#fff"
+        android:gravity="center_vertical"
+        android:lineSpacingExtra="10dp"
+        android:text="@string/bookshelf_dialog_copyright_info"
+        android:textColor="@color/bookshelf_content_text_color"
+        app:layout_heightPercent="16.44%sh"
+        app:layout_paddingPercent="4.63%w"
+        app:layout_textSizePercent="2.1%sh"/>
+
+    <com.zhy.android.percent.support.PercentLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#fff"
+        android:orientation="horizontal"
+        app:layout_heightPercent="35%w"
+        >
+        <!--app:layout_widthPercent="66.67%sw"-->
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--app:layout_heightPercent="35%w">-->
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/bookshelf_dialog_platform"
+            android:drawablePadding="@dimen/dialog_icon_padding"
+            android:gravity="center"
+            android:text="@string/bookshelf_dialog_platform"
+            android:textColor="@color/bookshelf_content_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/bookshelf_dialog_resource"
+            android:drawablePadding="@dimen/dialog_icon_padding"
+            android:gravity="center"
+            android:text="@string/bookshelf_dialog_resource"
+            android:textColor="@color/bookshelf_content_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/bookshelf_dialog_service"
+            android:drawablePadding="@dimen/dialog_icon_padding"
+            android:gravity="center"
+            android:text="@string/bookshelf_dialog_service"
+            android:textColor="@color/bookshelf_content_text_color"
+            android:textSize="@dimen/sp_12"/>
+        <!--</LinearLayout>-->
+    </com.zhy.android.percent.support.PercentLinearLayout>
+
+</com.zhy.android.percent.support.PercentLinearLayout>

@@ -1,4 +1,4 @@
-package com.chinafocus.bookshelf.ui.fragment;
+package com.chinafocus.bookshelf.ui.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,7 +35,6 @@ public class FontSettingsDialog extends AlertDialog implements PercentSeekBar.On
     private Context mContext;
     //事件回调
     private OnFontOptionListener onFontListener;
-    private PercentSeekBar mPercentSeekBar;
 
     public FontSettingsDialog(@NonNull Context context) {
         this(context, R.style.AppCompatTranslucentDialog);
@@ -56,7 +55,7 @@ public class FontSettingsDialog extends AlertDialog implements PercentSeekBar.On
     private void init() {
         View mContentView = LayoutInflater.from(mContext).inflate(R.layout.bookshelf_dialog_font_setting, null);
         //字体刻度View
-        mPercentSeekBar = mContentView.findViewById(R.id.sb_bookshelf_font);
+        PercentSeekBar mPercentSeekBar = mContentView.findViewById(R.id.sb_bookshelf_font);
         mPercentSeekBar.setOnPointResultListener(this);
         //初始化控件
         setView(mContentView);
@@ -87,7 +86,7 @@ public class FontSettingsDialog extends AlertDialog implements PercentSeekBar.On
 
     @Override
     public void onShow(DialogInterface dialog) {
-        int fontOption = SpUtil.getInt(mContext, BookShelfConstant.BOOKSHELF_FONT_SETTING);
+//        int fontOption = SpUtil.getInt(mContext, BookShelfConstant.BOOKSHELF_FONT_SETTING);
     }
 
 

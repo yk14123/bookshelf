@@ -1,17 +1,12 @@
 package com.chinafocus.bookshelf.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.http.SslError;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +16,8 @@ import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.bean.BookContentRawBean;
 import com.chinafocus.bookshelf.presenter.shelves.BookContentDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
-import com.chinafocus.bookshelf.ui.fragment.FontSettingsDialog;
-import com.chinafocus.bookshelf.utils.SpUtil;
+import com.chinafocus.bookshelf.ui.adapter.BookContentDetailAdapter;
+import com.chinafocus.bookshelf.ui.dialog.FontSettingsDialog;
 
 import java.util.List;
 
@@ -37,7 +32,9 @@ import java.util.List;
 public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.BookContentResultBean> {
     private static final String TAG = "BookContentDetail";
     //内容展示控件
-    private WebView mWvBookContent;
+    private RecyclerView mRvBookContent;
+    //适配器
+    private BookContentDetailAdapter mBookContentAdapter;
     //当前图书书柜id
     private int mShelfId;
     //当前图书id
@@ -46,9 +43,13 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     private int mCategoryId;
     //当前图书的名称
     private String mBookName;
-    //page
+    //上一頁的full參數
     private String mPageId;
+    //当前内容页的下一个pageId参数
+    private String mNextPage;
+    //字体调节对话框
     private FontSettingsDialog mFontDialog;
+
 
     @Override
     protected void initView() {
@@ -56,50 +57,25 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         setContentView(R.layout.bookshelf_activity_book_content_detail);
         initNavMenu();
         //初始化WebView
-        mWvBookContent = findViewById(R.id.wv_book_content_detail);
-        WebSettings webSettings = mWvBookContent.getSettings(); //声明WebSettings子类
-
-        webSettings.setDomStorageEnabled(true);  //设置适应Html5的一些方法
-        //设置自适应屏幕，两者合用
-        webSettings.setUseWideViewPort(true); //将图片调整到适合WebView的大小
-        webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
-        //缩放操作
-        webSettings.setSupportZoom(false); //支持缩放，默认为true。是下面那个的前提。
-        webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
-        webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
-        int fontOption = SpUtil.getInt(this, BookShelfConstant.BOOKSHELF_FONT_SETTING);
-        setFontSize(fontOption);
-        mWvBookContent.setWebViewClient(new WebViewClient() {
+        mRvBookContent = findViewById(R.id.rv_book_content_detail);
+        LinearLayoutManager manager = new LinearLayoutManager(
+                this, LinearLayoutManager.VERTICAL, false);
+        mRvBookContent.setLayoutManager(manager);
+        //添加下拉底部加载下一步数据
+        mRvBookContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                Log.d(TAG, "onPageFinished: url >>>" + url);
-                super.onPageFinished(view, url);
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.d(TAG, "onPageStarted: url >>>" + url);
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed();
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                //判断当前RecyclerView是否滑到底部。加载更多的逻辑 >>>避免当前只有一条的情况
+//                int childCount = recyclerView.getChildCount();
+                if (!mRvBookContent.canScrollVertically(1)
+                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    Log.d(TAG, "onScrollStateChanged: 当前滑动到底部 >>>> loadMore >>> ");
+                    loadBookContent(mNextPage);
+                }
             }
         });
-        //初始化Presenter
-        //控制器
-        IShelvesMvpContract.IPresenter mPresenter = new BookContentDetailPresenter(this);
-        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_DETAIL,
-                new String[]{String.valueOf(mShelfId),
-                        String.valueOf(mCategoryId),
-                        String.valueOf(mBookId), mPageId});
+
+        loadBookContent(mPageId);
     }
 
     /**
@@ -133,34 +109,6 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     }
 
     /**
-     * 設置字體顔色
-     *
-     * @param fontOption {@link FontSettingsDialog}類常量值定义
-     */
-    private void setFontSize(int fontOption) {
-        switch (fontOption) {
-            case FontSettingsDialog.FONT_SMALLER:
-                mWvBookContent.getSettings().setTextZoom(200);
-                break;
-            case FontSettingsDialog.FONT_STANDARD:
-                mWvBookContent.getSettings().setTextZoom(250);
-                break;
-            case FontSettingsDialog.FONT_LARGE:
-                mWvBookContent.getSettings().setTextZoom(300);
-                break;
-            case FontSettingsDialog.FONT_LARGER:
-                mWvBookContent.getSettings().setTextZoom(350);
-                break;
-            case FontSettingsDialog.FONT_LARGEST:
-                mWvBookContent.getSettings().setTextZoom(400);
-                break;
-            default:
-                mWvBookContent.getSettings().setTextZoom(250);
-                break;
-        }
-    }
-
-    /**
      * 获取intent跳转的参数
      */
     private void getExtraFromIntent() {
@@ -178,20 +126,60 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         }
     }
 
+    /**
+     * 加载指定pageId的章节内容数据
+     */
+    private void loadBookContent(String pageId) {
+        //初始化Presenter
+        IShelvesMvpContract.IPresenter mPresenter = new BookContentDetailPresenter(this);
+        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_DETAIL,
+                new String[]{String.valueOf(mShelfId),
+                        String.valueOf(mCategoryId),
+                        String.valueOf(mBookId), pageId});
+    }
+
 
     @Override
     public void onRefreshFinished(String refreshType, List<BookContentRawBean.BookContentResultBean> result) {
         BookContentRawBean.BookContentResultBean bookContentResultBean = result.get(0);
         if (bookContentResultBean != null) {
-            String current = bookContentResultBean.getCurrent();
-            String css = bookContentResultBean.getCss();
-            if (!TextUtils.isEmpty(current)) {
-                //加载本地文件
-                String linkCss = "<link rel=\"stylesheet\" href=\"" + css + "\" type=\"text/img\">";
-                Log.d(TAG, "onRefreshFinished: linkCss >>>" + linkCss);
-                String body = "<html><header>" + linkCss + "</header>" + current + "</body></html>";
-                mWvBookContent.loadDataWithBaseURL(linkCss, body, "text/html", "UTF-8", null);
+            mNextPage = bookContentResultBean.getNext();
+            if (mBookContentAdapter == null) {
+                //首次加載
+                mBookContentAdapter = new BookContentDetailAdapter(this, result);
+                mRvBookContent.setAdapter(mBookContentAdapter);
+            } else {
+                //加載更多
+                mBookContentAdapter.addContentEntity(bookContentResultBean);
             }
+        }
+    }
+
+    /**
+     * 刷新当前WebView内部的字体大小
+     *
+     * @param fontOption {@link FontSettingsDialog}類常量值定义
+     */
+    private void setFontSize(int fontOption) {
+        switch (fontOption) {
+            case FontSettingsDialog.FONT_SMALLER:
+                mBookContentAdapter.setFontSize(BookShelfConstant.SMALLER);
+                break;
+            case FontSettingsDialog.FONT_STANDARD:
+                mBookContentAdapter.setFontSize(BookShelfConstant.SMALLER);
+                break;
+            case FontSettingsDialog.FONT_LARGE:
+                mBookContentAdapter.setFontSize(BookShelfConstant.LARGE);
+                break;
+            case FontSettingsDialog.FONT_LARGER:
+                mBookContentAdapter.setFontSize(BookShelfConstant.LARGER);
+                break;
+            case FontSettingsDialog.FONT_LARGEST:
+                mBookContentAdapter.setFontSize(BookShelfConstant.LARGEST);
+                break;
+            default:
+                mBookContentAdapter.setFontSize(BookShelfConstant.SMALLER);
+                break;
         }
     }
 
@@ -203,21 +191,6 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     @Override
     protected void onDestroy() {
         //防止WebView导致的内存泄露
-        if (mWvBookContent != null) {
-            // 如果先调用destroy()方法，则会命中
-            // if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再destroy()
-            ViewParent parent = mWvBookContent.getParent();
-            if (parent != null) {
-                ((ViewGroup) parent).removeView(mWvBookContent);
-            }
-            mWvBookContent.stopLoading();
-            // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
-            mWvBookContent.getSettings().setJavaScriptEnabled(false);
-            mWvBookContent.clearHistory();
-//            mWvBookContent.clearView();
-            mWvBookContent.removeAllViews();
-            mWvBookContent.destroy();
-        }
         super.onDestroy();
     }
 }

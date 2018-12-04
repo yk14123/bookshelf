@@ -25,7 +25,10 @@ import com.chinafocus.bookshelf.ui.adapter.BookMetaParentAdapter;
 import com.chinafocus.bookshelf.ui.widgets.ExpandableTextView;
 import com.chinafocus.bookshelf.utils.ScreenUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * 图书目录页面
@@ -49,6 +52,8 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
     private ImageView mIvBookCover;
     //图书名称
     private TextView mTvBookTitle;
+    //推荐语标签
+    private TextView mTvBookComment;
     //Behavior
     private BottomSheetBehavior<NestedScrollView> sheetBehavior;
 
@@ -71,6 +76,7 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
 
         mIvBookCover = findViewById(R.id.iv_book_meta_data_cover);
         mTvBookTitle = findViewById(R.id.tv_book_meta_data_title);
+        mTvBookComment = findViewById(R.id.tv_book_meta_data_tag);
         mExpandListView = findViewById(R.id.elv_tree_test);
         mExpandListView.setFocusable(false);
         mNestedScrollView = findViewById(R.id.nsv_book_meta_data);
@@ -173,55 +179,71 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
             String comment = dataBean.getComment();
             if (!TextUtils.isEmpty(comment)) {
                 Log.i(TAG, "comment >>> " + comment);
+                mTvBookComment.setText(getString(R.string.bookshelf_book_comment));
                 expandableTextView.setText(Html.fromHtml(comment));
             } else {
+                mTvBookComment.setText(getString(R.string.bookshelf_book_intro));
                 String description = dataBean.getDescription();
                 if (!TextUtils.isEmpty(description)) {
                     expandableTextView.setText(Html.fromHtml(description));
                 }
             }
+
+
             //目录数据
-            BookMetaParentAdapter adapter = new BookMetaParentAdapter(this, dataBean.getToc());
-            mExpandListView.setAdapter(adapter);
-            mExpandListView.setGroupIndicator(null);
-            //设置内部item的点击事件
-            adapter.setBookMetaListener(new BookMetaParentAdapter.OnBookMetaListener() {
-                @Override
-                public void onChild(int groupPosition, int childPosition,
-                                    BookMetadataRawBean.BookMetadataResultBean.TocBean childrenBeanX) {
-                    if (childrenBeanX != null) {
-                        String href = childrenBeanX.getFull();
-                        startIntentForContent(href);
-                        Log.i(TAG, "onGroupClick  href >>>" + href);
+            List<BookMetadataRawBean.BookMetadataResultBean.TocBean> toc = dataBean.getToc();
+            Log.d(TAG, "onRefreshFinished: the size >>> " + toc.size());
+            if (toc.size() != 0) {
+                ArrayList<BookMetadataRawBean.BookMetadataResultBean.TocBean> tocBeans = new ArrayList<>();
+                //去除数据完毕
+                for (int i = 0; i < toc.size(); i++) {
+                    BookMetadataRawBean.BookMetadataResultBean.TocBean tocBean = toc.get(i);
+                    Log.d(TAG, "onRefreshFinished: visible >>> " + tocBean.getVisible() + " ...title >>>" + tocBean.getTitle());
+                    if (tocBean.getVisible() == 1) {
+                        tocBeans.add(tocBean);
                     }
                 }
-
-                @Override
-                public void onItem(BookMetadataRawBean.BookMetadataResultBean.TocBean childrenBean) {
-                    if (childrenBean != null) {
-                        String href = childrenBean.getFull();
-                        startIntentForContent(href);
-                        Log.i(TAG, "onGroupClick  href >>>" + href);
+                BookMetaParentAdapter adapter = new BookMetaParentAdapter(this, tocBeans);
+                mExpandListView.setAdapter(adapter);
+                mExpandListView.setGroupIndicator(null);
+                //设置内部item的点击事件
+                adapter.setBookMetaListener(new BookMetaParentAdapter.OnBookMetaListener() {
+                    @Override
+                    public void onChild(int groupPosition, int childPosition,
+                                        BookMetadataRawBean.BookMetadataResultBean.TocBean childrenBeanX) {
+                        if (childrenBeanX != null) {
+                            String full = childrenBeanX.getFull();
+                            startIntentForContent(full);
+                            Log.i(TAG, "onGroupClick  full >>>" + full);
+                        }
                     }
-                }
-            });
 
-            //Group的点击监听事件
-            mExpandListView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
-                BookMetadataRawBean.BookMetadataResultBean.TocBean tocBean = dataBean.getToc().get(groupPosition);
-                if (tocBean != null) {
-                    String href = tocBean.getFull();
-                    startIntentForContent(href);
+                    @Override
+                    public void onItem(BookMetadataRawBean.BookMetadataResultBean.TocBean childrenBean) {
+                        if (childrenBean != null) {
+                            String full = childrenBean.getFull();
+                            startIntentForContent(full);
+                            Log.i(TAG, "onGroupClick  full >>>" + full);
+                        }
+                    }
+                });
+
+                //Group的点击监听事件
+                mExpandListView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+                    BookMetadataRawBean.BookMetadataResultBean.TocBean tocBean = toc.get(groupPosition);
+                    if (tocBean != null) {
+                        String href = tocBean.getFull();
+                        startIntentForContent(href);
+                    }
+                    return true;
+                });
+                //将ExpandableListView内部的group全部显示
+                int count = mExpandListView.getCount();
+                Log.i(TAG, "getCount >>> " + count);
+                for (int i = 0; i < count; i++) {
+                    mExpandListView.expandGroup(i);
                 }
-                return true;
-            });
-            //将ExpandableListView内部的group全部显示
-            int count = mExpandListView.getCount();
-            Log.i(TAG, "getCount >>> " + count);
-            for (int i = 0; i < count; i++) {
-                mExpandListView.expandGroup(i);
-            }
-        }
+            } }
     }
 
     /**

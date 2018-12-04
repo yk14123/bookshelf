@@ -46,7 +46,8 @@
         </provider>
 
         <activity
-            android:name=".ui.activity.ShelfDetailActivity">
+            android:name=".ui.activity.ShelfDetailActivity"
+            android:theme="@style/AppCompatNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

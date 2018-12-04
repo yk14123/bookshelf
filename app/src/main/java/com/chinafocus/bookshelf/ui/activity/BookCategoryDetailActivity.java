@@ -60,8 +60,6 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
         //初始化請求數據
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CATEGORY_DETAIL,
                 new String[]{String.valueOf(mShelfId), String.valueOf(mCategoryId)});
-
-        Log.i("MyLog","BookCategoryDetailActivity  onCreate");
     }
 
     /**

@@ -6,10 +6,9 @@
     android:id="@+id/rl_shelf_detail_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f00"
     tools:background="@drawable/bookshelf_default_cover_port"
     tools:context=".ui.activity.ShelfDetailActivity">
-
-
 
     <ImageView
         android:id="@+id/iv_shelf_detail_logo"
@@ -18,31 +17,11 @@
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/bookshelf_content_description"
         android:src="@drawable/bookshelf_detail_header"
-        app:layout_heightPercent="9.17%sh"
-        app:layout_marginTopPercent="13%sh"
+        app:layout_heightPercent="8.17%sh"
+        app:layout_marginTopPercent="14%sh"
         app:layout_maxHeightPercent="9.17%sh"
         app:layout_maxWidthPercent="67.5%sw"
         app:layout_widthPercent="67.5%sw"/>
-
-    <!--app:layout_heightPercent="9%sh"-->
-    <!--app:layout_widthPercent="68%sw"-->
-
-    <!--<com.zhy.android.percent.support.PercentFrameLayout-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--app:layout_marginTopPercent="26%sh"-->
-    <!--app:layout_widthPercent="82%sw"-->
-    <!--&gt;-->
-    <!--android:layout_height="0dp"-->
-    <!--app:layout_heightPercent="60%sh"-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/rv_shelf_detail_category"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_above="@+id/iv_shelf_detail_copyright"-->
-    <!--android:layout_below="@+id/iv_shelf_detail_logo"/>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_shelf_detail_category"
@@ -50,61 +29,29 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         app:layout_marginTopPercent="26%sh"
+        app:layout_marginBottomPercent="12.5%sh"
         app:layout_widthPercent="82%sw"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_shelf_detail_intro"
+        android:layout_width="0dp"
+        app:layout_widthPercent="82%sw"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_marginTopPercent="26%sh"
+        android:layout_centerHorizontal="true"
+        app:layout_marginBottomPercent="12.5%sh"/>
 
-    <!--android:paddingRight="12dp"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--app:layout_marginTopPercent="26%sh"-->
-    <!--app:layout_widthPercent="82%sw"-->
-
-    <!--<ScrollView-->
-    <!--android:id="@+id/nev_shelf_detail_intro"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_above="@+id/iv_shelf_detail_copyright"-->
-    <!--android:layout_below="@+id/iv_shelf_detail_logo"-->
-    <!--android:fillViewport="true"-->
-    <!--android:scrollbars="none"-->
-    <!--android:visibility="gone">-->
-
-    <!--<WebView-->
-        <!--android:id="@+id/wv_shelf_detail_intro"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--app:layout_marginTopPercent="26%sh"-->
-        <!--app:layout_widthPercent="82%sw"/>-->
-
-    <!--</ScrollView>-->
-
-    <!--</com.zhy.android.percent.support.PercentFrameLayout>-->
-
-
-    <!--<ImageView-->
-        <!--android:id="@+id/iv_shelf_detail_copyright"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:contentDescription="@string/bookshelf_content_description"-->
-        <!--android:src="@drawable/bookshelf_detail_copyright"-->
-        <!--app:layout_heightPercent="3.44%sh"-->
-        <!--app:layout_marginBottomPercent="6.98%sh"-->
-        <!--app:layout_maxHeightPercent="3.44%sh"-->
-        <!--app:layout_maxWidthPercent="30.65%sw"-->
-        <!--app:layout_widthPercent="30.65%sw"/>-->
 
     <ImageView
         android:id="@+id/iv_shelf_detail_copyright"
         android:src="@drawable/bookshelf_detail_copyright"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        app:layout_marginBottomPercent="6.94%sh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
-    <!--app:layout_heightPercent="4%sh"-->
-    <!--app:layout_widthPercent="32%sw"-->
 
     <TextView
         android:id="@+id/tv_shelf_detail_version"
@@ -116,6 +63,6 @@
         android:visibility="invisible"
         app:layout_marginBottomPercent="2%w"
         app:layout_marginRightPercent="4%w"
-        tools:text="1.2.11"/>
+        tools:text="1.2.11" />
 
 </com.zhy.android.percent.support.PercentRelativeLayout>

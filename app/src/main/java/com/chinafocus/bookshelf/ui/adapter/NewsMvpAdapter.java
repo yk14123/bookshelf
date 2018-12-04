@@ -27,7 +27,7 @@ package com.chinafocus.bookshelf.ui.adapter;
 //        return mNewsEntity != null ? mNewsEntity.size() : 0;
 //    }
 //
-//    public void setCategoryEntity(List<NewsBean> newsEntity) {
+//    public void addContentEntity(List<NewsBean> newsEntity) {
 //        mNewsEntity = newsEntity;
 //    }
 //
