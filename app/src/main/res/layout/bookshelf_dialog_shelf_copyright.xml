@@ -9,7 +9,6 @@
     android:gravity="center"
     android:orientation="vertical">
 
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,7 +18,6 @@
         app:layout_heightPercent="16.44%sh"
         app:layout_maxHeightPercent="16.44%sh"/>
     <!--app:layout_heightPercent="42%w"-->
-
     <!--<TextView-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="0dp"-->
@@ -31,69 +29,86 @@
     <!--app:layout_heightPercent="30%w"-->
     <!--app:layout_marginPercent="5%w" />-->
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:background="#fff"
-        android:gravity="center_vertical"
-        android:lineSpacingExtra="10dp"
-        android:text="@string/bookshelf_dialog_copyright_info"
-        android:textColor="@color/bookshelf_content_text_color"
-        app:layout_heightPercent="16.44%sh"
-        app:layout_paddingPercent="4.63%w"
-        app:layout_textSizePercent="2.1%sh"/>
-
-    <com.zhy.android.percent.support.PercentLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#fff"
-        android:orientation="horizontal"
-        app:layout_heightPercent="35%w"
+        app:layout_heightPercent="34.48%sh"
         >
-        <!--app:layout_widthPercent="66.67%sw"-->
-        <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:orientation="horizontal"-->
-        <!--app:layout_heightPercent="35%w">-->
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/bookshelf_dialog_platform"
-            android:drawablePadding="@dimen/dialog_icon_padding"
-            android:gravity="center"
-            android:text="@string/bookshelf_dialog_platform"
-            android:textColor="@color/bookshelf_content_text_color"
-            android:textSize="@dimen/sp_12"/>
+        <com.zhy.android.percent.support.PercentLinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/bookshelf_dialog_resource"
-            android:drawablePadding="@dimen/dialog_icon_padding"
-            android:gravity="center"
-            android:text="@string/bookshelf_dialog_resource"
-            android:textColor="@color/bookshelf_content_text_color"
-            android:textSize="@dimen/sp_12"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#fff"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="10dp"
+                android:text="@string/bookshelf_dialog_copyright_info"
+                android:textColor="@color/bookshelf_content_text_color"
+                app:layout_paddingPercent="4.63%w"
+                app:layout_textSizePercent="2.1%sh"/>
+            <!--android:layout_height="0dp"-->
+            <!--app:layout_heightPercent="16.44%sh"-->
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/bookshelf_dialog_service"
-            android:drawablePadding="@dimen/dialog_icon_padding"
-            android:gravity="center"
-            android:text="@string/bookshelf_dialog_service"
-            android:textColor="@color/bookshelf_content_text_color"
-            android:textSize="@dimen/sp_12"/>
-        <!--</LinearLayout>-->
-    </com.zhy.android.percent.support.PercentLinearLayout>
+            <com.zhy.android.percent.support.PercentLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="#f00"
+                android:orientation="horizontal"
+                app:layout_heightPercent="35%w">
+                <!--app:layout_widthPercent="66.67%sw"-->
+                <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="0dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--app:layout_heightPercent="35%w">-->
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/bookshelf_dialog_platform"
+                    android:drawablePadding="@dimen/dialog_icon_padding"
+                    android:gravity="center"
+                    android:text="@string/bookshelf_dialog_platform"
+                    android:textColor="@color/bookshelf_content_text_color"
+                    android:textSize="@dimen/sp_12"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/bookshelf_dialog_resource"
+                    android:drawablePadding="@dimen/dialog_icon_padding"
+                    android:gravity="center"
+                    android:text="@string/bookshelf_dialog_resource"
+                    android:textColor="@color/bookshelf_content_text_color"
+                    android:textSize="@dimen/sp_12"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/bookshelf_dialog_service"
+                    android:drawablePadding="@dimen/dialog_icon_padding"
+                    android:gravity="center"
+                    android:text="@string/bookshelf_dialog_service"
+                    android:textColor="@color/bookshelf_content_text_color"
+                    android:textSize="@dimen/sp_12"/>
+                <!--</LinearLayout>-->
+            </com.zhy.android.percent.support.PercentLinearLayout>
+        </com.zhy.android.percent.support.PercentLinearLayout>
+
+
+    </ScrollView>
+
+
 
 </com.zhy.android.percent.support.PercentLinearLayout>

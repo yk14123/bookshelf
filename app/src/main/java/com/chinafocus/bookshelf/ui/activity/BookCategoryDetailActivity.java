@@ -12,11 +12,12 @@ import android.widget.TextView;
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
-import com.chinafocus.bookshelf.model.bean.BookCategoryDetailRawBean;
+import com.chinafocus.bookshelf.model.bean.BookCategoryDetailRawBean.BookCategoryDetailResultBean;
 import com.chinafocus.bookshelf.presenter.shelves.BookCategoryDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.ui.adapter.BookCategoryAdapter;
 import com.chinafocus.bookshelf.ui.widgets.LinearItemDecoration;
+import com.chinafocus.bookshelf.utils.UIHelper;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ import java.util.List;
  * @version 1.0
  * create at 2018/11/27 10:36
  */
-public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailRawBean.BookCategoryDetailResultBean> {
+public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailResultBean> {
     private static final String TAG = "BookCategoryDetail";
     //控制器
     private IShelvesMvpContract.IPresenter mPresenter;
@@ -93,11 +94,11 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
     }
 
     @Override
-    public void onRefreshFinished(String refreshType, List<BookCategoryDetailRawBean.BookCategoryDetailResultBean> result) {
+    public void onRefreshFinished(String refreshType, List<BookCategoryDetailResultBean> result) {
         Log.d(TAG, "onRefreshFinished: resultBean.size >>> " + result.size());
-        BookCategoryDetailRawBean.BookCategoryDetailResultBean bookCategoryDetailResultBean = result.get(0);
+        BookCategoryDetailResultBean bookCategoryDetailResultBean = result.get(0);
         if (bookCategoryDetailResultBean != null) {
-            List<BookCategoryDetailRawBean.BookCategoryDetailResultBean.BooksCategoryDetailFinalBean> books
+            List<BookCategoryDetailResultBean.BooksCategoryDetailFinalBean> books
                     = bookCategoryDetailResultBean.getBooks();
             if (mBookCategoryAdapter == null) {
                 mBookCategoryAdapter = new BookCategoryAdapter(this, books);
@@ -105,13 +106,7 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
                 mBookCategoryAdapter.setBookItemListener((bookId, bookName) -> {
                     Log.d(TAG, "onRefreshFinished: bookId >>> " + bookId + " bookName >>> " + bookName);
                     //跳轉圖書詳情頁
-                    Intent intent = new Intent(this, BookMetaDataActivity.class);
-                    intent.putExtra(BookShelfConstant.SHELF_ID, mShelfId);
-                    intent.putExtra(BookShelfConstant.CATEGORY_ID, mCategoryId);
-                    intent.putExtra(BookShelfConstant.BOOK_ID, bookId);
-                    intent.putExtra(BookShelfConstant.BOOK_NAME, bookName);
-                    intent.putExtra(BookShelfConstant.CATEGORY_NAME, mCategoryName);
-                    startActivity(intent);
+                    UIHelper.startBookMetaActivity(this, mShelfId, mCategoryId, bookId, mCategoryName);
                 });
             } else {
                 mBookCategoryAdapter.setCategoryEntity(books);

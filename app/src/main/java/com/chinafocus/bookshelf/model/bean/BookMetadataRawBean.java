@@ -1,5 +1,7 @@
 package com.chinafocus.bookshelf.model.bean;
 
+import org.w3c.dom.Node;
+
 import java.util.List;
 
 public class BookMetadataRawBean {
@@ -134,7 +136,7 @@ public class BookMetadataRawBean {
             this.toc = toc;
         }
 
-        public static class TocBean {
+        public static class TocBean extends BaseNode<String> {
             /**
              * visible : 0
              * id :
@@ -146,10 +148,38 @@ public class BookMetadataRawBean {
 
             private int visible;
             private String id;
+            //自定义字段parentId,当前Node以来上级Node的唯一标识
+            private String parentId;
             private String href;
             private String title;
             private String full;
             private List<TocBean> children;
+
+            @Override
+            public String getParentId() {
+                return parentId;
+            }
+
+            public void setParentId(String parentId) {
+                this.parentId = parentId;
+            }
+
+            @Override
+            public String getLabel() {
+                return title;
+            }
+
+            //当前节点是否是父节点
+            @Override
+            public boolean parent(BaseNode dest) {
+                return id.equals(dest.getParentId());
+            }
+
+            //当前节点是否是孩子节点
+            @Override
+            public boolean child(BaseNode dest) {
+                return parentId.equals(dest.getId());
+            }
 
             public int getVisible() {
                 return visible;

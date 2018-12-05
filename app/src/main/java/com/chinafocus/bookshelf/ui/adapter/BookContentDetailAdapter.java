@@ -17,7 +17,8 @@ import android.webkit.WebViewClient;
 
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
-import com.chinafocus.bookshelf.model.bean.BookContentRawBean;
+import com.chinafocus.bookshelf.model.bean.BookContentRawBean.BookContentResultBean;
+import com.chinafocus.bookshelf.utils.SpUtil;
 
 import java.util.List;
 
@@ -29,17 +30,19 @@ import java.util.List;
  * create at 2018/11/27 14:47
  */
 public class BookContentDetailAdapter extends RecyclerView.Adapter<BookContentDetailAdapter.BookCategoryHolder> {
-    private static final String TAG = "ShelfCategoryAdapter";
+    private static final String TAG = "ContentDetail";
     private Context mContext;
 
-    private List<BookContentRawBean.BookContentResultBean> mBookContents;
+    private List<BookContentResultBean> mBookContents;
 
     //内容字号 --->默认250 zoom
-    private int mFontOption = BookShelfConstant.NORMAL;
+    private int mFontOption;
 
-    public BookContentDetailAdapter(Context context, List<BookContentRawBean.BookContentResultBean> result) {
+    public BookContentDetailAdapter(Context context, List<BookContentResultBean> result) {
         this.mContext = context;
         this.mBookContents = result;
+        mFontOption = SpUtil.getInt(mContext, BookShelfConstant.BOOKSHELF_FONT_SETTING, BookShelfConstant.NORMAL);
+        Log.d(TAG, " fontOption >>> " + mFontOption);
     }
 
     @NonNull
@@ -52,7 +55,7 @@ public class BookContentDetailAdapter extends RecyclerView.Adapter<BookContentDe
 
     @Override
     public void onBindViewHolder(@NonNull BookCategoryHolder holder, int position) {
-        BookContentRawBean.BookContentResultBean bookContentResultBean = mBookContents.get(position);
+        BookContentResultBean bookContentResultBean = mBookContents.get(position);
         if (bookContentResultBean != null) {
             String current = bookContentResultBean.getCurrent();
             String css = bookContentResultBean.getCss();
@@ -110,7 +113,8 @@ public class BookContentDetailAdapter extends RecyclerView.Adapter<BookContentDe
     /**
      * 添加content实体数据bean到数据链表中
      */
-    public void addContentEntity(BookContentRawBean.BookContentResultBean contentEntity) {
+    public void addContentEntity(BookContentResultBean contentEntity) {
+//        mFontOption = SpUtil.getInt(mContext, BookShelfConstant.BOOKSHELF_FONT_SETTING, BookShelfConstant.NORMAL);
         mBookContents.add(contentEntity);
         notifyItemInserted(getItemCount());
     }

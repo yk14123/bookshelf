@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bookshelf_white"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/BookShelfFontSettingTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/bookshelf_app_bar_bg"
+        android:text="@string/bookshelf_font_option_title"
+        android:textColor="#999999"
+        app:layout_heightPercent="11%w"
+        app:layout_textSizePercent="3.8%w" />
+
+    <TextView
+        android:id="@+id/tv_font_option_larger"
+        style="@style/BookShelfFontSettingTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/bookshelf_font_option_largest"
+        app:layout_heightPercent="11%w"
+        app:layout_marginTopPercent="3.5%w"
+        app:layout_textSizePercent="4.5%w" />
+
+    <TextView
+        android:id="@+id/tv_font_option_large"
+        style="@style/BookShelfFontSettingTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/bookshelf_font_option_large"
+        app:layout_heightPercent="11%w"
+        app:layout_textSizePercent="4.5%w" />
+
+    <TextView
+        android:id="@+id/tv_font_option_normal"
+        style="@style/BookShelfFontSettingTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/bookshelf_font_option_normal"
+        app:layout_heightPercent="11%w"
+        app:layout_textSizePercent="4.5%w" />
+
+    <TextView
+        android:id="@+id/tv_font_option_small"
+        style="@style/BookShelfFontSettingTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/bookshelf_font_option_small"
+        app:layout_heightPercent="11%w"
+        app:layout_textSizePercent="4.5%w" />
+
+    <TextView
+        android:id="@+id/tv_font_option_cancel"
+        style="@style/BookShelfFontSettingTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/bookshelf_font_option_cancel"
+        android:textColor="#61686D"
+        app:layout_heightPercent="11%w"
+        app:layout_marginTopPercent="3.5%w"
+        app:layout_textSizePercent="4.5%w" />
+
+</com.zhy.android.percent.support.PercentLinearLayout>

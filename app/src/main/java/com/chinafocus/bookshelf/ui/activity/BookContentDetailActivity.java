@@ -17,7 +17,7 @@ import com.chinafocus.bookshelf.model.bean.BookContentRawBean;
 import com.chinafocus.bookshelf.presenter.shelves.BookContentDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.ui.adapter.BookContentDetailAdapter;
-import com.chinafocus.bookshelf.ui.dialog.FontSettingsDialog;
+import com.chinafocus.bookshelf.ui.dialog.FontSettingDialog;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     //当前内容页的下一个pageId参数
     private String mNextPage;
     //字体调节对话框
-    private FontSettingsDialog mFontDialog;
+    private FontSettingDialog mFontDialog;
 
 
     @Override
@@ -96,10 +96,10 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         mIvRightMenu.setOnClickListener(v -> {
             //调整字体大小
             if (mFontDialog == null) {
-                mFontDialog = new FontSettingsDialog(this);
-                mFontDialog.setOnFontListener(fontOption -> {
-                    Log.d(TAG, "initNavMenu: fontOption >>> " + fontOption);
-                    setFontSize(fontOption);
+                mFontDialog = new FontSettingDialog(this);
+                mFontDialog.setOnFontOptionListener(fontZoomSize -> {
+                    Log.d(TAG, "initNavMenu: fontOption >>> " + fontZoomSize);
+                    mBookContentAdapter.setFontSize(fontZoomSize);
                 });
             }
             if (!mFontDialog.isShowing()) {
@@ -152,34 +152,6 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
                 //加載更多
                 mBookContentAdapter.addContentEntity(bookContentResultBean);
             }
-        }
-    }
-
-    /**
-     * 刷新当前WebView内部的字体大小
-     *
-     * @param fontOption {@link FontSettingsDialog}類常量值定义
-     */
-    private void setFontSize(int fontOption) {
-        switch (fontOption) {
-            case FontSettingsDialog.FONT_SMALLER:
-                mBookContentAdapter.setFontSize(BookShelfConstant.SMALLER);
-                break;
-            case FontSettingsDialog.FONT_STANDARD:
-                mBookContentAdapter.setFontSize(BookShelfConstant.SMALLER);
-                break;
-            case FontSettingsDialog.FONT_LARGE:
-                mBookContentAdapter.setFontSize(BookShelfConstant.LARGE);
-                break;
-            case FontSettingsDialog.FONT_LARGER:
-                mBookContentAdapter.setFontSize(BookShelfConstant.LARGER);
-                break;
-            case FontSettingsDialog.FONT_LARGEST:
-                mBookContentAdapter.setFontSize(BookShelfConstant.LARGEST);
-                break;
-            default:
-                mBookContentAdapter.setFontSize(BookShelfConstant.SMALLER);
-                break;
         }
     }
 

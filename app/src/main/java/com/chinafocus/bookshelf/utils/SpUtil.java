@@ -28,10 +28,10 @@ public class SpUtil {
         sSp.edit().putInt(key, b).commit();
     }
 
-    public static int getInt(Context context, String key) {
+    public static int getInt(Context context, String key, int defValue) {
         if (sSp == null)
             sSp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
-        return sSp.getInt(key, -1);
+        return sSp.getInt(key, defValue);
     }
 
     public static void setString(Context context, String key, String b) {

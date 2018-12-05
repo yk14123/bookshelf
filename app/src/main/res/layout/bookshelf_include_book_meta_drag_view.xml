@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nsv_book_meta_data"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_behavior="com.chinafocus.bookshelf.ui.widgets.BottomViewDragBehavior">
+
+    <com.zhy.android.percent.support.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_book_meta_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/dp_10"
+            app:cardElevation="@dimen/dp_5"
+            app:contentPadding="@dimen/dp_10"
+            app:layout_marginLeftPercent="4%w"
+            app:layout_marginRightPercent="4%w">
+
+            <com.zhy.android.percent.support.PercentLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.chinafocus.bookshelf.ui.widgets.TagTextView
+                    android:id="@+id/tv_book_meta_data_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/dp_8"
+                    android:maxLines="3"
+                    android:textColor="@color/bookshelf_title_text_color"
+                    android:textStyle="bold"
+                    app:layout_textSizePercent="5.5%w"
+                    app:tagTextColor="@color/bookshelf_white"
+                    app:tagTextDrawable="@drawable/bookshelf_book_category_tag_bg"
+                    app:tagTextGravity="end"
+                    app:tagTextSize="@dimen/sp_12"
+                    tools:text="诗经" />
+
+                <com.chinafocus.bookshelf.ui.widgets.ExpandableTextView
+                    android:id="@+id/expand_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:gravity="center"
+                    app:animAlphaStart="1"
+                    app:collapseIndicator="@string/bookshelf_collapse_text"
+                    app:expandIndicator="@string/bookshelf_more_text"
+                    app:expandToggleType="TextView"
+                    app:maxCollapsedLines="4">
+
+                    <com.chinafocus.bookshelf.ui.widgets.TagTextView
+                        android:id="@+id/expandable_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:lineSpacingExtra="@dimen/dp_6"
+                        android:textColor="@color/bookshelf_content_text_color"
+                        app:tagTextColor="#999999"
+                        app:tagTextDrawable="@drawable/bookshelf_book_comment_tag_bg"
+                        app:tagTextGravity="start"
+                        app:tagTextSize="@dimen/sp_10" />
+
+                    <TextView
+                        android:id="@+id/expand_collapse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:drawableEnd="@drawable/bookshelf_arrow_down"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_10"
+                        android:drawablePadding="@dimen/dp_10"
+                        android:textColor="#999999"
+                        app:layout_textSizePercent="3%w" />
+                </com.chinafocus.bookshelf.ui.widgets.ExpandableTextView>
+            </com.zhy.android.percent.support.PercentLinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <com.zhy.android.percent.support.PercentLinearLayout
+            android:id="@+id/ll_book_meta_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bookshelf_white"
+            android:orientation="vertical"
+            app:layout_marginTopPercent="8%w">
+
+            <com.zhy.android.percent.support.PercentLinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="@dimen/dp_4"
+                    android:layout_height="0dp"
+                    android:background="#9B704A"
+                    app:layout_heightPercent="4%w" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|start"
+                    android:text="@string/bookshelf_book_summary"
+                    android:textColor="@color/bookshelf_title_text_color"
+                    android:textStyle="bold"
+                    app:layout_marginLeftPercent="3.5%w"
+                    app:layout_textSizePercent="4.5%w" />
+
+            </com.zhy.android.percent.support.PercentLinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_book_meta_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                app:layout_marginLeftPercent="5%w"
+                app:layout_marginRightPercent="5%w"
+                app:layout_marginTopPercent="1%w" />
+        </com.zhy.android.percent.support.PercentLinearLayout>
+
+    </com.zhy.android.percent.support.PercentRelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

@@ -4,14 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.utils.ScreenUtils;
 
 
 /**
@@ -30,7 +26,7 @@ public class ShelfCopyrightDialog extends AlertDialog {
     private ShelfCopyrightDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
         mContext = context;
-        init();
+//        init();
     }
 
 
@@ -48,17 +44,22 @@ public class ShelfCopyrightDialog extends AlertDialog {
         //设置可以点击消失
         setCancelable(true);
         //设置从底部弹出,设置宽度适配屏幕宽度
-        Window window = getWindow();
-        if (window != null) {
-            window.setGravity(Gravity.CENTER);
-            int screenWidth = ScreenUtils.getScreenWidth(mContext);
-            int padding = (int) (screenWidth * 0.3f) / 2;
-//            window.getDecorView().setPadding(padding, 0, padding, 0);
-            WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            window.setAttributes(lp);
-        }
+//        Window window = getWindow();
+//        if (window != null) {
+//            window.setGravity(Gravity.CENTER);
+//            int screenWidth = ScreenUtils.getScreenWidth(mContext);
+//            Log.i("MyLog", "ShelfCopyrightDialog  --  screenWidth  -->" + screenWidth);
+//            int width = (int) (screenWidth * 0.7);
+////            window.getDecorView().setPadding(width, 0, width, 0);
+//            WindowManager.LayoutParams lp = window.getAttributes();
+//            lp.width = width;
+//            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+////            lp.dimAmount = 0f;
+//            window.setAttributes(lp);
+//            //设置dialog的背景颜色为透明色,就可以显示圆角了!!
+//            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//            window.setBackgroundDrawableResource(android.R.color.transparent);
+//        }
 
     }
 

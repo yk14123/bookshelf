@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--设置字体大小控件-->
     <declare-styleable name="ExpandableTextView">
         <attr name="maxCollapsedLines" format="integer" />
         <attr name="animDuration" format="integer" />
@@ -15,13 +16,28 @@
         <attr name="expandToggleOnTextClick" format="boolean" />
     </declare-styleable>
 
-    <!--设置字体大小控件-->
+    <!--微信调整字体大小控件自定义属性-->
     <declare-styleable name="PercentSeekBar">
         <attr name="lineWidth" format="dimension|reference" />
         <attr name="lineColor" format="color|reference" />
         <attr name="totalCount" format="integer" />
         <attr name="circleColor" format="color|reference" />
         <attr name="circleRadius" format="dimension|reference" />
+    </declare-styleable>
+
+    <!--带TAG标签的TextView属性-->
+    <declare-styleable name="TagTextView">
+        <!--Tag标签关联的背景样式-->
+        <attr name="tagTextDrawable" format="reference" />
+        <!--Tag标签的文字颜色-->
+        <attr name="tagTextColor" format="reference|color" />
+        <!--Tag标签文字的大小-->
+        <attr name="tagTextSize" format="reference|dimension" />
+        <!--Tag的显示位置-->
+        <attr name="tagTextGravity" format="integer">
+            <enum name="start" value="1" />
+            <enum name="end" value="2" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="PercentLayout_Layout">

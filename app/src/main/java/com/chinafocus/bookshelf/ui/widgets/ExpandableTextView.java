@@ -42,7 +42,6 @@ import android.widget.TextView;
 
 import com.chinafocus.bookshelf.R;
 
-
 public class ExpandableTextView extends LinearLayout implements View.OnClickListener {
 
     private static final String TAG = ExpandableTextView.class.getSimpleName();
@@ -62,7 +61,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
     /* The default alpha value when the animation starts */
     private static final float DEFAULT_ANIM_ALPHA_START = 0.7f;
 
-    protected TextView mTv;
+    protected TagTextView mTv;
 
     protected View mToggleView; // View to expand/collapse
 
@@ -131,6 +130,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
         }
 
         mCollapsed = !mCollapsed;
+        //更改TextView的rightDrawable
         mExpandIndicatorController.changeState(mCollapsed);
 
         if (mCollapsedStatus != null) {
@@ -251,6 +251,17 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
         requestLayout();
     }
 
+    public void setTextWithTag(@Nullable CharSequence text, String tag) {
+        mRelayout = true;
+        if (!TextUtils.isEmpty(tag)) {
+            mTv.setContentAndTag(String.valueOf(text), tag);
+        }
+        setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
+        clearAnimation();
+        getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        requestLayout();
+    }
+
     public void setText(@Nullable CharSequence text, @NonNull SparseBooleanArray collapsedStatus, int position) {
         mCollapsedStatus = collapsedStatus;
         mPosition = position;
@@ -290,7 +301,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
     }
 
     private void findViews() {
-        mTv = (TextView) findViewById(mExpandableTextId);
+        mTv = findViewById(mExpandableTextId);
         if (mExpandToggleOnTextClick) {
             mTv.setOnClickListener(this);
         } else {
@@ -358,7 +369,9 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
             case EXPAND_INDICATOR_TEXT_VIEW:
                 String expandText = typedArray.getString(R.styleable.ExpandableTextView_expandIndicator);
                 String collapseText = typedArray.getString(R.styleable.ExpandableTextView_collapseIndicator);
-                expandIndicatorController = new TextViewExpandController(expandText, collapseText);
+                Drawable down = context.getDrawable(R.drawable.bookshelf_arrow_down);
+                Drawable up = context.getDrawable(R.drawable.bookshelf_arrow_up);
+                expandIndicatorController = new TextViewExpandController(expandText, collapseText, down, up);
                 break;
             default:
                 throw new IllegalStateException("Must be of enum: ExpandableTextView_expandToggleType, one of EXPAND_INDICATOR_IMAGE_BUTTON or EXPAND_INDICATOR_TEXT_VIEW.");
@@ -444,6 +457,11 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
 
         private final String mExpandText;
         private final String mCollapseText;
+        //arrow down
+        private Drawable mArrowDownDrawable;
+        //arrow up
+        private Drawable mArrowUpDrawable;
+
 
         private TextView mTextView;
 
@@ -452,9 +470,22 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
             mCollapseText = collapseText;
         }
 
+        public TextViewExpandController(String expandText, String collapseText, Drawable down, Drawable up) {
+            mExpandText = expandText;
+            mCollapseText = collapseText;
+            mArrowUpDrawable = up;
+            mArrowDownDrawable = down;
+            mArrowUpDrawable.setBounds(0, 0, mArrowUpDrawable.getMinimumWidth(), mArrowUpDrawable.getMinimumHeight());
+            mArrowDownDrawable.setBounds(0, 0, mArrowDownDrawable.getMinimumWidth(), mArrowDownDrawable.getMinimumHeight());
+        }
+
         @Override
         public void changeState(boolean collapsed) {
             mTextView.setText(collapsed ? mExpandText : mCollapseText);
+            if (mArrowDownDrawable != null && mArrowUpDrawable != null) {
+                mTextView.setCompoundDrawables(null, null, collapsed ? mArrowDownDrawable : mArrowUpDrawable, null);
+            }
+//            mTextView.setCompoundDrawablePadding(10);//设置图片和text之间的间距
         }
 
         @Override

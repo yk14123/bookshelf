@@ -5,7 +5,7 @@
     android:id="@+id/tb_book_category_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bookshelf_book_category_shadow"
+    android:background="@drawable/bookshelf_app_bar_bg"
     android:paddingTop="@dimen/dp_10"
     android:paddingBottom="@dimen/dp_10">
 
@@ -29,7 +29,7 @@
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textColor="@color/bookshelf_content_text_color"
+        android:textColor="@color/bookshelf_title_text_color"
         android:textSize="@dimen/sp_18"
         tools:text="習近平的著作" />
 

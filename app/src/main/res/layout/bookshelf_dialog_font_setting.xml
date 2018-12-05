@@ -30,7 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bookshelf_font_normal"
+            android:text="@string/bookshelf_font_option_standard"
             android:textColor="#BABABA"
             android:textSize="@dimen/sp_16"
             app:layout_marginStartPercent="21.5%w" />

@@ -12,6 +12,7 @@ public class BookShelfConstant {
     public static final String BOOK_ID = "bookId";
     public static final String BOOK_NAME = "bookName";
     public static final String PAGE = "page";
+    public static final String BOOK_COVER_URL = "bookCoverUrl";
 
     /**
      * 字体常量值定义
