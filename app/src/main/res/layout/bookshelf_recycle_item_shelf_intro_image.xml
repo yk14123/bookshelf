@@ -12,7 +12,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:contentDescription="@string/bookshelf_content_description"/>
-    <!--android:layout_marginLeft="12dp"-->
-    <!--android:layout_marginRight="12dp"-->
 
 </FrameLayout>

@@ -8,9 +8,10 @@
     <string name="bookshelf_book_summary">目录</string>
     <string name="bookshelf_collapse_text">收起</string>
     <string name="bookshelf_more_text">更多</string>
+    <string name="bookshelf_book_comment">推荐语</string>
+    <string name="bookshelf_book_intro">简介</string>
 
-    <string name="bookshelf_font_normal">标准</string>
-
+    <!--FONT OPTION TEXT-->
     <string name="bookshelf_font_option_title">字体大小</string>
     <string name="bookshelf_font_option_standard">标准</string>
     <string name="bookshelf_font_option_largest">特大</string>
@@ -18,11 +19,10 @@
     <string name="bookshelf_font_option_normal">中</string>
     <string name="bookshelf_font_option_small">小</string>
     <string name="bookshelf_font_option_cancel">取消</string>
+    <string name="bookshelf_reconnected_net">网络不给力，请检查网络设置~</string>
+    <string name="bookshelf_refresh_data">点击刷新</string>
+    <string name="bookshelf_loading">正在加载中...</string>
 
-    <string name="bookshelf_book_comment">推荐语</string>
-    <string name="bookshelf_book_intro">简介</string>
-
-
+    <string name="bookshelf_font_normal">标准</string>
     <string name="app_name">主题书柜</string>
-
 </resources>

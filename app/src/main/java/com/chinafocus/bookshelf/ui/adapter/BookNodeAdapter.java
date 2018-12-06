@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean;
+import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
+import com.chinafocus.bookshelf.utils.ScreenUtils;
 
 import java.util.ArrayList;
 
@@ -26,17 +26,18 @@ import java.util.ArrayList;
 public class BookNodeAdapter extends RecyclerView.Adapter<BookNodeAdapter.BookNodeHolder> {
     private static final String TAG = "BookNodeAdapter";
     private Context mContext;
-    private ArrayList<BookMetadataRawBean.BookMetadataResultBean.TocBean> mTocBeans;
+    private ArrayList<TocBean> mTocBeans;
     //当前条目的缩进值
     private int retract;
     //回调
     private OnBookNodeClickListener listener;
 
-    public BookNodeAdapter(Context mContext, ArrayList<BookMetadataRawBean.BookMetadataResultBean.TocBean> mTocBeans) {
+    public BookNodeAdapter(Context mContext, ArrayList<TocBean> mTocBeans) {
         this.mContext = mContext;
         this.mTocBeans = mTocBeans;
-        //缩进值，大家可以将它配置在资源文件中，从而实现适配
-        retract = (int) (mContext.getResources().getDisplayMetrics().density * 10 + 0.5f);
+        //缩进值，屏幕宽度的7.3%占比缩进
+        int screenWidth = ScreenUtils.getScreenWidth(mContext);
+        retract = (int) (screenWidth * 0.073f);
         Log.d(TAG, "BookNodeAdapter: retract >>> " + retract);
     }
 
@@ -50,14 +51,15 @@ public class BookNodeAdapter extends RecyclerView.Adapter<BookNodeAdapter.BookNo
 
     @Override
     public void onBindViewHolder(@NonNull BookNodeHolder bookNodeHolder, int i) {
-        BookMetadataRawBean.BookMetadataResultBean.TocBean baseNode = mTocBeans.get(i);
+        TocBean baseNode = mTocBeans.get(i);
         if (baseNode != null) {
             String label = baseNode.getLabel();
             int level = baseNode.getLevel();
             if (!TextUtils.isEmpty(label)) {
                 //添加两个空格字符,实现缩进字符的效果 >>> 除去level 1层级
                 if (level != 0) {
-                    label = getLabel(label, level);
+//                    label = getLabel(label, level);
+                    bookNodeHolder.llBookMetaRoot.setPadding(retract * level, 0, 0, 0);
                     bookNodeHolder.tvCaptureTitle.setTextAppearance(mContext, R.style.BookShelfItemTextAppearance);
                 }
                 bookNodeHolder.tvCaptureTitle.setText(label);
@@ -66,7 +68,7 @@ public class BookNodeAdapter extends RecyclerView.Adapter<BookNodeAdapter.BookNo
             //设置点选回调事件
             bookNodeHolder.llBookMetaRoot.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onNodeClick(baseNode.getFull());
+                    listener.onNodeClick(baseNode.getLabel(), baseNode.getFull());
                 }
             });
         }
@@ -86,7 +88,7 @@ public class BookNodeAdapter extends RecyclerView.Adapter<BookNodeAdapter.BookNo
 
     //回调接口
     public interface OnBookNodeClickListener {
-        void onNodeClick(String pageId);
+        void onNodeClick(String label, String pageId);
     }
 
     public void setBookNodeClickListener(OnBookNodeClickListener listener) {

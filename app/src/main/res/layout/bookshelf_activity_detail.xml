@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         app:layout_marginTopPercent="26%sh"
+        android:overScrollMode="never"
         app:layout_marginBottomPercent="12.5%sh"
         app:layout_widthPercent="82%sw"/>
 
@@ -36,6 +37,7 @@
         android:layout_width="0dp"
         app:layout_widthPercent="82%sw"
         android:visibility="gone"
+        android:overScrollMode="never"
         android:layout_height="wrap_content"
         android:scrollbars="none"
         app:layout_marginTopPercent="26%sh"

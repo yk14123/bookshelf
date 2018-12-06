@@ -26,11 +26,17 @@
         android:id="@+id/tv_bookshelf_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="center"
+        android:layout_toStartOf="@+id/iv_bookshelf_right_menu"
+        android:layout_toEndOf="@+id/iv_bookshelf_left_menu"
+        android:ellipsize="end"
         android:gravity="center"
+        android:maxLines="1"
         android:textColor="@color/bookshelf_title_text_color"
         android:textSize="@dimen/sp_18"
+        app:layout_marginEndPercent="3%w"
+        app:layout_marginStartPercent="3%w"
         tools:text="習近平的著作" />
 
     <ImageView

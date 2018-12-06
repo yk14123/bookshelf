@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bookshelf_white">#FFFFFF</color>
-    <color name="bookshelf_black">#000000</color>
-    <color name="bookshelf_transparent">#00000000</color>
-    <color name="bookshelf_line_color">#EEEEEE</color>
-    <color name="bookshelf_grey">#F9F9F9</color>
-
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <color name="test">#0000ff</color>
+    <color name="bookshelf_white">#FFFFFF</color>
+    <color name="bookshelf_black">#000000</color>
+    <color name="bookshelf_grey">#F9F9F9</color>
+    <color name="bookshelf_transparent">#00000000</color>
+    <color name="bookshelf_line_color">#EEEEEE</color>
     <!--文本标题顔色-->
     <color name="bookshelf_title_text_color">#333333</color>
     <!--文本内容顔色-->
     <color name="bookshelf_content_text_color">#666666</color>
-
-    <color name="test">#0000ff</color>
+    <!--提示性文本顔色-->
+    <color name="bookshelf_tip_text_color">#999999</color>
 
 </resources>

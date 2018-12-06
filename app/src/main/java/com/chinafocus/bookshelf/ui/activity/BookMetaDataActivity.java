@@ -11,13 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean;
+import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean;
 import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
 import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
@@ -25,6 +26,7 @@ import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapter;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
 import com.chinafocus.bookshelf.ui.widgets.BottomViewDragBehavior;
 import com.chinafocus.bookshelf.ui.widgets.ExpandableTextView;
+import com.chinafocus.bookshelf.ui.widgets.ReboundScrollView;
 import com.chinafocus.bookshelf.ui.widgets.TagTextView;
 import com.chinafocus.bookshelf.utils.ScreenUtils;
 import com.chinafocus.bookshelf.utils.UIHelper;
@@ -41,16 +43,18 @@ import java.util.List;
  * @version 1.0
  * create at 2018/11/27 13:06
  */
-public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookMetadataResultBean> {
-    private static final String TAG = "BookMetaData";
+public class BookMetaDataActivity extends BaseActivity<BookMetadataResultBean> implements View.OnClickListener {
+    private static final String TAG = "BookMeta";
     private PercentRelativeLayout mRlAppBar;
     private BookMetaDataPresenter mPresenter;
+    //错误视图
+    private PercentLinearLayout mLlErrorLayout;
     //目录列表容器
     private PercentLinearLayout mLlBookMetaWrapper;
     private RecyclerView mRvMetaData;
     private BookNodeAdapter mBookNodeAdapter;
     //滑动控件
-    private NestedScrollView mNestedScrollView;
+    private ReboundScrollView mNestedScrollView;
     //悬浮控件
     private ImageView mIvBackTop;
     //卡片容器
@@ -61,10 +65,9 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
     private ImageView mIvBookCover;
     private String mCoverUrl;
     private BookCoverDialog mBookCoverDialog;
-    //当前图书的名称
-    private TextView mTvBookNavTitle;
+    //图书名
+    private String mBookName;
     private TagTextView mTvBookTitle;
-    private String mBookTitle;
     //Behavior
     private BottomViewDragBehavior<NestedScrollView> mViewDragBehavior;
     //当前图书书柜id
@@ -76,25 +79,17 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
     //分类标签名
     private String mCategoryTagName;
 
-
     @Override
     protected void initView() {
         getExtraFromIntent();
         setContentView(R.layout.bookshelf_activity_book_meta_data);
         initNavMenu();
+        //无数据视图
+        mLlErrorLayout = findViewById(R.id.ll_bookshelf_reconnect_net);
+        mLlErrorLayout.setOnClickListener(this);
         //封面点击事件
         mIvBookCover = findViewById(R.id.iv_book_meta_data_cover);
-        mIvBookCover.setOnClickListener(v -> {
-            if (!TextUtils.isEmpty(mCoverUrl)) {
-                if (mBookCoverDialog == null) {
-                    mBookCoverDialog = new BookCoverDialog(BookMetaDataActivity.this, mRlAppBar);
-                    mBookCoverDialog.setImageUrl(mCoverUrl);
-                }
-                if (!mBookCoverDialog.isShowing()) {
-                    mBookCoverDialog.show();
-                }
-            }
-        });
+        mIvBookCover.setOnClickListener(this);
         //图书信息
         mTvBookTitle = findViewById(R.id.tv_book_meta_data_title);
         //目录信息
@@ -107,13 +102,10 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
         mRvMetaData.setNestedScrollingEnabled(false);//禁止RecyclerView的滑动事件，交给NestedScrollView
         //返回顶部
         mIvBackTop = findViewById(R.id.iv_book_meta_back_top);
-        mIvBackTop.setOnClickListener(v -> {
-            mViewDragBehavior.setState(BottomViewDragBehavior.STATE_COLLAPSED);
-            mNestedScrollView.fullScroll(View.FOCUS_UP);
-        });
+        mIvBackTop.setOnClickListener(this);
         //更多&收起
         mCvBookHeaderWrapper = findViewById(R.id.cv_book_meta_header);  //卡片布局
-        mLlBookMetaWrapper = findViewById(R.id.ll_book_meta_root);//padding值
+        mLlBookMetaWrapper = findViewById(R.id.ll_book_meta_root);
         mExpandText = findViewById(R.id.expand_text_view);
         mExpandText.setOnExpandStateChangeListener((textView, isExpanded) -> {
             Log.d(TAG, "expandState changed >>> isExpanded >>> " + isExpanded);
@@ -121,6 +113,8 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
         });
         //底部拖动View
         mNestedScrollView = findViewById(R.id.nsv_book_meta_data);
+        mNestedScrollView.setEnableTopRebound(true);
+        mNestedScrollView.setEnableBottomRebound(false);
         mViewDragBehavior = BottomViewDragBehavior.from(mNestedScrollView);
         int screenHeight = ScreenUtils.getScreenHeight(this);
         mViewDragBehavior.setPeekHeight(screenHeight / 2);
@@ -133,13 +127,64 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
                         setFloatingButtonState(false);
                     }
                 });
+        //加载数据
+        loadBookMeta();
 
+    }
+
+    /**
+     * 获取intent跳转的参数
+     */
+    private void getExtraFromIntent() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, 1);
+            mBookId = intent.getIntExtra(BookShelfConstant.BOOK_ID, 1);
+            mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, 1);
+            mCategoryTagName = intent.getStringExtra(BookShelfConstant.CATEGORY_NAME);
+            mBookName = intent.getStringExtra(BookShelfConstant.BOOK_NAME);
+            Log.d(TAG, "getExtraFromIntent: mShelfId >>>" + mShelfId
+                    + " mBookId >>> " + mBookId + " mCategoryId >>> "
+                    + mCategoryId + " mCategoryTagName >>> " + mCategoryTagName);
+        }
+    }
+
+
+    /**
+     * 加载目录页面数据
+     */
+    private void loadBookMeta() {
+        showLoading();
         //初始化控制器
-        mPresenter = new BookMetaDataPresenter(this);
+        if (mPresenter == null) {
+            mPresenter = new BookMetaDataPresenter(this);
+        }
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_METADATA,
                 new String[]{String.valueOf(mShelfId),
                         String.valueOf(mCategoryId),
                         String.valueOf(mBookId)});
+    }
+
+    /**
+     * 初始化通用的ActionBar布局
+     */
+    private void initNavMenu() {
+        mRlAppBar = findViewById(R.id.tb_book_category_bar);
+        //Back键
+        ImageView mIvBack = findViewById(R.id.iv_bookshelf_left_menu);
+        mIvBack.setOnClickListener(v -> {
+            if (mBookCoverDialog != null && mBookCoverDialog.isShowing()) {
+                mBookCoverDialog.dismiss();
+            } else finish();
+        });
+        //初始化标题
+        //当前图书的名称
+        TextView mTvBookNavTitle = findViewById(R.id.tv_bookshelf_title);
+        if (!TextUtils.isEmpty(mBookName))
+            mTvBookNavTitle.setText(mBookName);
+        //右側menu
+        ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
+        mIvRightMenu.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -169,47 +214,15 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
         }
     }
 
-    /**
-     * 获取intent跳转的参数
-     */
-    private void getExtraFromIntent() {
-        Intent intent = getIntent();
-        if (intent != null) {
-            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, 1);
-            mBookId = intent.getIntExtra(BookShelfConstant.BOOK_ID, 1);
-            mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, 1);
-            mCategoryTagName = intent.getStringExtra(BookShelfConstant.CATEGORY_NAME);
-            Log.d(TAG, "getExtraFromIntent: mShelfId >>>" + mShelfId
-                    + " mBookId >>> " + mBookId + " mCategoryId >>> "
-                    + mCategoryId + " mCategoryTagName >>> " + mCategoryTagName);
-        }
-    }
-
-    /**
-     * 初始化通用的ActionBar布局
-     */
-    private void initNavMenu() {
-        mRlAppBar = findViewById(R.id.tb_book_category_bar);
-        //Back键
-        ImageView mIvBack = findViewById(R.id.iv_bookshelf_left_menu);
-        mIvBack.setOnClickListener(v -> finish());
-        //初始化标题
-        mTvBookNavTitle = findViewById(R.id.tv_bookshelf_title);
-        //右側menu
-        ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
-        mIvRightMenu.setVisibility(View.GONE);
-    }
-
-
     @Override
-    public void onRefreshFinished(String refreshType, List<BookMetadataRawBean.BookMetadataResultBean> result) {
-        Log.d(TAG, "onRefreshFinished: result.size() >>> " + result.size());
-        BookMetadataRawBean.BookMetadataResultBean dataBean = result.get(0);
+    public void onRefreshFinished(String refreshType, List<BookMetadataResultBean> result) {
+        Log.d(TAG, "showTips: onRefreshFinished >>> ");
+        BookMetadataResultBean dataBean = result.get(0);
         if (dataBean != null) {
+            showRefreshLayout(false);
             //图书名称
-            mBookTitle = dataBean.getTitle();
+            String mBookTitle = dataBean.getTitle();
             if (!TextUtils.isEmpty(mBookTitle)) {
-                mTvBookNavTitle.setText(mBookTitle);
                 if (!TextUtils.isEmpty(mCategoryTagName)) {
                     mTvBookTitle.setContentAndTag(mBookTitle, mCategoryTagName);
                 }
@@ -219,8 +232,8 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
             Glide.with(this)
                     .load(mCoverUrl)
                     .apply(new RequestOptions()
-                            .placeholder(R.drawable.bookshelf_default_cover_land)
-                            .error(R.drawable.bookshelf_default_cover_land))
+                            .placeholder(R.drawable.bookshelf_default_cover_port)
+                            .error(R.drawable.bookshelf_default_cover_port))
                     .into(mIvBookCover);
             //图书推荐语
             String comment = dataBean.getComment();
@@ -235,8 +248,8 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
                             getString(R.string.bookshelf_book_intro));
                 }
             }
-            //此处在设置完成数据之后，设置延迟500ms之后执行paddingTop的自适应刷新操作
-            mLlBookMetaWrapper.postDelayed(this::requestNestedLayout, 500);
+//            此处在设置完成数据之后，设置延迟100ms之后执行paddingTop的自适应刷新操作
+            mLlBookMetaWrapper.postDelayed(this::requestNestedLayout, 100);
 
             List<TocBean> toc = dataBean.getToc();
             //获取数据
@@ -244,29 +257,47 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataRawBean.BookM
             if (mBookNodeAdapter == null) {
                 mBookNodeAdapter = new BookNodeAdapter(this, baseNodes);
             }
-            mBookNodeAdapter.setBookNodeClickListener(pageId ->
+            mBookNodeAdapter.setBookNodeClickListener((label, pageId) ->
                     UIHelper.startContentDetailActivity(BookMetaDataActivity.this,
-                            mShelfId, mCategoryId, mBookId, mBookTitle, pageId));
+                            mShelfId, mCategoryId, mBookId, label, pageId));
             mRvMetaData.setAdapter(mBookNodeAdapter);
+        } else {
+            showRefreshLayout(true);
         }
+        dismissLoading();
     }
 
     @Override
     public void showTips(String message) {
-
+        dismissLoading();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        showRefreshLayout(true);
     }
 
-    /**
-     * 复写finish方法，检测PopupWindow是否显示，显示dismiss掉
-     */
+    private void showRefreshLayout(boolean showRefresh) {
+        mLlErrorLayout.setVisibility(showRefresh ? View.VISIBLE : View.GONE);
+        mNestedScrollView.setVisibility(showRefresh ? View.GONE : View.VISIBLE);
+    }
+
     @Override
-    public void finish() {
-        if (mBookCoverDialog != null && mBookCoverDialog.isShowing()) {
-            mBookCoverDialog.dismiss();
-            Log.d(TAG, "finish: dialog is showing...");
-        } else {
-            Log.d(TAG, "finish: dialog is dismiss...");
-            super.finish();
+    public void onClick(View v) {
+        if (v == mIvBookCover) {
+            if (!TextUtils.isEmpty(mCoverUrl)) {
+                if (mBookCoverDialog == null) {
+                    mBookCoverDialog = new BookCoverDialog(BookMetaDataActivity.this, mRlAppBar);
+                    mBookCoverDialog.setImageUrl(mCoverUrl);
+                }
+                if (!mBookCoverDialog.isShowing()) {
+                    mBookCoverDialog.show();
+                }
+            }
+        } else if (v == mIvBackTop) {
+            mViewDragBehavior.setState(BottomViewDragBehavior.STATE_COLLAPSED);
+            mNestedScrollView.fullScroll(View.FOCUS_UP);
+        } else if (v == mLlErrorLayout) {
+            mLlErrorLayout.setVisibility(View.GONE);
+            loadBookMeta();
         }
     }
+
 }

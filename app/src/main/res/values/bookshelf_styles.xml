@@ -6,17 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <!--Window color-->//window背景
-        <item name="android:windowBackground">@color/background_material_light</item>
-
-        <!--去掉原来的ActionBar-->
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-
-        <!-- API Level 22 编译要去点android -->
-        <item name="windowNoTitle">true</item>
-
     </style>
 
     <!--無ActionBar标题主题风格-->
@@ -46,13 +35,13 @@
         <!-- 背景透明 -->
         <item name="android:windowBackground">@color/bookshelf_transparent</item>
         <item name="android:windowContentOverlay">@null</item>
-        <!-- 浮于Activity之上1 -->
+        <!-- 浮于Activity之上 -->
         <item name="android:windowIsFloating">true</item>
-        <!-- 边框1 -->
+        <!-- 边框 -->
         <item name="android:windowFrame">@null</item>
         <!-- Dialog以外的区域模糊效果 -->
         <item name="android:backgroundDimEnabled">true</item>
-        <!-- 无标题1 -->
+        <!-- 无标题 -->
         <item name="android:windowNoTitle">true</item>
         <!-- 半透明 -->
         <item name="android:windowIsTranslucent">false</item>

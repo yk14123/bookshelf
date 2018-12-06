@@ -77,7 +77,7 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
         }
         //右側menu
         ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
-        mIvRightMenu.setVisibility(View.GONE);
+        mIvRightMenu.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -106,7 +106,7 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
                 mBookCategoryAdapter.setBookItemListener((bookId, bookName) -> {
                     Log.d(TAG, "onRefreshFinished: bookId >>> " + bookId + " bookName >>> " + bookName);
                     //跳轉圖書詳情頁
-                    UIHelper.startBookMetaActivity(this, mShelfId, mCategoryId, bookId, mCategoryName);
+                    UIHelper.startBookMetaActivity(this, mShelfId, mCategoryId, bookId, bookName, mCategoryName);
                 });
             } else {
                 mBookCategoryAdapter.setCategoryEntity(books);

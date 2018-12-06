@@ -61,7 +61,7 @@ public class BookContentDetailAdapter extends RecyclerView.Adapter<BookContentDe
             String css = bookContentResultBean.getCss();
             if (!TextUtils.isEmpty(current)) {
                 //加载本地文件
-                String linkCss = "<link rel=\"stylesheet\" href=\"" + css + "\" type=\"text/img\">";
+                String linkCss = "<link rel=\"stylesheet\" href=\"" + css + "\" type=\"text/css\">";
                 Log.d(TAG, "onRefreshFinished: linkCss >>>" + linkCss);
                 String body = "<html><header>" + linkCss + "</header>" + current + "</body></html>";
                 WebSettings webSettings = holder.mWebContent.getSettings(); //声明WebSettings子类

@@ -47,7 +47,7 @@ abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContract.IPres
 
         mCompositeDisposable.add(disposableObserver);
 
-        Observable<String> cacheShelvesSource = ShelvesRepositoryFactory.getInstance().getCacheShelves(refreshType,args);
+        Observable<String> cacheShelvesSource = ShelvesRepositoryFactory.getInstance().getCacheShelves(refreshType, args);
         Observable<String> netShelvesSource = ShelvesRepositoryFactory.getInstance().getNetShelves(refreshType, args);
 
         Observable.concat(cacheShelvesSource, netShelvesSource)

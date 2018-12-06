@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.base.BaseActivity;
@@ -18,6 +19,7 @@ import com.chinafocus.bookshelf.presenter.shelves.BookContentDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.ui.adapter.BookContentDetailAdapter;
 import com.chinafocus.bookshelf.ui.dialog.FontSettingDialog;
+import com.zhy.android.percent.support.PercentLinearLayout;
 
 import java.util.List;
 
@@ -30,7 +32,10 @@ import java.util.List;
  */
 
 public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.BookContentResultBean> {
-    private static final String TAG = "BookContentDetail";
+    private static final String TAG = "BookContent";
+    private IShelvesMvpContract.IPresenter mPresenter;
+    //错误视图
+    private PercentLinearLayout mLlErrorLayout;
     //内容展示控件
     private RecyclerView mRvBookContent;
     //适配器
@@ -56,11 +61,15 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         getExtraFromIntent();
         setContentView(R.layout.bookshelf_activity_book_content_detail);
         initNavMenu();
-        //初始化WebView
+        mLlErrorLayout = findViewById(R.id.ll_bookshelf_reconnect_net);
+        mLlErrorLayout.setOnClickListener(v -> loadBookContent(mPageId));
+        //初始化RecyclerView
         mRvBookContent = findViewById(R.id.rv_book_content_detail);
         LinearLayoutManager manager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
         mRvBookContent.setLayoutManager(manager);
+        //取消RecyclerView的自动滑动效果 ---> 避免调整字体之后自动滑动到顶部
+        mRvBookContent.setFocusableInTouchMode(false);
         //添加下拉底部加载下一步数据
         mRvBookContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -99,7 +108,8 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
                 mFontDialog = new FontSettingDialog(this);
                 mFontDialog.setOnFontOptionListener(fontZoomSize -> {
                     Log.d(TAG, "initNavMenu: fontOption >>> " + fontZoomSize);
-                    mBookContentAdapter.setFontSize(fontZoomSize);
+                    if (mBookContentAdapter != null)
+                        mBookContentAdapter.setFontSize(fontZoomSize);
                 });
             }
             if (!mFontDialog.isShowing()) {
@@ -130,8 +140,11 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
      * 加载指定pageId的章节内容数据
      */
     private void loadBookContent(String pageId) {
+        showRefreshLayout(false);
+        showLoading();
         //初始化Presenter
-        IShelvesMvpContract.IPresenter mPresenter = new BookContentDetailPresenter(this);
+        if (mPresenter == null)
+            mPresenter = new BookContentDetailPresenter(this);
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_DETAIL,
                 new String[]{String.valueOf(mShelfId),
                         String.valueOf(mCategoryId),
@@ -143,6 +156,7 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     public void onRefreshFinished(String refreshType, List<BookContentRawBean.BookContentResultBean> result) {
         BookContentRawBean.BookContentResultBean bookContentResultBean = result.get(0);
         if (bookContentResultBean != null) {
+            showRefreshLayout(false);
             mNextPage = bookContentResultBean.getNext();
             if (mBookContentAdapter == null) {
                 //首次加載
@@ -152,17 +166,30 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
                 //加載更多
                 mBookContentAdapter.addContentEntity(bookContentResultBean);
             }
+        } else {
+            showRefreshLayout(true);
         }
+        dismissLoading();
+    }
+
+    /**
+     * 显示刷新视图
+     *
+     * @param showRefresh 是否刷新视图，false将显示内容视图
+     */
+    private void showRefreshLayout(boolean showRefresh) {
+        mLlErrorLayout.setVisibility(showRefresh ? View.VISIBLE : View.GONE);
+        mRvBookContent.setVisibility(showRefresh ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void showTips(String message) {
-
+        dismissLoading();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onDestroy() {
-        //防止WebView导致的内存泄露
         super.onDestroy();
     }
 }

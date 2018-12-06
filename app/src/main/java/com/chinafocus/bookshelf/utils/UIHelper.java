@@ -17,7 +17,6 @@ import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivity;
  */
 public class UIHelper {
 
-
     /**
      * 跳转图书目录页面 see {@link BookMetaDataActivity}
      *
@@ -27,12 +26,13 @@ public class UIHelper {
      * @param categoryTagName 分类标签名
      */
     public static void startBookMetaActivity(Context context, int shelfId,
-                                             int categoryId, int bookId, String categoryTagName) {
+                                             int categoryId, int bookId, String bookName, String categoryTagName) {
         //跳轉圖書詳情頁
         Intent intent = new Intent(context, BookMetaDataActivity.class);
         intent.putExtra(BookShelfConstant.SHELF_ID, shelfId);
         intent.putExtra(BookShelfConstant.CATEGORY_ID, categoryId);
         intent.putExtra(BookShelfConstant.BOOK_ID, bookId);
+        intent.putExtra(BookShelfConstant.BOOK_NAME, bookName);
         intent.putExtra(BookShelfConstant.CATEGORY_NAME, categoryTagName);
         context.startActivity(intent);
     }

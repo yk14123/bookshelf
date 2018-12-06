@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
+import com.chinafocus.bookshelf.utils.ProgressBarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +35,23 @@ public abstract class BaseActivity<T> extends AppCompatActivity implements IShel
     protected abstract void initView();
 
 
+    /**
+     * 显示loading视图
+     */
+    public void showLoading() {
+        ProgressBarUtils.showProgressDialog(this, "");
+    }
+
+    /**
+     * 关闭loading视图
+     */
+    public void dismissLoading() {
+        ProgressBarUtils.dismiss();
+    }
+
     @Override
     protected void onDestroy() {
+        dismissLoading();
         super.onDestroy();
     }
 

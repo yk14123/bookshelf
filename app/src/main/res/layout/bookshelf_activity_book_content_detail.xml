@@ -7,7 +7,7 @@
     tools:context=".ui.activity.BookCategoryDetailActivity">
 
     <include
-        layout="@layout/bookshelf_include_appbar_layout"
+        layout="@layout/bookshelf_include_app_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -17,5 +17,13 @@
         android:layout_height="match_parent"
         android:paddingStart="@dimen/dp_10"
         android:paddingEnd="@dimen/dp_10" />
+
+    <!--无网络视图-->
+    <include
+        android:id="@+id/ll_bookshelf_reconnect_net"
+        layout="@layout/bookshelf_include_app_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
 </com.zhy.android.percent.support.PercentLinearLayout>

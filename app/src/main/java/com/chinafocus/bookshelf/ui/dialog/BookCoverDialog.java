@@ -59,6 +59,8 @@ public class BookCoverDialog extends PopupWindow {
         setContentView(contentView);
         //设置点击外部可以消失
         setOutsideTouchable(true);
+        //响应物理按键
+        setFocusable(true);
         //设置背景
         setBackgroundDrawable(new ColorDrawable(0));
         //设置动画

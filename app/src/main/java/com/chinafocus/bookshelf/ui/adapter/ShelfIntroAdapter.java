@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.http.SslError;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chinafocus.bookshelf.R;
+import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
 
 /**
@@ -89,27 +94,9 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             webSettings.setSupportZoom(false); //支持缩放，默认为true。是下面那个的前提。
             webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
             webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
-            webSettings.setTextZoom(150);   //设置显示的字体大小
+            webSettings.setTextZoom(180);   //设置显示的字体大小
             //加载本地文件
             webViewHolder.wvShelfWeb.loadUrl("file:///android_asset/bookcaseIntro.html");
-
-//            //防止WebView导致的内存泄露
-//            if (mWvIntro != null) {
-//                // 如果先调用destroy()方法，则会命中
-//                // if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再destroy()
-//                ViewParent parent = mWvIntro.getParent();
-//                if (parent != null) {
-//                    ((ViewGroup) parent).removeView(mWvIntro);
-//                }
-//                mWvIntro.stopLoading();
-//                // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
-//                mWvIntro.getSettings().setJavaScriptEnabled(false);
-//                mWvIntro.clearHistory();
-////            mWvIntro.clearView();
-//                mWvIntro.removeAllViews();
-//                mWvIntro.destroy();
-//            }
-
         } else if (holder instanceof ImageHolder) {
             ImageHolder imageHolder = (ImageHolder) holder;
             Log.d(TAG, "onBindViewHolder: current position >>> " + position);
@@ -132,7 +119,7 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /**
      * 书柜Image圖片holder
      */
-    static class ImageHolder extends RecyclerView.ViewHolder {
+    class ImageHolder extends RecyclerView.ViewHolder {
         private ImageView ivShelfImage;
 
         ImageHolder(@NonNull View itemView) {
@@ -144,7 +131,7 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /**
      * 书柜WEB页面holder
      */
-    static class WebViewHolder extends RecyclerView.ViewHolder {
+    class WebViewHolder extends RecyclerView.ViewHolder {
         private WebView wvShelfWeb;
 
         WebViewHolder(View itemView) {
