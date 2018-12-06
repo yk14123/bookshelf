@@ -26,7 +26,7 @@ public class ShelfCopyrightDialog extends AlertDialog {
     private ShelfCopyrightDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
         mContext = context;
-//        init();
+        init();
     }
 
 
@@ -43,7 +43,7 @@ public class ShelfCopyrightDialog extends AlertDialog {
         setCanceledOnTouchOutside(true);
         //设置可以点击消失
         setCancelable(true);
-        //设置从底部弹出,设置宽度适配屏幕宽度
+//        //设置从底部弹出,设置宽度适配屏幕宽度
 //        Window window = getWindow();
 //        if (window != null) {
 //            window.setGravity(Gravity.CENTER);
@@ -56,11 +56,7 @@ public class ShelfCopyrightDialog extends AlertDialog {
 //            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 ////            lp.dimAmount = 0f;
 //            window.setAttributes(lp);
-//            //设置dialog的背景颜色为透明色,就可以显示圆角了!!
-//            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//            window.setBackgroundDrawableResource(android.R.color.transparent);
 //        }
 
     }
-
 }

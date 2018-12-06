@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="bookshelf_content_description">content  description</string>
-    <!--<string name="bookshelf_dialog_copyright_info">易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。</string>-->
-    <string name="bookshelf_dialog_copyright_info">易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。</string>
+    <string name="bookshelf_dialog_copyright_info">易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。</string>
+    <!--<string name="bookshelf_dialog_copyright_info">易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。易阅通（CNPeReading.com）是中图公司自主开发的数字内容搜选、采购与阅读一站式全球资源交易与服务平台。</string>-->
 
     <string name="bookshelf_dialog_platform">一个平台</string>
     <string name="bookshelf_dialog_resource">海量资源</string>
