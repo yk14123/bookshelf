@@ -32,12 +32,16 @@ abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContract.IPres
         DisposableObserver<TT> disposableObserver = new DisposableObserver<TT>() {
             @Override
             public void onNext(TT t) {
-                mViewWeakReference.get().onRefreshFinished(refreshType, (List) t);
+                IShelvesMvpContract.IView iView = mViewWeakReference.get();
+                if (iView != null)
+                    iView.onRefreshFinished(refreshType, (List) t);
             }
 
             @Override
             public void onError(Throwable e) {
-                mViewWeakReference.get().showTips("网络不好，刷新错误");
+                IShelvesMvpContract.IView iView = mViewWeakReference.get();
+                if (iView != null)
+                    iView.showTips("网络不好，刷新错误。错误类型是 --> " + e.getMessage());
             }
 
             @Override

@@ -6,6 +6,7 @@
     android:id="@+id/rl_shelf_detail_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bookshelf_detail_bg"
     tools:background="@drawable/bookshelf_default_cover_port"
     tools:context=".ui.activity.ShelfDetailActivity">
 

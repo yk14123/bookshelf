@@ -11,10 +11,11 @@ public interface IShelvesMvpContract {
     String REFRESH_BOOK_CATEGORY_DETAIL = "getBookCategoryDetail";
     String REFRESH_BOOK_METADATA = "getBookMetadata";
     String REFRESH_BOOK_CONTENT_DETAIL = "getBookContentDetail";
+    String REFRESH_BOOK_CONTENT_AES_DETAIL = "getBookContentAESDetail";
 
     @StringDef({REFRESH_SHELVES, REFRESH_SHELVES_DETAIL,
             REFRESH_BOOK_CATEGORY_DETAIL, REFRESH_BOOK_METADATA,
-            REFRESH_BOOK_CONTENT_DETAIL})
+            REFRESH_BOOK_CONTENT_DETAIL, REFRESH_BOOK_CONTENT_AES_DETAIL})
     @interface RefreshType {
     }
 

@@ -32,6 +32,10 @@ class RemoteShelvesSourceData {
             return ApiManager.getInstance().getService().getBookContentDetail(parms[0], parms[1], parms[2], parms[3]);
         }
 
+        if (category.equals("getBookContentAESDetail")) {
+            return ApiManager.getInstance().getService().getBookContentAESDetail(parms[0], parms[1], parms[2], parms[3]);
+        }
+
         return null;
     }
 

@@ -52,6 +52,8 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     private String mPageId;
     //当前内容页的下一个pageId参数
     private String mNextPage;
+    //是否是加载更多
+    private boolean isLoadMore = false;
     //字体调节对话框
     private FontSettingDialog mFontDialog;
 
@@ -79,6 +81,7 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
                 if (!mRvBookContent.canScrollVertically(1)
                         && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     Log.d(TAG, "onScrollStateChanged: 当前滑动到底部 >>>> loadMore >>> ");
+                    isLoadMore = true;
                     loadBookContent(mNextPage);
                 }
             }
@@ -145,7 +148,12 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         //初始化Presenter
         if (mPresenter == null)
             mPresenter = new BookContentDetailPresenter(this);
-        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_DETAIL,
+//        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_DETAIL,
+//                new String[]{String.valueOf(mShelfId),
+//                        String.valueOf(mCategoryId),
+//                        String.valueOf(mBookId), pageId});
+
+        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_AES_DETAIL,
                 new String[]{String.valueOf(mShelfId),
                         String.valueOf(mCategoryId),
                         String.valueOf(mBookId), pageId});
@@ -186,6 +194,10 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     public void showTips(String message) {
         dismissLoading();
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        //当前在加载更多操作过程中，无需显示网络刷新视图，只需提示用户网络异常情况
+        if (!isLoadMore) {
+            showRefreshLayout(true);
+        }
     }
 
     @Override

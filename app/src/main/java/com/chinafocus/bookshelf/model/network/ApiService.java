@@ -65,4 +65,17 @@ public interface ApiService {
     @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/page/{page}")
     @Headers("corigin:expressreader")
     Observable<String> getBookContentDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Path("page") String page);
+
+    /**
+     * 书的每一页具体内容--加密版本
+     *  https://book.expressreader.cn/api/shelves/3/categories/26/books/285/page/aes/Chapter2.xhtml#ebookNote_3
+     * @param id         书柜id
+     * @param categoryId 书的类别id
+     * @param bookId     具体书的id
+     * @param page       书的内容页
+     * @return 书的每一页具体内容
+     */
+    @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/page/aes/{page}")
+    @Headers("corigin:expressreader")
+    Observable<String> getBookContentAESDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Path("page") String page);
 }

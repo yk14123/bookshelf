@@ -3,9 +3,6 @@ package com.chinafocus.bookshelf.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,11 +20,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
@@ -105,6 +97,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         mPresenter = new ShelvesDetailPresenter(this);
         //请求数据
         requestShelfDetail();
+
     }
 
     private void initCopyright() {
@@ -158,6 +151,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
      * 设置CopyrightDialogContent
      * 竖屏设备：网址变色，且不能点击
      * 手机设备：网址变色，能够点击（未实现）
+     *
      * @param string
      */
     private void setCopyrightDialogContent(String string) {
@@ -217,15 +211,20 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     public void onRefreshFinished(String refreshType, List<ShelvesCategoryResultBean> result) {
         ShelvesCategoryResultBean resultBean = result.get(0);
         if (resultBean != null) {
+            /**
+             * 设置ShelfDetailActivityBg来源
+             * 竖屏设备：九宫格背景图片，来自本地
+             * 手机设备：如九宫格背景图片需要来自网络，则启用（已实现）
+             */
             String bg = resultBean.getBg();
-            RequestOptions requestOptions = new RequestOptions();
-            requestOptions.centerCrop().diskCacheStrategy(DiskCacheStrategy.RESOURCE);
-            Glide.with(ShelfDetailActivity.this).load(bg).apply(requestOptions).into(new SimpleTarget<Drawable>(1080,1920) {
-                @Override
-                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                    mRlShelfRoot.setBackground(resource);
-                }
-            });
+//            RequestOptions requestOptions = new RequestOptions();
+//            requestOptions.centerCrop().diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+//            Glide.with(ShelfDetailActivity.this).load(bg).apply(requestOptions).into(new SimpleTarget<Drawable>(1080,1920) {
+//                @Override
+//                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+//                    mRlShelfRoot.setBackground(resource);
+//                }
+//            });
 
             if (mShelfCategoryAdapter == null) {
                 mShelfCategoryAdapter = new ShelfCategoryAdapter(ShelfDetailActivity.this, resultBean.getCategories());

@@ -2,7 +2,6 @@ package com.chinafocus.bookshelf.model.repository.shelves;
 
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
@@ -62,6 +61,10 @@ class ShelvesRepository extends AbstractShelvesRepository {
         }
 
         if (category.equals("getBookContentDetail")) {
+            key = category + "&" + parms[0] + "&" + parms[1] + "&" + parms[2] + "&" + parms[3];
+        }
+
+        if (category.equals("getBookContentAESDetail")) {
             key = category + "&" + parms[0] + "&" + parms[1] + "&" + parms[2] + "&" + parms[3];
         }
         return key;

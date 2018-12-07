@@ -4,8 +4,6 @@ import android.content.Context;
 import android.net.http.SslError;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +13,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
 
 /**
@@ -94,7 +89,7 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             webSettings.setSupportZoom(false); //支持缩放，默认为true。是下面那个的前提。
             webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
             webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
-            webSettings.setTextZoom(180);   //设置显示的字体大小
+            webSettings.setTextZoom(150);   //设置显示的字体大小
             //加载本地文件
             webViewHolder.wvShelfWeb.loadUrl("file:///android_asset/bookcaseIntro.html");
         } else if (holder instanceof ImageHolder) {
