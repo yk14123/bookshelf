@@ -47,20 +47,26 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
     protected void initView() {
         getExtraFromIntent();
         setContentView(R.layout.bookshelf_activity_book_category_detail);
+        //初始化actionBar
         initNavMenu();
         //初始化RecyclerView
+        initRvBookCategoryList();
+
+        Log.i("MyLog", "BookCategoryDetailActivity  onCreate");
+        //初始化presenter控制器
+        mPresenter = new BookCategoryDetailPresenter(this);
+        //初始化請求數據
+        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CATEGORY_DETAIL,
+                new String[]{String.valueOf(mShelfId), String.valueOf(mCategoryId)});
+    }
+
+    private void initRvBookCategoryList() {
         mRvBookCategory = findViewById(R.id.rv_book_category_list);
         LinearLayoutManager manager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
         mRvBookCategory.setLayoutManager(manager);
         mRvBookCategory.setHasFixedSize(true);
         mRvBookCategory.addItemDecoration(new LinearItemDecoration());
-
-        //初始化presenter控制器
-        mPresenter = new BookCategoryDetailPresenter(this);
-        //初始化請求數據
-        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CATEGORY_DETAIL,
-                new String[]{String.valueOf(mShelfId), String.valueOf(mCategoryId)});
     }
 
     /**
@@ -77,7 +83,7 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
         }
         //右側menu
         ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
-        mIvRightMenu.setVisibility(View.INVISIBLE);
+        mIvRightMenu.setVisibility(View.GONE);
     }
 
     /**
@@ -86,8 +92,8 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
     private void getExtraFromIntent() {
         Intent intent = getIntent();
         if (intent != null) {
-            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, 1);
-            mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, 1);
+            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, -1);
+            mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, -1);
             mCategoryName = intent.getStringExtra(BookShelfConstant.CATEGORY_NAME);
             Log.d(TAG, "getExtraFromIntent: mShelfId >>> " + mShelfId + "  mCategoryId >>> " + mCategoryId);
         }

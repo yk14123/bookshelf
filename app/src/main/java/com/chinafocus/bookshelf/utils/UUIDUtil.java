@@ -28,7 +28,9 @@ public class UUIDUtil {
      * @param context
      * @return
      */
+    @SuppressLint("HardwareIds")
     public static String getDeviceId(Context context) {
+
         StringBuilder deviceId = new StringBuilder();
         // 渠道标志
         deviceId.append("a");

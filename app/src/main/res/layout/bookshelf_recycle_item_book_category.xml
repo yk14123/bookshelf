@@ -28,6 +28,8 @@
         android:layout_alignTop="@+id/iv_book_category_item_cover"
         android:layout_toEndOf="@+id/iv_book_category_item_cover"
         android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="#333333"
         android:textSize="@dimen/sp_15"
         tools:text="现当代文学" />

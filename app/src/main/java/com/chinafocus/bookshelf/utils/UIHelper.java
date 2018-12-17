@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.chinafocus.bookshelf.global.BookShelfConstant;
+import com.chinafocus.bookshelf.ui.activity.BookCategoryDetailActivity;
 import com.chinafocus.bookshelf.ui.activity.BookContentDetailActivity;
 import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivity;
 
@@ -18,7 +19,22 @@ import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivity;
 public class UIHelper {
 
     /**
-     * 跳转图书目录页面 see {@link BookMetaDataActivity}
+     * 跳转图书分类内容详情页面 see {@link BookCategoryDetailActivity}
+     *
+     * @param shelfId      书柜标识
+     * @param categoryId   图书分类标志
+     * @param categoryName 图书分类名称
+     */
+    public static void startBookCategoryDetailActivity(Context context, int shelfId, int categoryId, String categoryName) {
+        Intent intent = new Intent(context, BookCategoryDetailActivity.class);
+        intent.putExtra(BookShelfConstant.SHELF_ID, shelfId);
+        intent.putExtra(BookShelfConstant.CATEGORY_ID, categoryId);
+        intent.putExtra(BookShelfConstant.CATEGORY_NAME, categoryName);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 跳转图书三级目录页面 see {@link BookMetaDataActivity}
      *
      * @param shelfId         书柜标识
      * @param categoryId      图书分类标志

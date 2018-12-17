@@ -1,7 +1,6 @@
 package com.chinafocus.bookshelf.ui.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,13 +21,13 @@ import android.widget.TextView;
 
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.base.BaseActivity;
-import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesDetailPresenter;
 import com.chinafocus.bookshelf.ui.adapter.ShelfCategoryAdapter;
 import com.chinafocus.bookshelf.ui.adapter.ShelfIntroAdapter;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
+import com.chinafocus.bookshelf.utils.UIHelper;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
@@ -230,11 +229,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 mShelfCategoryAdapter = new ShelfCategoryAdapter(ShelfDetailActivity.this, resultBean.getCategories());
                 mShelfCategoryAdapter.setShelfCategoryListener((shelfId, categoryId, categoryName) -> {
                     //跳转书架页面
-                    Intent intent = new Intent(ShelfDetailActivity.this, BookCategoryDetailActivity.class);
-                    intent.putExtra(BookShelfConstant.SHELF_ID, shelfId);
-                    intent.putExtra(BookShelfConstant.CATEGORY_ID, categoryId);
-                    intent.putExtra(BookShelfConstant.CATEGORY_NAME, categoryName);
-                    startActivity(intent);
+                    UIHelper.startBookCategoryDetailActivity(ShelfDetailActivity.this,shelfId,categoryId,categoryName);
+
                 });
                 mRvCategory.setAdapter(mShelfCategoryAdapter);
             } else {
