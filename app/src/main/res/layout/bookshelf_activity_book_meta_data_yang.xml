@@ -16,12 +16,12 @@
         tools:src="@drawable/bookshelf_default_cover_port"/>
 
 
-    <android.support.v4.widget.NestedScrollView
+    <com.chinafocus.bookshelf.ui.widgets.OverByNestedScrollView
         android:id="@+id/nsv_book_meta_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <include layout="@layout/bookshelf_include_cardview_item_yang"/>
-    </android.support.v4.widget.NestedScrollView>
+    </com.chinafocus.bookshelf.ui.widgets.OverByNestedScrollView>
 
 
     <!--悬浮按钮-->

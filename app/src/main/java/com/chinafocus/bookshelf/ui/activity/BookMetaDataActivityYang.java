@@ -404,8 +404,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     @SuppressLint("CheckResult")
     private void initBgView() {
         CropTransformation cropTransformation = new CropTransformation(1080, 900, CropTransformation.CropType.TOP);
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.bitmapTransform(cropTransformation)
+        RequestOptions requestOptions = new RequestOptions()
+                .bitmapTransform(cropTransformation)
                 .placeholder(R.drawable.bookshelf_default_cover_port)
                 .error(R.drawable.bookshelf_default_cover_port);
 
@@ -413,6 +413,16 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 .load(mCoverUrl)
                 .apply(requestOptions)
                 .into(mIvBookCover);
+
+//        RequestOptions requestOptions = new RequestOptions()
+//                .bitmapTransform(new CropTransformation(1080, 1152, CropTransformation.CropType.TOP))
+//                .placeholder(R.drawable.bookshelf_default_cover_port)
+//                .error(R.drawable.bookshelf_default_cover_port);
+//
+//        Glide.with(this)
+//                .load(mCoverUrl)
+//                .apply(requestOptions)
+//                .into(mIvBookCover);
     }
 
     @Override
