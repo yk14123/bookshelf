@@ -1,10 +1,10 @@
 package com.chinafocus.bookshelf.ui.widgets;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 /**
  * FrameLayout加嵌套背景色
@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 public class MyFrameLayout extends FrameLayout {
 
     private View mEmbedBg;
-    private LinearLayout mLinearLayout;
+    private CardView mCardView;
     private int mLl_left;
 
     public MyFrameLayout(Context context) {
@@ -31,21 +31,21 @@ public class MyFrameLayout extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mEmbedBg = getChildAt(0);
-        mLinearLayout = (LinearLayout) getChildAt(1);
-        FrameLayout.LayoutParams layoutParams = (LayoutParams) mLinearLayout.getLayoutParams();
+        mCardView = (CardView) getChildAt(1);
+        FrameLayout.LayoutParams layoutParams = (LayoutParams) mCardView.getLayoutParams();
         mLl_left = layoutParams.leftMargin;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int ll_measuredHeight = mLinearLayout.getMeasuredHeight();
+        int ll_measuredHeight = mCardView.getMeasuredHeight() + 20;
 
         int bgResultHeightSpec = MeasureSpec.makeMeasureSpec(ll_measuredHeight, MeasureSpec.EXACTLY);
 
         measureChild(mEmbedBg, widthMeasureSpec, bgResultHeightSpec);
 
-        measureChildWithMargins(mLinearLayout, widthMeasureSpec, mLl_left, heightMeasureSpec, 0);
+        measureChildWithMargins(mCardView, widthMeasureSpec, mLl_left, heightMeasureSpec, 0);
 
         int size = MeasureSpec.getSize(widthMeasureSpec);
 
@@ -60,10 +60,10 @@ public class MyFrameLayout extends FrameLayout {
 //
 //        int ll_result_width_spec = MeasureSpec.makeMeasureSpec(ll_result_width_size, MeasureSpec.EXACTLY);
 //
-//        int ll_measuredHeight = mLinearLayout.getMeasuredHeight();
+//        int ll_measuredHeight = mCardView.getMeasuredHeight();
 //        int bgResultHeightSpec = MeasureSpec.makeMeasureSpec(ll_measuredHeight, MeasureSpec.EXACTLY);
 //
-//        mLinearLayout.measure(ll_result_width_spec,bgResultHeightSpec);
+//        mCardView.measure(ll_result_width_spec,bgResultHeightSpec);
 //
 //        int size = MeasureSpec.getSize(widthMeasureSpec);
 //

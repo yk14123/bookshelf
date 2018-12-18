@@ -87,6 +87,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private View mViewHeaderWrapper;
     private ImageView mIvBookCover;
     private Disposable mTvExpandControlClicks;
+    private int mShortHeight;
+    private int mLongHeight;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -121,9 +123,11 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
                 //判断当前NestedScrollView是否滑动到顶部
                 if (mNestedScrollView.getScrollY() == 0) {
-                    setFloatingButtonState(true);
+//                    setFloatingButtonState(true);
+                    mIvBackTop.setVisibility(View.GONE);
                 } else {
-                    setFloatingButtonState(false);
+//                    setFloatingButtonState(false);
+                    mIvBackTop.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -182,22 +186,21 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 R.drawable.bookshelf_arrow_down);
     }
 
-    private boolean isLoadMore = true;
+    private boolean isHeaderContentLoadMore = true;
 
     private void toggle() {
-        int shortHeight = getShortHeight();
-        int longHeight = getLongHeight();
-
-        if (isLoadMore) {
-            //打开更多
-            isLoadMore = false;
-            if (longHeight > shortHeight)
-                mAnimator = ValueAnimator.ofInt(shortHeight, longHeight);
+        mShortHeight = getShortHeight();
+        mLongHeight = getLongHeight();
+        if (!isHeaderContentLoadMore) {
+            //不需要更多，所以执行，关闭-->显示：更多
+            isHeaderContentLoadMore = true;
+            if (mLongHeight > mShortHeight)
+                mAnimator = ValueAnimator.ofInt(mLongHeight, mShortHeight);
         } else {
-            //关闭收入
-            isLoadMore = true;
-            if (longHeight > shortHeight)
-                mAnimator = ValueAnimator.ofInt(longHeight, shortHeight);
+            //是需要更多，所以执行，打开-->显示：收入
+            isHeaderContentLoadMore = false;
+            if (mLongHeight > mShortHeight)
+                mAnimator = ValueAnimator.ofInt(mShortHeight, mLongHeight);
         }
 
         if (mAnimator != null && !mAnimator.isRunning()) {
@@ -218,7 +221,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
 
-                    if (isLoadMore) {
+                    if (isHeaderContentLoadMore) {
                         mTv_expand_control.setText("更多");
                         mTv_expand_control.setCompoundDrawablesWithIntrinsicBounds(null, null, mBookshelf_arrow_down, null);
                     } else {
@@ -344,22 +347,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         mIvRightMenu.setVisibility(View.INVISIBLE);
     }
 
-    /**
-     * 設置悬浮按钮的显示和隐藏状态
-     *
-     * @param reachTop 当前NestedScrollView是否滑动到顶部
-     */
-    private void setFloatingButtonState(boolean reachTop) {
-        if (reachTop) {
-            if (mIvBackTop.getVisibility() == View.VISIBLE) {
-                mIvBackTop.setVisibility(View.GONE);
-            }
-        } else {
-            if (mIvBackTop.getVisibility() == View.GONE) {
-                mIvBackTop.setVisibility(View.VISIBLE);
-            }
-        }
-    }
 
     @SuppressLint("CheckResult")
     @Override
@@ -400,8 +387,17 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             List<TocBean> toc = dataBean.getToc();
             //获取数据
             ArrayList<TocBean> baseNodes = mPresenter.getTocList(toc, -1);
+
+            Log.i("MyLog", "baseNodes ==  " + baseNodes.size());
+
+            List<TocBean> subBaseNodes = baseNodes.subList(0, 50);
+
+            ArrayList<TocBean> finalBaseNode = new ArrayList<>(subBaseNodes);
+
+            Log.i("MyLog", "baseNodes ==  " + finalBaseNode.size());
+
             if (mBookNodeAdapter == null) {
-                mBookNodeAdapter = new BookNodeAdapter(this, baseNodes);
+                mBookNodeAdapter = new BookNodeAdapter(this, finalBaseNode);
             }
             mBookNodeAdapter.setBookNodeClickListener((label, pageId) ->
                     UIHelper.startContentDetailActivity(BookMetaDataActivityYang.this,
@@ -442,6 +438,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     public void onClick(View v) {
         if (v == mIvBackTop) {
             mNestedScrollView.fullScroll(View.FOCUS_UP);
+            if (!isHeaderContentLoadMore)
+                toggle();
         } else if (v == mLlErrorLayout) {
             mLlErrorLayout.setVisibility(View.GONE);
             loadBookMeta();
