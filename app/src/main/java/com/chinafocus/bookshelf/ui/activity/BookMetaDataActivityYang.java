@@ -29,14 +29,18 @@ import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapter;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
+import com.chinafocus.bookshelf.ui.widgets.OverByNestedScrollView;
 import com.chinafocus.bookshelf.utils.UIHelper;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentLinearLayout;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import jp.wasabeef.glide.transformations.CropTransformation;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 图书目录页面
@@ -55,11 +59,10 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private RecyclerView mRvMetaData;
     private BookNodeAdapter mBookNodeAdapter;
     //滑动控件
-    private NestedScrollView mNestedScrollView;
+    private OverByNestedScrollView mNestedScrollView;
     //悬浮控件
     private ImageView mIvBackTop;
-    //图书封面
-    private ImageView mIvBookCover;
+
     private String mCoverUrl;
     private BookCoverDialog mBookCoverDialog;
     //图书名
@@ -79,7 +82,13 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private LinearLayout.LayoutParams mTv_expand_layoutParams;
     private Drawable mBookshelf_arrow_up;
     private Drawable mBookshelf_arrow_down;
+    private Disposable mViewHeaderWrapperClicks;
+    //图书封面
+    private View mViewHeaderWrapper;
+    private ImageView mIvBookCover;
+    private Disposable mTvExpandControlClicks;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView() {
         getExtraFromIntent();
@@ -89,37 +98,23 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         mLlErrorLayout = findViewById(R.id.ll_bookshelf_reconnect_net);
         mLlErrorLayout.setOnClickListener(this);
         //封面点击事件
-        mIvBookCover = findViewById(R.id.iv_book_meta_data_cover);
-        mIvBookCover.setOnClickListener(this);
-        View view_wrapper = findViewById(R.id.view_wrapper);
-        view_wrapper.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("MyLog4", "背景图被点击了");
-            }
-        });
-        //图书信息
-//        mTvBookTitle = findViewById(R.id.tv_book_meta_data_title);
-        //目录信息
-        mRvMetaData = findViewById(R.id.rv_book_meta_data);
-
-        //初始化RecycleView
+        initViewHeaderWrapper();
+        //初始化图书信息HeaderExpand标题及内容
+        initExpandText();
+        //初始化多级目录信息
         initRvMetaData();
-
         //返回顶部
+        iniRollbackTop();
+        //加载数据
+        loadBookMeta();
+
+    }
+
+    private void iniRollbackTop() {
         mIvBackTop = findViewById(R.id.iv_book_meta_back_top);
         mIvBackTop.setOnClickListener(this);
-        //更多&收起
-//        mLlBookMetaWrapper = findViewById(R.id.ll_book_meta_root);
         //底部拖动View
         mNestedScrollView = findViewById(R.id.nsv_book_meta_data);
-//        mNestedScrollView.setEnableTopRebound(true);
-//        mNestedScrollView.setEnableBottomRebound(false);
-//        mViewDragBehavior = BottomViewDragBehavior.from(mNestedScrollView);
-//        int screenHeight = ScreenUtils.getScreenHeight(this);
-//        mViewDragBehavior.setPeekHeight(screenHeight / 2);
-
-        initExpandText();
 
         mNestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -132,30 +127,52 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 }
             }
         });
-        //加载数据
-        loadBookMeta();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initViewHeaderWrapper() {
+
+        mIvBookCover = findViewById(R.id.iv_book_meta_data_cover_yang);
+
+        mViewHeaderWrapper = findViewById(R.id.view_header_wrapper);
+
+        mViewHeaderWrapperClicks = RxView.clicks(mViewHeaderWrapper).throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        if (!TextUtils.isEmpty(mCoverUrl)) {
+                            if (mBookCoverDialog == null) {
+                                mBookCoverDialog = new BookCoverDialog(BookMetaDataActivityYang.this, mRlAppBar);
+                                mBookCoverDialog.setImageUrl(mCoverUrl);
+                            }
+                            if (!mBookCoverDialog.isShowing()) {
+                                mBookCoverDialog.show();
+                            }
+                        }
+                    }
+                });
 
     }
 
     private void initExpandText() {
         mTv_expand_title = findViewById(R.id.tv_expand_title);
 
-        mTv_expand_control = findViewById(R.id.tv_expand_control);
-        mTv_expand_control.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggle();
-            }
-        });
-
         mTv_expand_content_view = findViewById(R.id.tv_expand_content_view);
+
         mTv_expand_layoutParams = (LinearLayout.LayoutParams) mTv_expand_content_view.getLayoutParams();
         mTv_expand_layoutParams.height = getShortHeight();
         mTv_expand_content_view.setLayoutParams(mTv_expand_layoutParams);
         mTv_expand_content_view.setText(Html.fromHtml(mDataTest));
 
+        mTv_expand_control = findViewById(R.id.tv_expand_control);
+        mTvExpandControlClicks = RxView.clicks(mTv_expand_control).throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        toggle();
+                    }
+                });
         initArrowImage();
-
     }
 
     private void initArrowImage() {
@@ -187,8 +204,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    Integer height = (Integer) animation.getAnimatedValue();
-                    mTv_expand_layoutParams.height = height;
+                    mTv_expand_layoutParams.height = (Integer) animation.getAnimatedValue();
                     mTv_expand_content_view.setLayoutParams(mTv_expand_layoutParams);
                 }
             });
@@ -197,6 +213,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             mAnimator.start();
 
             mAnimator.addListener(new AnimatorListenerAdapter() {
+
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
@@ -208,14 +225,13 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                         mTv_expand_control.setText("收起");
                         mTv_expand_control.setCompoundDrawablesWithIntrinsicBounds(null, null, mBookshelf_arrow_up, null);
                     }
+
                 }
             });
         }
     }
 
-
     private int getShortHeight() {
-
         int measuredWidth = mTv_expand_content_view.getMeasuredWidth();
 
         TextView textView = new TextView(this);
@@ -232,19 +248,16 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     }
 
     private String mDataTest = "人是科技创新最关键的因素。创新的事业呼唤创新的人才。尊重人才，是中华民族的悠久传统。“思皇多士，生此王国。王国克生，维周之桢；济济多士，文王以宁。”这是《诗经•大雅•文王》中的话，说的是周文王尊贤礼士，贤才济济，所以国势强盛。千秋基业，人才为先。实现中华民族伟大复兴，人才越多越好，本事越大越好。<br><br><i>——摘自“加快从要素驱动、投资规模驱动发展为主向以创新驱动发展为主的转变（2014年6月9日）”，《习近平谈治国理政 第一卷》</i>";
-//    private String mDataTest = "《习近平谈治国理政 第一卷》</i>";
 
     private int getLongHeight() {
-
         int measuredWidth = mTv_expand_content_view.getMeasuredWidth();
 
         TextView textView = new TextView(this);
         textView.setText(Html.fromHtml(mDataTest));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-//        textView.setMaxLines(4);
 
         int widthSpec = View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY);
-        int heightSpec = View.MeasureSpec.makeMeasureSpec(3000, View.MeasureSpec.AT_MOST);
+        int heightSpec = View.MeasureSpec.makeMeasureSpec(2000, View.MeasureSpec.AT_MOST);
 
         textView.measure(widthSpec, heightSpec);
 
@@ -252,8 +265,12 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     }
 
     private void initRvMetaData() {
+        mRvMetaData = findViewById(R.id.rv_book_meta_data);
         LinearLayoutManager manager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
+        manager.setSmoothScrollbarEnabled(true);
+        manager.setAutoMeasureEnabled(true);
+
         mRvMetaData.setLayoutManager(manager);
         mRvMetaData.setHasFixedSize(true);//当前条目固定的情况下，设置此属性，提高RecyclerView的性能
         mRvMetaData.setFocusable(false);//取消RecyclerView获取焦点事件，避免NestedScrollView无法滑动到顶部的问题
@@ -275,13 +292,18 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                     + " mBookId >>> " + mBookId + " mCategoryId >>> "
                     + mCategoryId + " mCategoryTagName >>> " + mCategoryTagName);
 
-            mShelfId = 2;
-            mBookId = 185;
-            mCategoryId = 16;
-            mCategoryTagName = "习近平著作";
-            mBookName = "习近平著作标题";
+//            mShelfId = 2;
+//            mBookId = 185;
+//            mCategoryId = 16;
+//            mCategoryTagName = "习近平著作";
+//            mBookName = "习近平著作标题";
 //            mShelfId >>>2 mBookId >>> 185 mCategoryId >>> 16 mCategoryTagName >>> 习近平著作
 //            mShelfId >>>2 mBookId >>> 189 mCategoryId >>> 13 mCategoryTagName >>> 经史典集
+            mShelfId = 2;
+            mBookId = 189;
+            mCategoryId = 13;
+            mCategoryTagName = "经史典集";
+            mBookName = "经史典集标题";
         }
     }
 
@@ -320,16 +342,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         //右側menu
         ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
         mIvRightMenu.setVisibility(View.INVISIBLE);
-    }
-
-    /**
-     * 动态设定目录信息容器的paddingTop值
-     */
-    private void requestNestedLayout() {
-//        int height = mCvBookHeaderWrapper.getHeight();
-//        Log.d(TAG, "requestNestedLayout: the height >>> " + height);
-//        mLlBookMetaWrapper.setPadding(0, height, 0, 0);
-//        mNestedScrollView.requestLayout();
     }
 
     /**
@@ -403,9 +415,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
     @SuppressLint("CheckResult")
     private void initBgView() {
-        CropTransformation cropTransformation = new CropTransformation(1080, 900, CropTransformation.CropType.TOP);
         RequestOptions requestOptions = new RequestOptions()
-                .bitmapTransform(cropTransformation)
+                .centerCrop()
                 .placeholder(R.drawable.bookshelf_default_cover_port)
                 .error(R.drawable.bookshelf_default_cover_port);
 
@@ -413,16 +424,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 .load(mCoverUrl)
                 .apply(requestOptions)
                 .into(mIvBookCover);
-
-//        RequestOptions requestOptions = new RequestOptions()
-//                .bitmapTransform(new CropTransformation(1080, 1152, CropTransformation.CropType.TOP))
-//                .placeholder(R.drawable.bookshelf_default_cover_port)
-//                .error(R.drawable.bookshelf_default_cover_port);
-//
-//        Glide.with(this)
-//                .load(mCoverUrl)
-//                .apply(requestOptions)
-//                .into(mIvBookCover);
     }
 
     @Override
@@ -439,17 +440,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
     @Override
     public void onClick(View v) {
-        if (v == mIvBookCover) {
-            if (!TextUtils.isEmpty(mCoverUrl)) {
-                if (mBookCoverDialog == null) {
-                    mBookCoverDialog = new BookCoverDialog(BookMetaDataActivityYang.this, mRlAppBar);
-                    mBookCoverDialog.setImageUrl(mCoverUrl);
-                }
-                if (!mBookCoverDialog.isShowing()) {
-                    mBookCoverDialog.show();
-                }
-            }
-        } else if (v == mIvBackTop) {
+        if (v == mIvBackTop) {
             mNestedScrollView.fullScroll(View.FOCUS_UP);
         } else if (v == mLlErrorLayout) {
             mLlErrorLayout.setVisibility(View.GONE);
@@ -457,4 +448,15 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mViewHeaderWrapperClicks != null && mViewHeaderWrapperClicks.isDisposed()) {
+            mViewHeaderWrapperClicks.dispose();
+        }
+
+        if (mTvExpandControlClicks != null && mTvExpandControlClicks.isDisposed()) {
+            mTvExpandControlClicks.dispose();
+        }
+    }
 }

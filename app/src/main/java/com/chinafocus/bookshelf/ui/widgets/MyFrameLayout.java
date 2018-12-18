@@ -6,10 +6,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+/**
+ * FrameLayout加嵌套背景色
+ */
 public class MyFrameLayout extends FrameLayout {
 
-    private View mBg;
-    private LinearLayout mLl_metadata_header;
+    private View mEmbedBg;
+    private LinearLayout mLinearLayout;
     private int mLl_left;
 
     public MyFrameLayout(Context context) {
@@ -27,23 +30,22 @@ public class MyFrameLayout extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mBg = getChildAt(0);
-        mLl_metadata_header = (LinearLayout) getChildAt(1);
-
-        FrameLayout.LayoutParams layoutParams = (LayoutParams) mLl_metadata_header.getLayoutParams();
+        mEmbedBg = getChildAt(0);
+        mLinearLayout = (LinearLayout) getChildAt(1);
+        FrameLayout.LayoutParams layoutParams = (LayoutParams) mLinearLayout.getLayoutParams();
         mLl_left = layoutParams.leftMargin;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int ll_measuredHeight = mLl_metadata_header.getMeasuredHeight();
+        int ll_measuredHeight = mLinearLayout.getMeasuredHeight();
 
         int bgResultHeightSpec = MeasureSpec.makeMeasureSpec(ll_measuredHeight, MeasureSpec.EXACTLY);
 
-        measureChild(mBg, widthMeasureSpec, bgResultHeightSpec);
+        measureChild(mEmbedBg, widthMeasureSpec, bgResultHeightSpec);
 
-        measureChildWithMargins(mLl_metadata_header, widthMeasureSpec, mLl_left, heightMeasureSpec, 0);
+        measureChildWithMargins(mLinearLayout, widthMeasureSpec, mLl_left, heightMeasureSpec, 0);
 
         int size = MeasureSpec.getSize(widthMeasureSpec);
 
@@ -58,15 +60,15 @@ public class MyFrameLayout extends FrameLayout {
 //
 //        int ll_result_width_spec = MeasureSpec.makeMeasureSpec(ll_result_width_size, MeasureSpec.EXACTLY);
 //
-//        int ll_measuredHeight = mLl_metadata_header.getMeasuredHeight();
+//        int ll_measuredHeight = mLinearLayout.getMeasuredHeight();
 //        int bgResultHeightSpec = MeasureSpec.makeMeasureSpec(ll_measuredHeight, MeasureSpec.EXACTLY);
 //
-//        mLl_metadata_header.measure(ll_result_width_spec,bgResultHeightSpec);
+//        mLinearLayout.measure(ll_result_width_spec,bgResultHeightSpec);
 //
 //        int size = MeasureSpec.getSize(widthMeasureSpec);
 //
 //        int widthMeasureSpec1 = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
-//        mBg.measure(widthMeasureSpec1,bgResultHeightSpec);
+//        mEmbedBg.measure(widthMeasureSpec1,bgResultHeightSpec);
 //
 //        setMeasuredDimension(size, ll_measuredHeight);
 //    }

@@ -6,23 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <!--图片背景-->
     <ImageView
-        android:id="@+id/iv_book_meta_data_cover"
+        android:id="@+id/iv_book_meta_data_cover_yang"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:contentDescription="@string/bookshelf_content_description"
         tools:src="@drawable/bookshelf_default_cover_port"/>
-
 
     <com.chinafocus.bookshelf.ui.widgets.OverByNestedScrollView
         android:id="@+id/nsv_book_meta_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <include layout="@layout/bookshelf_include_cardview_item_yang"/>
     </com.chinafocus.bookshelf.ui.widgets.OverByNestedScrollView>
-
 
     <!--悬浮按钮-->
     <ImageView
