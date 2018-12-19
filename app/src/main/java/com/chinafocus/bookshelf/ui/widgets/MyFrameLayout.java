@@ -39,7 +39,7 @@ public class MyFrameLayout extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int ll_measuredHeight = mCardView.getMeasuredHeight() + 20;
+        int ll_measuredHeight = mCardView.getMeasuredHeight() + 30;
 
         int bgResultHeightSpec = MeasureSpec.makeMeasureSpec(ll_measuredHeight, MeasureSpec.EXACTLY);
 

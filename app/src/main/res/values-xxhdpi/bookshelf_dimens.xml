@@ -431,10 +431,10 @@
     <dimen name="sp_48">48sp</dimen>
     <dimen name="dialog_copyright_padding_bottom">20dp</dimen>
 
-    <dimen name="bookshelf_metadata_header_wrapper">731dp</dimen>
-    <dimen name="bookshelf_metadata_myframelayout_bg_view">196dp</dimen>
-    <dimen name="bookshelf_metadata_cardview_margin">45dp</dimen>
-    <dimen name="bookshelf_metadata_cardview_linearlayout_padding">45dp</dimen>
-    <dimen name="bookshelf_metadata_text_content_linespacing">30dp</dimen>
+    <dimen name="bookshelf_metadata_header_wrapper">244dp</dimen>
+    <dimen name="bookshelf_metadata_myframelayout_bg_view">65dp</dimen>
+    <dimen name="bookshelf_metadata_cardview_margin">15dp</dimen>
+    <dimen name="bookshelf_metadata_cardview_linearlayout_padding">15dp</dimen>
+    <dimen name="bookshelf_metadata_text_content_linespacing">10dp</dimen>
 
 </resources>

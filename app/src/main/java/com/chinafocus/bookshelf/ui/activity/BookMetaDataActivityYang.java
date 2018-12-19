@@ -158,27 +158,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
     }
 
-    private void initExpandText() {
-        mTv_expand_title = findViewById(R.id.tv_expand_title);
-
-        mTv_expand_content_view = findViewById(R.id.tv_expand_content_view);
-
-        mTv_expand_layoutParams = (LinearLayout.LayoutParams) mTv_expand_content_view.getLayoutParams();
-        mTv_expand_layoutParams.height = getShortHeight();
-        mTv_expand_content_view.setLayoutParams(mTv_expand_layoutParams);
-        mTv_expand_content_view.setText(Html.fromHtml(mDataTest));
-
-        mTv_expand_control = findViewById(R.id.tv_expand_control);
-        mTvExpandControlClicks = RxView.clicks(mTv_expand_control).throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        toggle();
-                    }
-                });
-        initArrowImage();
-    }
-
     private void initArrowImage() {
         mBookshelf_arrow_up = getResources().getDrawable(
                 R.drawable.bookshelf_arrow_up);
@@ -191,6 +170,10 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private void toggle() {
         mShortHeight = getShortHeight();
         mLongHeight = getLongHeight();
+
+        Log.i("toggle", "mShortHeight-->" + mShortHeight);
+        Log.i("toggle", "mLongHeight-->" + mLongHeight);
+
         if (!isHeaderContentLoadMore) {
             //不需要更多，所以执行，关闭-->显示：更多
             isHeaderContentLoadMore = true;
@@ -234,11 +217,34 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         }
     }
 
+    private void initExpandText() {
+        mTv_expand_title = findViewById(R.id.tv_expand_title);
+
+        mTv_expand_content_view = findViewById(R.id.tv_expand_content_view);
+
+        mTv_expand_layoutParams = (LinearLayout.LayoutParams) mTv_expand_content_view.getLayoutParams();
+        mTv_expand_layoutParams.height = getShortHeight();
+        mTv_expand_content_view.setLayoutParams(mTv_expand_layoutParams);
+        mTv_expand_content_view.setText(Html.fromHtml(mDataTest));
+//        mTv_expand_content_view.setText(mDataTest);
+
+        mTv_expand_control = findViewById(R.id.tv_expand_control);
+        mTvExpandControlClicks = RxView.clicks(mTv_expand_control).throttleFirst(1000, TimeUnit.MILLISECONDS)
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        toggle();
+                    }
+                });
+        initArrowImage();
+    }
+
     private int getShortHeight() {
         int measuredWidth = mTv_expand_content_view.getMeasuredWidth();
 
         TextView textView = new TextView(this);
-        textView.setText(Html.fromHtml(mDataTest));
+        textView.setText(Html.fromHtml(mDataTest),TextView.BufferType.SPANNABLE);
+//        textView.setText(mDataTest);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         textView.setMaxLines(4);
 
@@ -251,19 +257,23 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     }
 
     private String mDataTest = "人是科技创新最关键的因素。创新的事业呼唤创新的人才。尊重人才，是中华民族的悠久传统。“思皇多士，生此王国。王国克生，维周之桢；济济多士，文王以宁。”这是《诗经•大雅•文王》中的话，说的是周文王尊贤礼士，贤才济济，所以国势强盛。千秋基业，人才为先。实现中华民族伟大复兴，人才越多越好，本事越大越好。<br><br><i>——摘自“加快从要素驱动、投资规模驱动发展为主向以创新驱动发展为主的转变（2014年6月9日）”，《习近平谈治国理政 第一卷》</i>";
+//    private String mDataTest = "人是科技创新最关键的因素。创新的事业呼唤创新的人才。尊重人才，是中华民族的悠久传统。“思皇多士，生此王国。王国克生，维周之桢；济济多士，文王以宁。”这是《诗经•大雅•文王》中的话，说的是周文王尊贤礼士，贤才济济，所以国势强盛。千秋基业，人才为先。实现中华民族伟大复兴，人才越多越好，本事越大越好。  ——摘自“加快从要素驱动、投资规模驱动发展为主向以创新驱动发展为主的转变（2014年6月9日）”，《习近平谈治国理政 第一卷》";
 
     private int getLongHeight() {
         int measuredWidth = mTv_expand_content_view.getMeasuredWidth();
 
         TextView textView = new TextView(this);
-        textView.setText(Html.fromHtml(mDataTest));
+        textView.setText(Html.fromHtml(mDataTest),TextView.BufferType.SPANNABLE);
+//        textView.setText(mDataTest);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 
         int widthSpec = View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY);
-        int heightSpec = View.MeasureSpec.makeMeasureSpec(2000, View.MeasureSpec.AT_MOST);
+        int heightSpec = View.MeasureSpec.makeMeasureSpec(3000, View.MeasureSpec.AT_MOST);
 
         textView.measure(widthSpec, heightSpec);
-
+//竖屏加10   突然发现。这个+的数字和字号有关系  15的话 竖屏补10  手机补3
+//        return textView.getMeasuredHeight()+10;
+//        return textView.getMeasuredHeight()+3;
         return textView.getMeasuredHeight();
     }
 
@@ -271,8 +281,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         mRvMetaData = findViewById(R.id.rv_book_meta_data);
         LinearLayoutManager manager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
-        manager.setSmoothScrollbarEnabled(true);
-        manager.setAutoMeasureEnabled(true);
+//        manager.setSmoothScrollbarEnabled(true);
+//        manager.setAutoMeasureEnabled(true);
 
         mRvMetaData.setLayoutManager(manager);
         mRvMetaData.setHasFixedSize(true);//当前条目固定的情况下，设置此属性，提高RecyclerView的性能
@@ -295,18 +305,18 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                     + " mBookId >>> " + mBookId + " mCategoryId >>> "
                     + mCategoryId + " mCategoryTagName >>> " + mCategoryTagName);
 
-//            mShelfId = 2;
-//            mBookId = 185;
-//            mCategoryId = 16;
-//            mCategoryTagName = "习近平著作";
-//            mBookName = "习近平著作标题";
+            mShelfId = 2;
+            mBookId = 185;
+            mCategoryId = 16;
+            mCategoryTagName = "习近平著作";
+            mBookName = "习近平著作标题";
 //            mShelfId >>>2 mBookId >>> 185 mCategoryId >>> 16 mCategoryTagName >>> 习近平著作
 //            mShelfId >>>2 mBookId >>> 189 mCategoryId >>> 13 mCategoryTagName >>> 经史典集
-            mShelfId = 2;
-            mBookId = 189;
-            mCategoryId = 13;
-            mCategoryTagName = "经史典集";
-            mBookName = "经史典集标题";
+//            mShelfId = 2;
+//            mBookId = 189;
+//            mCategoryId = 13;
+//            mCategoryTagName = "经史典集";
+//            mBookName = "经史典集标题";
         }
     }
 
@@ -346,7 +356,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
         mIvRightMenu.setVisibility(View.INVISIBLE);
     }
-
 
     @SuppressLint("CheckResult")
     @Override
@@ -390,11 +399,14 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
             Log.i("MyLog", "baseNodes ==  " + baseNodes.size());
 
-            List<TocBean> subBaseNodes = baseNodes.subList(0, 50);
+            ArrayList<TocBean> finalBaseNode;
+            if (baseNodes.size() > 99) {
+                List<TocBean> subBaseNodes = baseNodes.subList(0, 100);
+                finalBaseNode = new ArrayList<>(subBaseNodes);
+            } else {
+                finalBaseNode = baseNodes;
+            }
 
-            ArrayList<TocBean> finalBaseNode = new ArrayList<>(subBaseNodes);
-
-            Log.i("MyLog", "baseNodes ==  " + finalBaseNode.size());
 
             if (mBookNodeAdapter == null) {
                 mBookNodeAdapter = new BookNodeAdapter(this, finalBaseNode);
@@ -415,7 +427,15 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 .centerCrop()
                 .placeholder(R.drawable.bookshelf_default_cover_port)
                 .error(R.drawable.bookshelf_default_cover_port);
+//        /**
+//         * 1736 / 1920 的比例 需要动态获取
+//         */
+//        RequestOptions requestOptions = RequestOptions
+//                .bitmapTransform(new CropTransformation(1080, 1736, CropTransformation.CropType.CENTER))
+//                .placeholder(R.drawable.bookshelf_default_cover_port)
+//                .error(R.drawable.bookshelf_default_cover_port);
 
+        Log.i("mCoverUrl", "mCoverUrl" + mCoverUrl);
         Glide.with(this)
                 .load(mCoverUrl)
                 .apply(requestOptions)
