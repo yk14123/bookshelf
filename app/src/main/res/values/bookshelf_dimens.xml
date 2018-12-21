@@ -435,6 +435,8 @@
     <dimen name="bookshelf_metadata_myframelayout_bg_view">196dp</dimen>
     <dimen name="bookshelf_metadata_cardview_margin">45dp</dimen>
     <dimen name="bookshelf_metadata_cardview_linearlayout_padding">45dp</dimen>
-    <dimen name="bookshelf_metadata_text_content_linespacing">30dp</dimen>
 
+    <!--<dimen name="bookshelf_metadata_text_content_linespacing">30dp</dimen>-->
+    <!--<dimen name="bookshelf_metadata_text_content_size">15sp</dimen>-->
+    <!--<dimen name="bookshelf_metadata_text_title_size">20sp</dimen>-->
 </resources>

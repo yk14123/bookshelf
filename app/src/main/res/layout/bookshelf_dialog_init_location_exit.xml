@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:id="@+id/tv_shelf_detail_exit_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="客户ID是："/>
+
+    <EditText
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:id="@+id/et_shelf_detail_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="退出密码"/>
+
+    <!--<Button-->
+        <!--android:id="@+id/bt_shelf_detail_exit"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="确认关闭程序"/>-->
+
+</LinearLayout>

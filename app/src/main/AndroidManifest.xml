@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.chinafocus.bookshelf">
+          package="com.chinafocus.bookshelf">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <application
         android:name=".global.BookShelfApplication"
@@ -32,7 +32,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
@@ -43,33 +43,40 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
 
         <activity
             android:name=".ui.activity.ShelfDetailActivity"
             android:theme="@style/AppCompatNoActionBar">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".ui.activity.BookCategoryDetailActivity"
-            android:theme="@style/AppCompatNoActionBar" />
+            android:theme="@style/AppCompatNoActionBar"/>
         <activity
             android:name=".ui.activity.BookMetaDataActivity"
-            android:theme="@style/AppCompatNoActionBar" />
+            android:theme="@style/AppCompatNoActionBar"/>
         <activity
             android:name=".ui.activity.BookContentDetailActivity"
-            android:theme="@style/AppCompatNoActionBar" />
+            android:theme="@style/AppCompatNoActionBar"/>
 
         <activity android:name=".ui.activity.BookMetaDataActivityYang">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity android:name=".ui.activity.BookInitActivity">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+
+            <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>

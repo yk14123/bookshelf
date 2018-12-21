@@ -67,7 +67,8 @@ public class BookCoverDialog extends PopupWindow {
         setAnimationStyle(R.style.ActivityScaleAnimation);
         //设置宽高
         int height = screenHeight - stateBarHeight - parent.getHeight();
-        setHeight(height);
+//        setHeight(height);
+        setHeight(screenHeight);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
@@ -75,7 +76,7 @@ public class BookCoverDialog extends PopupWindow {
         //设置图片
         Glide.with(mContext)
                 .load(imgUrl)
-                .apply(new RequestOptions()
+                .apply(new RequestOptions().centerCrop()
                         .error(R.drawable.bookshelf_default_cover_port)
                         .placeholder(R.drawable.bookshelf_default_cover_port))
                 .into(mIvBookCover);

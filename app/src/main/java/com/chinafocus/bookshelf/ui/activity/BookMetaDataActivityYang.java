@@ -27,9 +27,9 @@ import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResul
 import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
 import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
+import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapter;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
-import com.chinafocus.bookshelf.ui.widgets.OverByNestedScrollView;
 import com.chinafocus.bookshelf.utils.UIHelper;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentLinearLayout;
@@ -59,7 +59,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private RecyclerView mRvMetaData;
     private BookNodeAdapter mBookNodeAdapter;
     //滑动控件
-    private OverByNestedScrollView mNestedScrollView;
+    private NestedScrollView mNestedScrollView;
     //悬浮控件
     private ImageView mIvBackTop;
 
@@ -87,8 +87,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private View mViewHeaderWrapper;
     private ImageView mIvBookCover;
     private Disposable mTvExpandControlClicks;
-    private int mShortHeight;
-    private int mLongHeight;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -158,6 +156,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
     }
 
+
     private void initArrowImage() {
         mBookshelf_arrow_up = getResources().getDrawable(
                 R.drawable.bookshelf_arrow_up);
@@ -168,22 +167,21 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private boolean isHeaderContentLoadMore = true;
 
     private void toggle() {
-        mShortHeight = getShortHeight();
-        mLongHeight = getLongHeight();
-
-        Log.i("toggle", "mShortHeight-->" + mShortHeight);
-        Log.i("toggle", "mLongHeight-->" + mLongHeight);
+        int shortHeight = getShortHeight();
+        int longHeight = getLongHeight();
 
         if (!isHeaderContentLoadMore) {
+            //打开更多
             //不需要更多，所以执行，关闭-->显示：更多
             isHeaderContentLoadMore = true;
-            if (mLongHeight > mShortHeight)
-                mAnimator = ValueAnimator.ofInt(mLongHeight, mShortHeight);
+            if (longHeight > shortHeight)
+                mAnimator = ValueAnimator.ofInt(longHeight, shortHeight);
         } else {
+            //关闭收入
             //是需要更多，所以执行，打开-->显示：收入
             isHeaderContentLoadMore = false;
-            if (mLongHeight > mShortHeight)
-                mAnimator = ValueAnimator.ofInt(mShortHeight, mLongHeight);
+            if (longHeight > shortHeight)
+                mAnimator = ValueAnimator.ofInt(shortHeight, longHeight);
         }
 
         if (mAnimator != null && !mAnimator.isRunning()) {
@@ -226,7 +224,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         mTv_expand_layoutParams.height = getShortHeight();
         mTv_expand_content_view.setLayoutParams(mTv_expand_layoutParams);
         mTv_expand_content_view.setText(Html.fromHtml(mDataTest));
-//        mTv_expand_content_view.setText(mDataTest);
 
         mTv_expand_control = findViewById(R.id.tv_expand_control);
         mTvExpandControlClicks = RxView.clicks(mTv_expand_control).throttleFirst(1000, TimeUnit.MILLISECONDS)
@@ -243,13 +240,18 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         int measuredWidth = mTv_expand_content_view.getMeasuredWidth();
 
         TextView textView = new TextView(this);
-        textView.setText(Html.fromHtml(mDataTest),TextView.BufferType.SPANNABLE);
-//        textView.setText(mDataTest);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        textView.setText(Html.fromHtml(mDataTest));
+        //竖屏设备sp：25
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);//要和xml配置一致
+//        textView.setLineSpacing(30, 1);//要和xml配置一致
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);//要和xml配置一致
+        textView.setLineSpacing(30, 1);//要和xml配置一致，始终是固定30。因为xml里面写的是dp。竖屏和手机都是10dp
+
         textView.setMaxLines(4);
 
         int widthSpec = View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY);
-        int heightSpec = View.MeasureSpec.makeMeasureSpec(3000, View.MeasureSpec.AT_MOST);
+        int heightSpec = View.MeasureSpec.makeMeasureSpec(10000, View.MeasureSpec.AT_MOST);
 
         textView.measure(widthSpec, heightSpec);
 
@@ -257,23 +259,24 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     }
 
     private String mDataTest = "人是科技创新最关键的因素。创新的事业呼唤创新的人才。尊重人才，是中华民族的悠久传统。“思皇多士，生此王国。王国克生，维周之桢；济济多士，文王以宁。”这是《诗经•大雅•文王》中的话，说的是周文王尊贤礼士，贤才济济，所以国势强盛。千秋基业，人才为先。实现中华民族伟大复兴，人才越多越好，本事越大越好。<br><br><i>——摘自“加快从要素驱动、投资规模驱动发展为主向以创新驱动发展为主的转变（2014年6月9日）”，《习近平谈治国理政 第一卷》</i>";
-//    private String mDataTest = "人是科技创新最关键的因素。创新的事业呼唤创新的人才。尊重人才，是中华民族的悠久传统。“思皇多士，生此王国。王国克生，维周之桢；济济多士，文王以宁。”这是《诗经•大雅•文王》中的话，说的是周文王尊贤礼士，贤才济济，所以国势强盛。千秋基业，人才为先。实现中华民族伟大复兴，人才越多越好，本事越大越好。  ——摘自“加快从要素驱动、投资规模驱动发展为主向以创新驱动发展为主的转变（2014年6月9日）”，《习近平谈治国理政 第一卷》";
 
     private int getLongHeight() {
         int measuredWidth = mTv_expand_content_view.getMeasuredWidth();
 
         TextView textView = new TextView(this);
-        textView.setText(Html.fromHtml(mDataTest),TextView.BufferType.SPANNABLE);
-//        textView.setText(mDataTest);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        textView.setText(Html.fromHtml(mDataTest));
+        //竖屏设备sp：25
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);//要和xml配置一致
+//        textView.setLineSpacing(30, 1);//要和xml配置一致
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);//要和xml配置一致
+        textView.setLineSpacing(30, 1);//要和xml配置一致
 
         int widthSpec = View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY);
-        int heightSpec = View.MeasureSpec.makeMeasureSpec(3000, View.MeasureSpec.AT_MOST);
+        int heightSpec = View.MeasureSpec.makeMeasureSpec(10000, View.MeasureSpec.AT_MOST);
 
         textView.measure(widthSpec, heightSpec);
-//竖屏加10   突然发现。这个+的数字和字号有关系  15的话 竖屏补10  手机补3
-//        return textView.getMeasuredHeight()+10;
-//        return textView.getMeasuredHeight()+3;
+
         return textView.getMeasuredHeight();
     }
 
@@ -281,8 +284,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         mRvMetaData = findViewById(R.id.rv_book_meta_data);
         LinearLayoutManager manager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
-//        manager.setSmoothScrollbarEnabled(true);
-//        manager.setAutoMeasureEnabled(true);
+        manager.setSmoothScrollbarEnabled(true);
+//        manager.setAutoMeasureEnabled(true);默认是true
 
         mRvMetaData.setLayoutManager(manager);
         mRvMetaData.setHasFixedSize(true);//当前条目固定的情况下，设置此属性，提高RecyclerView的性能
@@ -357,6 +360,23 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         mIvRightMenu.setVisibility(View.INVISIBLE);
     }
 
+//    /**
+//     * 設置悬浮按钮的显示和隐藏状态
+//     *
+//     * @param reachTop 当前NestedScrollView是否滑动到顶部
+//     */
+//    private void setFloatingButtonState(boolean reachTop) {
+//        if (reachTop) {
+//            if (mIvBackTop.getVisibility() == View.VISIBLE) {
+//                mIvBackTop.setVisibility(View.GONE);
+//            }
+//        } else {
+//            if (mIvBackTop.getVisibility() == View.GONE) {
+//                mIvBackTop.setVisibility(View.VISIBLE);
+//            }
+//        }
+//    }
+
     @SuppressLint("CheckResult")
     @Override
     public void onRefreshFinished(String refreshType, List<BookMetadataResultBean> result) {
@@ -397,8 +417,10 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             //获取数据
             ArrayList<TocBean> baseNodes = mPresenter.getTocList(toc, -1);
 
-            Log.i("MyLog", "baseNodes ==  " + baseNodes.size());
 
+            /**
+             * 客户端要做分页优化！！！
+             */
             ArrayList<TocBean> finalBaseNode;
             if (baseNodes.size() > 99) {
                 List<TocBean> subBaseNodes = baseNodes.subList(0, 100);
@@ -407,13 +429,23 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 finalBaseNode = baseNodes;
             }
 
-
             if (mBookNodeAdapter == null) {
                 mBookNodeAdapter = new BookNodeAdapter(this, finalBaseNode);
             }
-            mBookNodeAdapter.setBookNodeClickListener((label, pageId) ->
+
+            mBookNodeAdapter.setBookNodeClickListener(new BookNodeAdapter.OnBookNodeClickListener() {
+                @Override
+                public void onNodeClick(String label, String pageId, String title) {
+
+                    String str = mBookId + "!" + title;
+
+                    Log.i("StatisticsPresenter", "StatisticsPresenter  last -->" + str);
+                    StatisticsPresenter.postStatisticsNow(getApplicationContext(), "4", str);
                     UIHelper.startContentDetailActivity(BookMetaDataActivityYang.this,
-                            mShelfId, mCategoryId, mBookId, label, pageId));
+                            mShelfId, mCategoryId, mBookId, label, pageId);
+                }
+            });
+
             mRvMetaData.setAdapter(mBookNodeAdapter);
         } else {
             showRefreshLayout(true);
@@ -427,15 +459,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 .centerCrop()
                 .placeholder(R.drawable.bookshelf_default_cover_port)
                 .error(R.drawable.bookshelf_default_cover_port);
-//        /**
-//         * 1736 / 1920 的比例 需要动态获取
-//         */
-//        RequestOptions requestOptions = RequestOptions
-//                .bitmapTransform(new CropTransformation(1080, 1736, CropTransformation.CropType.CENTER))
-//                .placeholder(R.drawable.bookshelf_default_cover_port)
-//                .error(R.drawable.bookshelf_default_cover_port);
 
-        Log.i("mCoverUrl", "mCoverUrl" + mCoverUrl);
         Glide.with(this)
                 .load(mCoverUrl)
                 .apply(requestOptions)

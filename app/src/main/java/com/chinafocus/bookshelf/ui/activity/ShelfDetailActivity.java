@@ -1,6 +1,7 @@
 package com.chinafocus.bookshelf.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,18 +17,23 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.base.BaseActivity;
+import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesDetailPresenter;
+import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.ShelfCategoryAdapter;
 import com.chinafocus.bookshelf.ui.adapter.ShelfIntroAdapter;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
+import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.UIHelper;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
@@ -69,14 +76,17 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     private ScrollView mSvCopyrightContent;
     private TextView mTvCopyrightContent;
 
+    private TextView mTvVersionInfo;
+    private AlertDialog mExitDialog;
+    private View mLocation_exit_view;
+    private EditText mExit_id;
+
     @SuppressLint("CheckResult")
     @Override
     protected void initView() {
         setContentView(R.layout.bookshelf_activity_detail);
         //设置当前的版本号
-        TextView mTvVersionInfo = findViewById(R.id.tv_shelf_detail_version);
-        String appVersion = ManifestUtils.getVersionName(this);
-        mTvVersionInfo.setText(appVersion);
+        initControlExitLogo();
         //root
         mRlShelfRoot = findViewById(R.id.rl_shelf_detail_root);
 
@@ -96,6 +106,94 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         mPresenter = new ShelvesDetailPresenter(this);
         //请求数据
         requestShelfDetail();
+
+    }
+
+    private void initControlExitLogo() {
+        mTvVersionInfo = findViewById(R.id.tv_shelf_detail_version);
+        String appVersion = ManifestUtils.getVersionName(this);
+        mTvVersionInfo.setText(appVersion);
+        mTvVersionInfo.setVisibility(View.VISIBLE);
+
+        //初始化退出dialog自定义View
+        initExitDialogView();
+
+        mTvVersionInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String string = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+                if (!TextUtils.isEmpty(string))
+
+                    if (mExitDialog == null) {
+                        mExitDialog = new AlertDialog.Builder(ShelfDetailActivity.this)
+                                .setView(mLocation_exit_view)
+                                .setPositiveButton("确认关闭应用", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String s = mExit_id.getText().toString();
+
+                                        if (s.equals("123")) {
+
+                                            SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "");
+
+                                            System.exit(0);
+                                        } else {
+
+                                            Toast.makeText(getApplicationContext(), "退出密码不对，无法关闭应用程序", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("取消退出应用", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mExitDialog.dismiss();
+                                    }
+                                })
+                                .create();
+                        //設置点击外部不可以消失
+                        mExitDialog.setCanceledOnTouchOutside(false);
+                        //设置不可以点击消失
+                        mExitDialog.setCancelable(false);
+
+                    }
+
+                if (!mExitDialog.isShowing()) {
+                    mExitDialog.show();
+                }
+
+            }
+        });
+    }
+
+    private void initExitDialogView() {
+        mLocation_exit_view = View.inflate(getApplicationContext(), R.layout.bookshelf_dialog_init_location_exit, null);
+
+        TextView location_id = mLocation_exit_view.findViewById(R.id.tv_shelf_detail_exit_location);
+        mExit_id = mLocation_exit_view.findViewById(R.id.et_shelf_detail_exit);
+//        Button bt_exit = mLocation_exit_view.findViewById(R.id.bt_shelf_detail_exit);
+
+        String Id = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+        location_id.setText("客户Id是：" + Id);
+
+//        bt_exit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String s = mExit_id.getText().toString();
+//
+//                if (s.equals("123")) {
+//
+//                    SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "");
+//
+//                    System.exit(0);
+//                } else {
+//
+//                    Toast.makeText(getApplicationContext(), "退出密码不对，无法关闭应用程序", Toast.LENGTH_SHORT).show();
+//
+//                }
+//            }
+//        });
 
     }
 
@@ -228,6 +326,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             if (mShelfCategoryAdapter == null) {
                 mShelfCategoryAdapter = new ShelfCategoryAdapter(ShelfDetailActivity.this, resultBean.getCategories());
                 mShelfCategoryAdapter.setShelfCategoryListener((shelfId, categoryId, categoryName) -> {
+
+                    StatisticsPresenter.postStatisticsNow(getApplicationContext(), "2", String.valueOf(categoryId));
                     //跳转书架页面
                     UIHelper.startBookCategoryDetailActivity(ShelfDetailActivity.this,shelfId,categoryId,categoryName);
 

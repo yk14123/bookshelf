@@ -15,6 +15,9 @@ class RetrofitFactory {
     static Retrofit getDownloadService() {
         SSLSocketFactory sslSocketFactory = HttpsUtils.setCertificatesFromFile(BookShelfApplication.sContext, "expressreader.cn.crt");
 
+        //证书无效处理
+        sslSocketFactory = null;
+
         OkHttpClient client;
         if (sslSocketFactory != null) {
             client = new OkHttpClient.Builder()

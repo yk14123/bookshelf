@@ -3,10 +3,21 @@ package com.chinafocus.bookshelf.model.network;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface ApiService {
 
+
+    /**
+     * @param statisticsType 为具体被点击的统计页面
+     * @param statisticsId   为具体被点击的条目
+     * @param origin         为当前客户唯一标识，需要在登陆页面输入获取
+     * @param client         为当前设备唯一id，通过代码获取
+     * @return
+     */
+    @POST("api/statistics/type/{statisticsType}/statisticsId/{statisticsId}/origin/{origin}/client/{client}")
+    Observable<String> postStatistics(@Path("statisticsType") String statisticsType, @Path("statisticsId") String statisticsId, @Path("origin") String origin, @Path("client") String client);
 
     /**
      * 获取相关书柜

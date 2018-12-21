@@ -60,10 +60,10 @@ public class MyFrameLayout extends FrameLayout {
 //
 //        int ll_result_width_spec = MeasureSpec.makeMeasureSpec(ll_result_width_size, MeasureSpec.EXACTLY);
 //
-//        int ll_measuredHeight = mCardView.getMeasuredHeight();
+//        int ll_measuredHeight = mLinearLayout.getMeasuredHeight();
 //        int bgResultHeightSpec = MeasureSpec.makeMeasureSpec(ll_measuredHeight, MeasureSpec.EXACTLY);
 //
-//        mCardView.measure(ll_result_width_spec,bgResultHeightSpec);
+//        mLinearLayout.measure(ll_result_width_spec,bgResultHeightSpec);
 //
 //        int size = MeasureSpec.getSize(widthMeasureSpec);
 //

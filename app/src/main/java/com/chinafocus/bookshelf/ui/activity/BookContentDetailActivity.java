@@ -33,7 +33,7 @@ import java.util.List;
 
 public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.BookContentResultBean> {
     private static final String TAG = "BookContent";
-    private IShelvesMvpContract.IPresenter mPresenter;
+    private BookContentDetailPresenter mPresenter;
     //错误视图
     private PercentLinearLayout mLlErrorLayout;
     //内容展示控件
@@ -60,6 +60,10 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
 
     @Override
     protected void initView() {
+        //初始化Presenter
+        if (mPresenter == null)
+            mPresenter = new BookContentDetailPresenter(this);
+
         getExtraFromIntent();
         setContentView(R.layout.bookshelf_activity_book_content_detail);
         initNavMenu();
@@ -131,7 +135,14 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
             mBookId = intent.getIntExtra(BookShelfConstant.BOOK_ID, 1);
             mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, 1);
             mBookName = intent.getStringExtra(BookShelfConstant.BOOK_NAME);
+
             mPageId = intent.getStringExtra(BookShelfConstant.PAGE);
+            mPageId = mPresenter.formatUrl(mPageId);
+            if (!TextUtils.isEmpty(mPageId) && mPageId.contains("/")) {
+                mPageId = mPageId.replace("/", "%2F");
+            }
+
+            Log.i("BookContent", "mPageId-!!0000000!!!->" + mPageId);
             Log.d(TAG, "getExtraFromIntent: mShelfId >>>" + mShelfId
                     + " mBookId >>> " + mBookId + " mCategoryId >>> "
                     + mCategoryId + " mBookName >>> " + mBookName
@@ -146,8 +157,8 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         showRefreshLayout(false);
         showLoading();
         //初始化Presenter
-        if (mPresenter == null)
-            mPresenter = new BookContentDetailPresenter(this);
+//        if (mPresenter == null)
+//            mPresenter = new BookContentDetailPresenter(this);
 //        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_DETAIL,
 //                new String[]{String.valueOf(mShelfId),
 //                        String.valueOf(mCategoryId),
@@ -166,6 +177,7 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         if (bookContentResultBean != null) {
             showRefreshLayout(false);
             mNextPage = bookContentResultBean.getNext();
+            mNextPage = mPresenter.formatUrl(mNextPage);
             if (mBookContentAdapter == null) {
                 //首次加載
                 mBookContentAdapter = new BookContentDetailAdapter(this, result);

@@ -58,7 +58,12 @@ public class BookContentDetailAdapter extends RecyclerView.Adapter<BookContentDe
         BookContentResultBean bookContentResultBean = mBookContents.get(position);
         if (bookContentResultBean != null) {
             String current = bookContentResultBean.getCurrent();
-            String css = bookContentResultBean.getCss();
+
+//            String css = bookContentResultBean.getCss();
+//            Log.i("woyaosile", css);
+//     原版CSS样式    https://bookcases.oss-cn-beijing.aliyuncs.com/6213dbe617bd9942d528c7795f7ca079/css/stylesheet.css
+//            https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css
+            String css = "https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css";
             if (!TextUtils.isEmpty(current)) {
                 //加载本地文件
                 String linkCss = "<link rel=\"stylesheet\" href=\"" + css + "\" type=\"text/css\">";

@@ -22,6 +22,7 @@ import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResul
 import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
 import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
+import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapter;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
 import com.chinafocus.bookshelf.ui.widgets.BottomViewDragBehavior;
@@ -257,9 +258,21 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataResultBean> i
             if (mBookNodeAdapter == null) {
                 mBookNodeAdapter = new BookNodeAdapter(this, baseNodes);
             }
-            mBookNodeAdapter.setBookNodeClickListener((label, pageId) ->
+
+            mBookNodeAdapter.setBookNodeClickListener(new BookNodeAdapter.OnBookNodeClickListener() {
+                @Override
+                public void onNodeClick(String label, String pageId, String title) {
+
+                    String str = mBookId + "!" + title;
+
+                    Log.i("StatisticsPresenter", "StatisticsPresenter  last -->" + str);
+                    StatisticsPresenter.postStatisticsNow(getApplicationContext(), "4", str);
+                    Log.i("StatisticsPresenter", "StatisticsPresenter  last -->" + pageId);
                     UIHelper.startContentDetailActivity(BookMetaDataActivity.this,
-                            mShelfId, mCategoryId, mBookId, label, pageId));
+                            mShelfId, mCategoryId, mBookId, label, pageId);
+                }
+            });
+
             mRvMetaData.setAdapter(mBookNodeAdapter);
         } else {
             showRefreshLayout(true);

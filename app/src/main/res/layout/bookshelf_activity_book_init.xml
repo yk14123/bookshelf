@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="旧的客户id是："
+        android:id="@+id/tv_location_temp_pre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:hint="请输入要发货的位置代号"
+        android:id="@+id/et_init_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:hint="请再次确认位置代号，两次输入需一致"
+        android:id="@+id/et_init_location_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/bt_init_ok_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="确认"/>
+
+</LinearLayout>

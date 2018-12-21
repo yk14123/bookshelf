@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
 import com.chinafocus.bookshelf.utils.ScreenUtils;
@@ -68,7 +69,7 @@ public class BookNodeAdapter extends RecyclerView.Adapter<BookNodeAdapter.BookNo
             //设置点选回调事件
             bookNodeHolder.llBookMetaRoot.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onNodeClick(baseNode.getLabel(), baseNode.getFull());
+                    listener.onNodeClick(baseNode.getLabel(), baseNode.getFull(), baseNode.getTitle());
                 }
             });
         }
@@ -88,7 +89,7 @@ public class BookNodeAdapter extends RecyclerView.Adapter<BookNodeAdapter.BookNo
 
     //回调接口
     public interface OnBookNodeClickListener {
-        void onNodeClick(String label, String pageId);
+        void onNodeClick(String label, String pageId, String title);
     }
 
     public void setBookNodeClickListener(OnBookNodeClickListener listener) {
