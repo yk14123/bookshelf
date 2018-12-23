@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
-import com.chinafocus.bookshelf.model.bean.BookCategoryDetailRawBean.BookCategoryDetailResultBean;
+import com.chinafocus.bookshelf.bean.BookCategoryDetailRawBean.BookCategoryDetailResultBean;
+import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.BookCategoryDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
@@ -112,7 +112,8 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
                 mRvBookCategory.setAdapter(mBookCategoryAdapter);
                 mBookCategoryAdapter.setBookItemListener((bookId, bookName) -> {
                     Log.d(TAG, "onRefreshFinished: bookId >>> " + bookId + " bookName >>> " + bookName);
-                    StatisticsPresenter.postStatisticsNow(getApplicationContext(), "3", String.valueOf(bookId));
+//                    StatisticsType.postStatisticsNow(getApplicationContext(), "3", String.valueOf(bookId));
+                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(), "3", String.valueOf(bookId));
                     //跳轉圖書詳情頁
                     UIHelper.startBookMetaActivity(this, mShelfId, mCategoryId, bookId, bookName, mCategoryName);
                 });

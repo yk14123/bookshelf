@@ -24,9 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
-import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
+import com.chinafocus.bookshelf.bean.ShelvesCategoryResultBean;
+import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesDetailPresenter;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
@@ -108,6 +108,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         requestShelfDetail();
 
     }
+
 
     private void initControlExitLogo() {
         mTvVersionInfo = findViewById(R.id.tv_shelf_detail_version);
@@ -327,7 +328,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 mShelfCategoryAdapter = new ShelfCategoryAdapter(ShelfDetailActivity.this, resultBean.getCategories());
                 mShelfCategoryAdapter.setShelfCategoryListener((shelfId, categoryId, categoryName) -> {
 
-                    StatisticsPresenter.postStatisticsNow(getApplicationContext(), "2", String.valueOf(categoryId));
+//                    StatisticsType.postStatisticsNow(getApplicationContext(), "2", String.valueOf(categoryId));
+                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(),"2",String.valueOf(categoryId));
                     //跳转书架页面
                     UIHelper.startBookCategoryDetailActivity(ShelfDetailActivity.this,shelfId,categoryId,categoryName);
 
@@ -437,6 +439,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         if (mIvCopyright_clicks != null && mIvCopyright_clicks.isDisposed()) {
             mIvCopyright_clicks.dispose();
         }
+        mPresenter.destroy();
         super.onDestroy();
     }
 }

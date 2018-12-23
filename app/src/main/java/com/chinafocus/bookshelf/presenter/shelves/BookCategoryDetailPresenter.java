@@ -1,8 +1,6 @@
 package com.chinafocus.bookshelf.presenter.shelves;
 
-import com.chinafocus.bookshelf.model.bean.BookCategoryDetailRawBean;
-import com.chinafocus.bookshelf.model.bean.ShelvesCategoryRawBean;
-import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
+import com.chinafocus.bookshelf.bean.BookCategoryDetailRawBean;
 
 import java.util.ArrayList;
 import java.util.List;

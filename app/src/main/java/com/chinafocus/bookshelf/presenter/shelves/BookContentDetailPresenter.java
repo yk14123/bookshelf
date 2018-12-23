@@ -2,10 +2,9 @@ package com.chinafocus.bookshelf.presenter.shelves;
 
 import android.text.TextUtils;
 
-import com.chinafocus.bookshelf.model.bean.BookContentRawBean;
+import com.chinafocus.bookshelf.bean.BookContentRawBean;
 import com.chinafocus.bookshelf.utils.JMDESUtil;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 

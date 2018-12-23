@@ -16,10 +16,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.base.BaseActivity;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
+import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
@@ -265,9 +265,10 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataResultBean> i
 
                     String str = mBookId + "!" + title;
 
-                    Log.i("StatisticsPresenter", "StatisticsPresenter  last -->" + str);
-                    StatisticsPresenter.postStatisticsNow(getApplicationContext(), "4", str);
-                    Log.i("StatisticsPresenter", "StatisticsPresenter  last -->" + pageId);
+                    Log.i("StatisticsType", "StatisticsType  last -->" + str);
+//                    StatisticsType.postStatisticsNow(getApplicationContext(), "4", str);
+                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(),"4",str);
+                    Log.i("StatisticsType", "StatisticsType  last -->" + pageId);
                     UIHelper.startContentDetailActivity(BookMetaDataActivity.this,
                             mShelfId, mCategoryId, mBookId, label, pageId);
                 }

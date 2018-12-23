@@ -72,7 +72,7 @@
             <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name=".ui.activity.BookInitActivity">
+        <activity android:name=".ui.activity.BookInitPortraitActivity">
             <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
 

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.model.bean.BookCategoryDetailRawBean;
+import com.chinafocus.bookshelf.bean.BookCategoryDetailRawBean;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.util.List;

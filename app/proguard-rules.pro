@@ -23,7 +23,7 @@
 
 #--------------------------1.实体类---------------------------------
 
--keep class com.chinafocus.bookshelf.model.bean.**{*;}
+-keep class com.chinafocus.bookshelf.bean.**{*;}
 
 #--------------------------2.第三方包-------------------------------
 

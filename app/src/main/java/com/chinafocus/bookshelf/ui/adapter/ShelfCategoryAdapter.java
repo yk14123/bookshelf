@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean;
+import com.chinafocus.bookshelf.bean.ShelvesCategoryResultBean;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
 import com.zhy.android.percent.support.PercentFrameLayout;
 

@@ -1,6 +1,6 @@
 package com.chinafocus.bookshelf.presenter.shelves;
 
-import com.chinafocus.bookshelf.model.repository.shelves.ShelvesRepositoryFactory;
+import com.chinafocus.bookshelf.model.base.shelvesrepository.ShelvesRepositoryFactory;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;

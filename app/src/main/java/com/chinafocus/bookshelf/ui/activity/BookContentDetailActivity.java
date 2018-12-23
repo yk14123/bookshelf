@@ -12,9 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.base.BaseActivity;
+import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
-import com.chinafocus.bookshelf.model.bean.BookContentRawBean;
+import com.chinafocus.bookshelf.bean.BookContentRawBean;
 import com.chinafocus.bookshelf.presenter.shelves.BookContentDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.ui.adapter.BookContentDetailAdapter;

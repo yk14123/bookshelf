@@ -17,7 +17,7 @@ import android.webkit.WebViewClient;
 
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
-import com.chinafocus.bookshelf.model.bean.BookContentRawBean.BookContentResultBean;
+import com.chinafocus.bookshelf.bean.BookContentRawBean.BookContentResultBean;
 import com.chinafocus.bookshelf.utils.SpUtil;
 
 import java.util.List;

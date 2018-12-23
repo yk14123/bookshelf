@@ -12,14 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
 import com.chinafocus.bookshelf.utils.ScreenUtils;
 
 import java.util.ArrayList;
 
 /**
  * 图书MetaData目录嵌套数据适配器
- * bean see {@link com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean}
+ * bean see {@link BookMetadataRawBean.BookMetadataResultBean.TocBean}
  *
  * @author HUANG_JIN
  * create on 2018/12/1

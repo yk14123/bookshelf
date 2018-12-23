@@ -6,14 +6,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.base.BaseActivity;
-import com.chinafocus.bookshelf.model.bean.ShelvesResultBean;
+import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
+import com.chinafocus.bookshelf.bean.ShelvesResultBean;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesPresenter;
 
 import java.util.List;
 
-//import com.chinafocus.bookshelf.model.bean.ShelvesCategoryResultBean.ShelvesCategoriesFinalBean;
+//import com.chinafocus.bookshelf.model.ShelvesCategoryResultBean.ShelvesCategoriesFinalBean;
 
 
 //public class ShelvesActivity extends BaseActivity<ShelvesCategoriesFinalBean> {

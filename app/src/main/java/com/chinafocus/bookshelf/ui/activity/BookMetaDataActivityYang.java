@@ -22,9 +22,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.base.BaseActivity;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
+import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
@@ -439,8 +439,9 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
                     String str = mBookId + "!" + title;
 
-                    Log.i("StatisticsPresenter", "StatisticsPresenter  last -->" + str);
-                    StatisticsPresenter.postStatisticsNow(getApplicationContext(), "4", str);
+                    Log.i("StatisticsType", "StatisticsType  last -->" + str);
+//                    StatisticsType.postStatisticsNow(getApplicationContext(), "4", str);
+                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(),"4",str);
                     UIHelper.startContentDetailActivity(BookMetaDataActivityYang.this,
                             mShelfId, mCategoryId, mBookId, label, pageId);
                 }

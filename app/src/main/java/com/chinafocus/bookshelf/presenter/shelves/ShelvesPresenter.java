@@ -1,8 +1,8 @@
 package com.chinafocus.bookshelf.presenter.shelves;
 
 
-import com.chinafocus.bookshelf.model.bean.ShelvesRawBean;
-import com.chinafocus.bookshelf.model.bean.ShelvesResultBean;
+import com.chinafocus.bookshelf.bean.ShelvesRawBean;
+import com.chinafocus.bookshelf.bean.ShelvesResultBean;
 
 import java.util.List;
 

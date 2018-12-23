@@ -2,9 +2,9 @@ package com.chinafocus.bookshelf.presenter.shelves;
 
 import android.util.Log;
 
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean;
-import com.chinafocus.bookshelf.model.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean;
+import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
 
 import java.util.ArrayList;
 import java.util.List;

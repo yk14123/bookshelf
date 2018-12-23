@@ -1,0 +1,3 @@
+PermissionManagerFactory为入口类
+IPermissionManager为业务类
+通过入口类拿到业务类对象
