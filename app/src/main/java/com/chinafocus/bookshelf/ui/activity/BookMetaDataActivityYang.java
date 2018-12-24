@@ -87,6 +87,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private View mViewHeaderWrapper;
     private ImageView mIvBookCover;
     private Disposable mTvExpandControlClicks;
+    private TextView mTvCategoryTag;
+    private TextView mTvCommentTag;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -218,6 +220,9 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private void initExpandText() {
         mTv_expand_title = findViewById(R.id.tv_expand_title);
 
+        mTvCategoryTag = findViewById(R.id.tv_book_meta_data_category_tag);
+        mTvCommentTag = findViewById(R.id.tv_book_meta_data_comment_tag);
+
         mTv_expand_content_view = findViewById(R.id.tv_expand_content_view);
 
         mTv_expand_layoutParams = (LinearLayout.LayoutParams) mTv_expand_content_view.getLayoutParams();
@@ -241,12 +246,12 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
         TextView textView = new TextView(this);
         textView.setText(Html.fromHtml(mDataTest));
+        //手机设备sp：15
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);//要和xml配置一致
+        textView.setLineSpacing(30, 1);//要和xml配置一致
         //竖屏设备sp：25
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);//要和xml配置一致
-//        textView.setLineSpacing(30, 1);//要和xml配置一致
-
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);//要和xml配置一致
-        textView.setLineSpacing(30, 1);//要和xml配置一致，始终是固定30。因为xml里面写的是dp。竖屏和手机都是10dp
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);//要和xml配置一致
+//        textView.setLineSpacing(30, 1);//要和xml配置一致，始终是固定30。因为xml里面写的是dp。竖屏和手机都是10dp
 
         textView.setMaxLines(4);
 
@@ -265,12 +270,12 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
         TextView textView = new TextView(this);
         textView.setText(Html.fromHtml(mDataTest));
-        //竖屏设备sp：25
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);//要和xml配置一致
-//        textView.setLineSpacing(30, 1);//要和xml配置一致
-
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);//要和xml配置一致
+        //手机设备sp：15
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);//要和xml配置一致
         textView.setLineSpacing(30, 1);//要和xml配置一致
+        //竖屏设备sp：25
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);//要和xml配置一致
+//        textView.setLineSpacing(30, 1);//要和xml配置一致
 
         int widthSpec = View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY);
         int heightSpec = View.MeasureSpec.makeMeasureSpec(10000, View.MeasureSpec.AT_MOST);
@@ -389,6 +394,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             if (!TextUtils.isEmpty(mBookTitle)) {
                 if (!TextUtils.isEmpty(mCategoryTagName)) {
 //                    mTvBookTitle.setContentAndTag(mBookTitle, mCategoryTagName);
+                    mTv_expand_title.setText(mBookTitle);
+                    mTvCommentTag.setText(mCategoryTagName);
                 }
             }
 
@@ -402,12 +409,16 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                 Log.i(TAG, "comment >>> " + comment);
 //                mExpandText.setTextWithTag(Html.fromHtml(comment),
 //                        getString(R.string.bookshelf_book_comment));
+                mTvCommentTag.setText("推荐语");
+                mTv_expand_content_view.setText(comment);
             } else {
+                mTvCommentTag.setText("简介");
                 String description = dataBean.getDescription();
                 if (!TextUtils.isEmpty(description)) {
                     Log.i(TAG, "description >>> " + description);
 //                    mExpandText.setTextWithTag(Html.fromHtml(description),
 //                            getString(R.string.bookshelf_book_intro));
+                    mTv_expand_content_view.setText(description);
                 }
             }
 //            此处在设置完成数据之后，设置延迟100ms之后执行paddingTop的自适应刷新操作
@@ -441,7 +452,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
                     Log.i("StatisticsType", "StatisticsType  last -->" + str);
 //                    StatisticsType.postStatisticsNow(getApplicationContext(), "4", str);
-                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(),"4",str);
+                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(), "4", str);
                     UIHelper.startContentDetailActivity(BookMetaDataActivityYang.this,
                             mShelfId, mCategoryId, mBookId, label, pageId);
                 }
@@ -501,5 +512,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         if (mTvExpandControlClicks != null && mTvExpandControlClicks.isDisposed()) {
             mTvExpandControlClicks.dispose();
         }
+        mPresenter.destroy();
     }
 }

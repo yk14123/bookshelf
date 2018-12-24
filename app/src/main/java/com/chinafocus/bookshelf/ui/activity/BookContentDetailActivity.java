@@ -215,5 +215,6 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mPresenter.destroy();
     }
 }

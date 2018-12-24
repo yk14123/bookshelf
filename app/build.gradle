@@ -10,7 +10,7 @@ android {
         versionName "2.1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        flavorDimensions "versionCode"
+//        flavorDimensions "versionCode"
     }
 
     signingConfigs {
@@ -40,87 +40,87 @@ android {
         }
     }
 
-    productFlavors {
-        defaultFlavors {
-            buildConfigField "String", "APPSTORE_PACKAGE", '""'
-        }
-        //360平台
-        m360 {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.qihoo.appstore"'
-        }
-        //官方正式服务器
-        portal {
-            buildConfigField "String", "APPSTORE_PACKAGE", '""'
-        }
-        //百度手机助手
-        baidu {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.baidu.appsearch"'
-        }
-        //豌豆荚
-        wandoujia {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.wandoujia.phoenix2"'
-        }
-        //小米应用商店
-        xiaomi {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.xiaomi.market"'
-        }
-        //木蚂蚁
-        mumayi {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.mumayi.market.ui"'
-        }
-        //	搜狗手机助手
-        sougouzhushou {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.sogou.androidtool"'
-        }
-        //乐视
-        leShi {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.letv.app.appstore"'
-        }
-        //腾讯应用宝
-        tecentYingYongBao {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.tencent.android.qqdownloader"'
-        }
-        //易用汇-金立应用商店
-        jinli {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.gionee.aora.market"'
-        }
-        //智汇云-华为应用市场
-        zhihuiyun {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.huawei.appmarket"'
-        }
-        //联想乐商店
-        lenovo {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.lenovo.leos.appstore"'
-        }
-        //安智网
-        anzhi {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"cn.goapk.market"'
-        }
-        //应用汇
-        appchina {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.yingyonghui.market"'
-        }
-        //N多网
-        nduo {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.nduoa.nmarket"'
-        }
-        //魅族应用商店
-        meizu {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.meizu.mstore"'
-        }
-        //OPPO应用商店
-        oppo {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.oppo.market"'
-        }
-        //VIVO应用商店
-        vivo {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.bbk.appstore"'
-        }
-        //PP助手
-        pp {
-            buildConfigField "String", "APPSTORE_PACKAGE", '"com.pp.assistant"'
-        }
-    }
+//    productFlavors {
+//        defaultFlavors {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '""'
+//        }
+//        //360平台
+//        m360 {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.qihoo.appstore"'
+//        }
+//        //官方正式服务器
+//        portal {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '""'
+//        }
+//        //百度手机助手
+//        baidu {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.baidu.appsearch"'
+//        }
+//        //豌豆荚
+//        wandoujia {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.wandoujia.phoenix2"'
+//        }
+//        //小米应用商店
+//        xiaomi {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.xiaomi.market"'
+//        }
+//        //木蚂蚁
+//        mumayi {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.mumayi.market.ui"'
+//        }
+//        //	搜狗手机助手
+//        sougouzhushou {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.sogou.androidtool"'
+//        }
+//        //乐视
+//        leShi {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.letv.app.appstore"'
+//        }
+//        //腾讯应用宝
+//        tecentYingYongBao {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.tencent.android.qqdownloader"'
+//        }
+//        //易用汇-金立应用商店
+//        jinli {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.gionee.aora.market"'
+//        }
+//        //智汇云-华为应用市场
+//        zhihuiyun {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.huawei.appmarket"'
+//        }
+//        //联想乐商店
+//        lenovo {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.lenovo.leos.appstore"'
+//        }
+//        //安智网
+//        anzhi {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"cn.goapk.market"'
+//        }
+//        //应用汇
+//        appchina {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.yingyonghui.market"'
+//        }
+//        //N多网
+//        nduo {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.nduoa.nmarket"'
+//        }
+//        //魅族应用商店
+//        meizu {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.meizu.mstore"'
+//        }
+//        //OPPO应用商店
+//        oppo {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.oppo.market"'
+//        }
+//        //VIVO应用商店
+//        vivo {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.bbk.appstore"'
+//        }
+//        //PP助手
+//        pp {
+//            buildConfigField "String", "APPSTORE_PACKAGE", '"com.pp.assistant"'
+//        }
+//    }
 //    productFlavors.all {
 //        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
 //    }

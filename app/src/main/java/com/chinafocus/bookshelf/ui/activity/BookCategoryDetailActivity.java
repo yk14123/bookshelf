@@ -127,4 +127,10 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
     public void showTips(String message) {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.destroy();
+    }
 }

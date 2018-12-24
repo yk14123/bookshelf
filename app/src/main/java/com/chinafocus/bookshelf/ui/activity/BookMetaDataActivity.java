@@ -314,4 +314,9 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataResultBean> i
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.destroy();
+    }
 }

@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
-public class PermissionActivity extends AppCompatActivity {
+public class PermissionDemoActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {

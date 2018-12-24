@@ -1,131 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentLinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <View
-        android:id="@+id/view_header_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bookshelf_metadata_header_wrapper"/>
-
-    <com.chinafocus.bookshelf.ui.widgets.MyFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bookshelf_metadata_myframelayout_bg_view"
-            android:background="#fff"/>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/bookshelf_metadata_cardview_margin"
-            app:cardCornerRadius="@dimen/dp_10"
-            app:cardElevation="@dimen/dp_3"
-            app:contentPadding="@dimen/dp_10">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="#fff"
-                android:orientation="vertical"
-                android:padding="@dimen/bookshelf_metadata_cardview_linearlayout_padding">
-
-
-                <TextView
-                    android:id="@+id/tv_expand_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="标题"
-                    android:textSize="40sp"/>
-                <!--android:textSize="20sp"-->
-                <!--android:textSize="40sp"-->
-
-                <TextView
-                    android:id="@+id/tv_expand_content_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:lineSpacingExtra="30dp"
-                    android:lineSpacingMultiplier="1"
-                    android:textSize="25sp"
-                    />
-                <!--android:textSize="15sp"-->
-                <!--android:textSize="25sp"-->
-                <!--android:lineSpacingExtra="10dp"-->
-
-                <TextView
-                    android:id="@+id/tv_expand_control"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:drawableRight="@drawable/bookshelf_arrow_down"
-                    android:drawablePadding="10dp"
-                    android:text="更多"
-                    android:textSize="25sp"/>
-                <!--android:textSize="15sp"-->
-                <!--android:textSize="25sp"-->
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-    </com.chinafocus.bookshelf.ui.widgets.MyFrameLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp">
-        <!--android:paddingBottom="10dp"-->
-        <!--android:paddingTop="10dp"-->
-
-        <View
-            android:layout_width="15dp"
-            android:layout_height="66dp"
-            android:layout_alignTop="@+id/tv_book_meta_data_catalog"
-            android:layout_alignBottom="@id/tv_book_meta_data_catalog"
-            android:layout_gravity="center_horizontal"
-            android:background="#9B704A"/>
-
-        <!--<View-->
-        <!--android:layout_width="5dp"-->
-        <!--android:layout_height="22dp"-->
-        <!--android:background="#9B704A"/>-->
-
-        <TextView
-            android:id="@+id/tv_book_meta_data_catalog"
-            android:layout_width="wrap_content"
-            android:layout_height="66dp"
-            android:layout_marginStart="30dp"
-            android:gravity="center"
-            android:text="@string/bookshelf_book_summary"
-            android:textColor="@color/bookshelf_title_text_color"
-            android:textSize="40sp"
-            android:textStyle="bold"/>
-        <!--android:layout_marginStart="30dp"-->
-        <!--android:layout_height="22dp"-->
-        <!--android:textSize="16sp"-->
-    </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_book_meta_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:scrollbars="none"/>
-
-</com.zhy.android.percent.support.PercentLinearLayout>
-
-<!--手机适配-->
 <!--<com.zhy.android.percent.support.PercentLinearLayout-->
     <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
@@ -136,7 +9,7 @@
     <!--<View-->
         <!--android:id="@+id/view_header_wrapper"-->
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="243dp"/>-->
+        <!--android:layout_height="@dimen/bookshelf_metadata_header_wrapper"/>-->
 
     <!--<com.chinafocus.bookshelf.ui.widgets.MyFrameLayout-->
         <!--android:layout_width="match_parent"-->
@@ -145,13 +18,13 @@
         <!--<View-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="65dp"-->
+            <!--android:layout_marginTop="@dimen/bookshelf_metadata_myframelayout_bg_view"-->
             <!--android:background="#fff"/>-->
 
         <!--<android.support.v7.widget.CardView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginStart="15dp"-->
+            <!--android:layout_marginStart="@dimen/bookshelf_metadata_cardview_margin"-->
             <!--app:cardCornerRadius="@dimen/dp_10"-->
             <!--app:cardElevation="@dimen/dp_3"-->
             <!--app:contentPadding="@dimen/dp_10">-->
@@ -162,24 +35,57 @@
                 <!--android:layout_gravity="center"-->
                 <!--android:background="#fff"-->
                 <!--android:orientation="vertical"-->
-                <!--android:padding="15dp">-->
+                <!--android:padding="@dimen/bookshelf_metadata_cardview_linearlayout_padding">-->
+
 
                 <!--<TextView-->
                     <!--android:id="@+id/tv_expand_title"-->
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:text="标题"-->
-                    <!--android:textSize="20sp"/>-->
+                    <!--android:textSize="40sp"/>-->
+                <!--&lt;!&ndash;android:textSize="20sp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textSize="40sp"&ndash;&gt;-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                    <!--<TextView-->
+                        <!--android:text="九宫格分类"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:textColor="#fff"-->
+                        <!--android:gravity="center"-->
+                        <!--android:textSize="15sp"-->
+                        <!--android:background="@drawable/bookshelf_book_category_tag_bg"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"/>-->
+
+                    <!--<TextView-->
+                        <!--android:layout_marginLeft="5dp"-->
+                        <!--android:text="推荐语"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:gravity="center"-->
+                        <!--android:textSize="15sp"-->
+                        <!--android:textColor="#ff999999"-->
+                        <!--android:background="@drawable/bookshelf_book_comment_tag_bg"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"/>-->
+
+                <!--</LinearLayout>-->
 
                 <!--<TextView-->
                     <!--android:id="@+id/tv_expand_content_view"-->
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:layout_marginTop="10dp"-->
-                    <!--android:lineSpacingExtra="10dp"-->
+                    <!--android:lineSpacingExtra="30dp"-->
                     <!--android:lineSpacingMultiplier="1"-->
-                    <!--android:textSize="15sp"-->
+                    <!--android:textSize="25sp"-->
                     <!--/>-->
+                <!--&lt;!&ndash;android:textSize="15sp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textSize="25sp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:lineSpacingExtra="10dp"&ndash;&gt;-->
 
                 <!--<TextView-->
                     <!--android:id="@+id/tv_expand_control"-->
@@ -190,7 +96,9 @@
                     <!--android:drawableRight="@drawable/bookshelf_arrow_down"-->
                     <!--android:drawablePadding="10dp"-->
                     <!--android:text="更多"-->
-                    <!--android:textSize="15sp"/>-->
+                    <!--android:textSize="25sp"/>-->
+                <!--&lt;!&ndash;android:textSize="15sp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textSize="25sp"&ndash;&gt;-->
 
             <!--</LinearLayout>-->
 
@@ -202,12 +110,14 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:background="#fff"-->
-        <!--android:paddingTop="10dp"-->
-        <!--android:paddingBottom="10dp">-->
+        <!--android:paddingTop="30dp"-->
+        <!--android:paddingBottom="30dp">-->
+        <!--&lt;!&ndash;android:paddingBottom="10dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:paddingTop="10dp"&ndash;&gt;-->
 
         <!--<View-->
-            <!--android:layout_width="5dp"-->
-            <!--android:layout_height="22dp"-->
+            <!--android:layout_width="15dp"-->
+            <!--android:layout_height="66dp"-->
             <!--android:layout_alignTop="@+id/tv_book_meta_data_catalog"-->
             <!--android:layout_alignBottom="@id/tv_book_meta_data_catalog"-->
             <!--android:layout_gravity="center_horizontal"-->
@@ -221,13 +131,16 @@
         <!--<TextView-->
             <!--android:id="@+id/tv_book_meta_data_catalog"-->
             <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="22dp"-->
+            <!--android:layout_height="66dp"-->
             <!--android:layout_marginStart="30dp"-->
             <!--android:gravity="center"-->
             <!--android:text="@string/bookshelf_book_summary"-->
             <!--android:textColor="@color/bookshelf_title_text_color"-->
-            <!--android:textSize="16sp"-->
+            <!--android:textSize="40sp"-->
             <!--android:textStyle="bold"/>-->
+        <!--&lt;!&ndash;android:layout_marginStart="30dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="22dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:textSize="16sp"&ndash;&gt;-->
     <!--</RelativeLayout>-->
 
     <!--<android.support.v7.widget.RecyclerView-->
@@ -238,3 +151,147 @@
         <!--android:scrollbars="none"/>-->
 
 <!--</com.zhy.android.percent.support.PercentLinearLayout>-->
+
+<!--手机适配-->
+<com.zhy.android.percent.support.PercentLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view_header_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="243dp"/>
+
+    <com.chinafocus.bookshelf.ui.widgets.MyFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            android:background="#fff"/>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            app:cardCornerRadius="@dimen/dp_10"
+            app:cardElevation="@dimen/dp_3"
+            app:contentPadding="@dimen/dp_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#fff"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/tv_expand_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="标题"
+                    android:textSize="20sp"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="九宫格分类"
+                        android:padding="5dp"
+                        android:textColor="#fff"
+                        android:gravity="center"
+                        android:id="@+id/tv_book_meta_data_category_tag"
+                        android:textSize="10sp"
+                        android:background="@drawable/bookshelf_book_category_tag_bg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/tv_book_meta_data_comment_tag"
+                        android:layout_marginLeft="5dp"
+                        android:text="推荐语"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        android:textSize="10sp"
+                        android:textColor="#ff999999"
+                        android:background="@drawable/bookshelf_book_comment_tag_bg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_expand_content_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:lineSpacingExtra="10dp"
+                    android:lineSpacingMultiplier="1"
+                    android:textSize="15sp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_expand_control"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:drawableRight="@drawable/bookshelf_arrow_down"
+                    android:drawablePadding="10dp"
+                    android:text="更多"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </com.chinafocus.bookshelf.ui.widgets.MyFrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="22dp"
+            android:layout_alignTop="@+id/tv_book_meta_data_catalog"
+            android:layout_alignBottom="@id/tv_book_meta_data_catalog"
+            android:layout_gravity="center_horizontal"
+            android:background="#9B704A"/>
+
+        <!--<View-->
+        <!--android:layout_width="5dp"-->
+        <!--android:layout_height="22dp"-->
+        <!--android:background="#9B704A"/>-->
+
+        <TextView
+            android:id="@+id/tv_book_meta_data_catalog"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_marginStart="30dp"
+            android:gravity="center"
+            android:text="@string/bookshelf_book_summary"
+            android:textColor="@color/bookshelf_title_text_color"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_book_meta_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:scrollbars="none"/>
+
+</com.zhy.android.percent.support.PercentLinearLayout>
