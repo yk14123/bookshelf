@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view_header_wrapper_rv_yang"
+        android:layout_width="match_parent"
+        android:layout_height="243dp"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_book_meta_all_detail_rv_yang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        app:cardCornerRadius="@dimen/dp_10"
+        app:cardElevation="@dimen/dp_3"
+        app:contentPadding="@dimen/dp_10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#fff"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/tv_expand_title_rv_yang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="标题"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/tv_book_meta_data_category_tag_rv_yang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bookshelf_book_category_tag_bg"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="九宫格分类123"
+                android:textColor="#fff"
+                android:textSize="10sp"/>
+
+            <com.chinafocus.bookshelf.ui.widgets.ExpandableTextView
+                android:id="@+id/expand_text_view_rv_yang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:animAlphaStart="1"
+                app:collapseIndicator="@string/bookshelf_collapse_text"
+                app:expandIndicator="@string/bookshelf_more_text"
+                app:expandToggleType="TextView"
+                app:maxCollapsedLines="4">
+
+                <com.chinafocus.bookshelf.ui.widgets.TagTextView
+                    android:id="@+id/expandable_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/dp_6"
+                    android:textColor="@color/bookshelf_content_text_color"
+                    android:textSize="@dimen/sp_13"
+                    app:tagTextColor="#999999"
+                    app:tagTextDrawable="@drawable/bookshelf_book_comment_tag_bg"
+                    app:tagTextGravity="start"
+                    app:tagTextSize="@dimen/sp_10"/>
+
+                <TextView
+                    android:id="@+id/expand_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:drawableEnd="@drawable/bookshelf_arrow_down"
+                    android:drawablePadding="@dimen/dp_10"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/dp_10"
+                    android:textColor="#999999"
+                    android:textSize="@dimen/sp_13"/>
+            </com.chinafocus.bookshelf.ui.widgets.ExpandableTextView>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="22dp"
+            android:layout_alignTop="@+id/tv_book_meta_data_catalog"
+            android:layout_alignBottom="@id/tv_book_meta_data_catalog"
+            android:layout_gravity="center_horizontal"
+            android:background="#9B704A"/>
+
+        <!--<View-->
+        <!--android:layout_width="5dp"-->
+        <!--android:layout_height="22dp"-->
+        <!--android:background="#9B704A"/>-->
+
+        <TextView
+            android:id="@+id/tv_book_meta_data_catalog"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_marginStart="30dp"
+            android:gravity="center"
+            android:text="@string/bookshelf_book_summary"
+            android:textColor="@color/bookshelf_title_text_color"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+</LinearLayout>

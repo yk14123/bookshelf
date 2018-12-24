@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,20 +21,14 @@ import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
-import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapter;
+import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapterYang;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
-import com.chinafocus.bookshelf.ui.widgets.ExpandableTextView;
 import com.chinafocus.bookshelf.utils.UIHelper;
-import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentLinearLayout;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * 图书目录页面
@@ -44,7 +37,7 @@ import io.reactivex.functions.Consumer;
  * @version 1.0
  * create at 2018/11/27 13:06
  */
-public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBean> implements View.OnClickListener {
+public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultBean> implements View.OnClickListener {
     private static final String TAG = "BookMeta";
     private PercentRelativeLayout mRlAppBar;
     private BookMetaDataPresenter mPresenter;
@@ -52,7 +45,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private PercentLinearLayout mLlErrorLayout;
     //目录列表容器
     private RecyclerView mRvMetaData;
-    private BookNodeAdapter mBookNodeAdapter;
+    private BookNodeAdapterYang mBookNodeAdapter;
     //滑动控件
     private NestedScrollView mNestedScrollView;
     //悬浮控件
@@ -70,30 +63,33 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private int mCategoryId;
     //分类标签名
     private String mCategoryTagName;
-    private TextView mTv_expand_title;
-    private Disposable mViewHeaderWrapperClicks;
     //图书封面
-    private View mViewHeaderWrapper;
     private ImageView mIvBookCover;
-    private Disposable mTvExpandControlClicks;
-    private TextView mTvCategoryTag;
-    private ExpandableTextView mExpandText;
+
+//    private String[] mHeaderContent = new String[4];
+
+    private ArrayList<String> mHeaderContent = new ArrayList<>();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView() {
+
         getExtraFromIntent();
-        setContentView(R.layout.bookshelf_activity_book_meta_data_yang);
+        setContentView(R.layout.bookshelf_activity_book_meta_data_yang_rv);
         initNavMenu();
         //无数据视图
         mLlErrorLayout = findViewById(R.id.ll_bookshelf_reconnect_net);
         mLlErrorLayout.setOnClickListener(this);
+
+
         //封面点击事件
         initViewHeaderWrapper();
         //初始化图书信息HeaderExpand标题及内容
-        initExpandText();
+//        initExpandText();
         //初始化多级目录信息
         initRvMetaData();
+
+
         //返回顶部
         iniRollbackTop();
         //加载数据
@@ -102,76 +98,42 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     }
 
     private void iniRollbackTop() {
-        mIvBackTop = findViewById(R.id.iv_book_meta_back_top);
+        mIvBackTop = findViewById(R.id.iv_book_meta_back_top_rv_yang);
         mIvBackTop.setOnClickListener(this);
         //底部拖动View
-        mNestedScrollView = findViewById(R.id.nsv_book_meta_data);
 
-        mNestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
-                //判断当前NestedScrollView是否滑动到顶部
-                if (mNestedScrollView.getScrollY() == 0) {
-//                    setFloatingButtonState(true);
-                    mIvBackTop.setVisibility(View.GONE);
-                } else {
-//                    setFloatingButtonState(false);
-                    mIvBackTop.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+//        mNestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
+//                //判断当前NestedScrollView是否滑动到顶部
+//                if (mNestedScrollView.getScrollY() == 0) {
+////                    setFloatingButtonState(true);
+//                    mIvBackTop.setVisibility(View.GONE);
+//                } else {
+////                    setFloatingButtonState(false);
+//                    mIvBackTop.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void initViewHeaderWrapper() {
-
-        mIvBookCover = findViewById(R.id.iv_book_meta_data_cover_yang);
-
-        mViewHeaderWrapper = findViewById(R.id.view_header_wrapper);
-
-        mViewHeaderWrapperClicks = RxView.clicks(mViewHeaderWrapper).throttleFirst(1000, TimeUnit.MILLISECONDS)
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        if (!TextUtils.isEmpty(mCoverUrl)) {
-                            if (mBookCoverDialog == null) {
-                                mBookCoverDialog = new BookCoverDialog(BookMetaDataActivityYang.this, mRlAppBar);
-                                mBookCoverDialog.setImageUrl(mCoverUrl);
-                            }
-                            if (!mBookCoverDialog.isShowing()) {
-                                mBookCoverDialog.show();
-                            }
-                        }
-                    }
-                });
-
+        mIvBookCover = findViewById(R.id.iv_book_meta_data_cover_yang_rv);
     }
 
-    private void initExpandText() {
-
-        mTv_expand_title = findViewById(R.id.tv_expand_title);
-
-        mExpandText = findViewById(R.id.expand_text_view);
-        mExpandText.setOnExpandStateChangeListener((textView, isExpanded) -> {
-            Log.d(TAG, "expandState changed >>> isExpanded >>> " + isExpanded);
-//            requestNestedLayout();
-        });
-
-        mTvCategoryTag = findViewById(R.id.tv_book_meta_data_category_tag);
-
-    }
 
 
     private void initRvMetaData() {
-        mRvMetaData = findViewById(R.id.rv_book_meta_data);
+        mRvMetaData = findViewById(R.id.rv_book_meta_data_yang_rv);
         LinearLayoutManager manager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
         manager.setSmoothScrollbarEnabled(true);
 
         mRvMetaData.setLayoutManager(manager);
-        mRvMetaData.setHasFixedSize(true);//当前条目固定的情况下，设置此属性，提高RecyclerView的性能
-        mRvMetaData.setFocusable(false);//取消RecyclerView获取焦点事件，避免NestedScrollView无法滑动到顶部的问题
-        mRvMetaData.setNestedScrollingEnabled(false);//禁止RecyclerView的滑动事件，交给NestedScrollView
+//        mRvMetaData.setHasFixedSize(true);//当前条目固定的情况下，设置此属性，提高RecyclerView的性能
+//        mRvMetaData.setFocusable(false);//取消RecyclerView获取焦点事件，避免NestedScrollView无法滑动到顶部的问题
+//        mRvMetaData.setNestedScrollingEnabled(false);//禁止RecyclerView的滑动事件，交给NestedScrollView
+
     }
 
     /**
@@ -249,76 +211,106 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         BookMetadataResultBean dataBean = result.get(0);
         if (dataBean != null) {
             showRefreshLayout(false);
-            //图书名称
-            String mBookTitle = dataBean.getTitle();
-            if (!TextUtils.isEmpty(mBookTitle)) {
-                if (!TextUtils.isEmpty(mCategoryTagName)) {
-//                    mTvBookTitle.setContentAndTag(mBookTitle, mCategoryTagName);
-                    mTv_expand_title.setText(mBookTitle);
-                    mTvCategoryTag.setText(mCategoryTagName);
-                }
-            }
 
             //图书封面
             mCoverUrl = dataBean.getCover();
             initBgView();
 
 
+            //图书名称
+            String mBookTitle = dataBean.getTitle();
+            if (!TextUtils.isEmpty(mBookTitle)) {
+                if (!TextUtils.isEmpty(mCategoryTagName)) {
+//                    mTvBookTitle.setContentAndTag(mBookTitle, mCategoryTagName);
+//                    mTv_expand_title.setText(mBookTitle);
+//                    mTvCategoryTag.setText(mCategoryTagName);
+
+                    mHeaderContent.add(mBookTitle);
+                    mHeaderContent.add(mCategoryTagName);
+//                    mHeaderContent[0] = mBookTitle;
+//                    mHeaderContent[1] = mCategoryTagName;
+                }
+            }
+
+
             //图书推荐语
             String comment = dataBean.getComment();
             if (!TextUtils.isEmpty(comment)) {
                 Log.i(TAG, "comment >>> " + comment);
-                mExpandText.setTextWithTag(Html.fromHtml(comment),
-                        getString(R.string.bookshelf_book_comment));
+//                mExpandText.setTextWithTag(Html.fromHtml(comment), getString(R.string.bookshelf_book_comment));
+
+                mHeaderContent.add("推荐语");
+                mHeaderContent.add(comment);
+//                mHeaderContent[2] = "推荐语";
+//                mHeaderContent[3] = comment;
             } else {
                 String description = dataBean.getDescription();
                 if (!TextUtils.isEmpty(description)) {
                     Log.i(TAG, "description >>> " + description);
-                    mExpandText.setTextWithTag(Html.fromHtml(description),
-                            getString(R.string.bookshelf_book_intro));
+//                    mExpandText.setTextWithTag(Html.fromHtml(description), getString(R.string.bookshelf_book_intro));
+                    mHeaderContent.add("简介");
+                    mHeaderContent.add(description);
+//                    mHeaderContent[2] = "简介";
+//                    mHeaderContent[3] = description;
                 }
             }
-
 
             List<TocBean> toc = dataBean.getToc();
             //获取数据
             ArrayList<TocBean> baseNodes = mPresenter.getTocList(toc, -1);
 
-
             /**
              * 客户端要做分页优化！！！
              */
-            ArrayList<TocBean> finalBaseNode;
-            if (baseNodes.size() > 99) {
-                List<TocBean> subBaseNodes = baseNodes.subList(0, 10);
-                finalBaseNode = new ArrayList<>(subBaseNodes);
-            } else {
-                finalBaseNode = baseNodes;
-            }
+//            ArrayList<TocBean> finalBaseNode;
+//            if (baseNodes.size() > 99) {
+//                List<TocBean> subBaseNodes = baseNodes.subList(0, 10);
+//                finalBaseNode = new ArrayList<>(subBaseNodes);
+//            } else {
+//                finalBaseNode = baseNodes;
+//            }
 
             if (mBookNodeAdapter == null) {
-                mBookNodeAdapter = new BookNodeAdapter(this, finalBaseNode);
+                mBookNodeAdapter = new BookNodeAdapterYang(this, baseNodes, mHeaderContent);
+                initBookNodeAdapter();
             }
-
-            mBookNodeAdapter.setBookNodeClickListener(new BookNodeAdapter.OnBookNodeClickListener() {
-                @Override
-                public void onNodeClick(String label, String pageId, String title) {
-
-                    String str = mBookId + "!" + title;
-
-                    Log.i("StatisticsType", "StatisticsType  last -->" + str);
-//                    StatisticsType.postStatisticsNow(getApplicationContext(), "4", str);
-                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(), "4", str);
-                    UIHelper.startContentDetailActivity(BookMetaDataActivityYang.this,
-                            mShelfId, mCategoryId, mBookId, label, pageId);
-                }
-            });
-
             mRvMetaData.setAdapter(mBookNodeAdapter);
         } else {
             showRefreshLayout(true);
         }
         dismissLoading();
+    }
+
+    private void initBookNodeAdapter() {
+        mBookNodeAdapter.setOnDialogShowListener(new BookNodeAdapterYang.OnDialogShowListener() {
+            @Override
+            public void onDialogShowClick(View v) {
+                if (!TextUtils.isEmpty(mCoverUrl)) {
+                    if (mBookCoverDialog == null) {
+                        mBookCoverDialog = new BookCoverDialog(BookMetaDataActivityYangRV.this, mRlAppBar);
+                        mBookCoverDialog.setImageUrl(mCoverUrl);
+                    }
+                    if (!mBookCoverDialog.isShowing()) {
+                        mBookCoverDialog.show();
+                    }
+                }
+            }
+        });
+
+        mBookNodeAdapter.setBookNodeClickListener(new BookNodeAdapterYang.OnBookNodeClickListener() {
+            @Override
+            public void onNodeClick(String label, String pageId, String title) {
+
+                String str = mBookId + "!" + title;
+
+                Log.i("StatisticsType", "StatisticsType  last -->" + str);
+//                    StatisticsType.postStatisticsNow(getApplicationContext(), "4", str);
+                StatisticsPresenter.getInstance().startStatistics(getApplicationContext(), "4", str);
+                UIHelper.startContentDetailActivity(BookMetaDataActivityYangRV.this,
+                        mShelfId, mCategoryId, mBookId, label, pageId);
+            }
+        });
+
     }
 
     @SuppressLint("CheckResult")
@@ -343,13 +335,13 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 
     private void showRefreshLayout(boolean showRefresh) {
         mLlErrorLayout.setVisibility(showRefresh ? View.VISIBLE : View.GONE);
-        mNestedScrollView.setVisibility(showRefresh ? View.GONE : View.VISIBLE);
+//        mNestedScrollView.setVisibility(showRefresh ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void onClick(View v) {
         if (v == mIvBackTop) {
-            mNestedScrollView.fullScroll(View.FOCUS_UP);
+//            mNestedScrollView.fullScroll(View.FOCUS_UP);
 //            if (!isHeaderContentLoadMore)
 //                toggle();
         } else if (v == mLlErrorLayout) {
@@ -361,13 +353,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mViewHeaderWrapperClicks != null && mViewHeaderWrapperClicks.isDisposed()) {
-            mViewHeaderWrapperClicks.dispose();
-        }
-
-        if (mTvExpandControlClicks != null && mTvExpandControlClicks.isDisposed()) {
-            mTvExpandControlClicks.dispose();
-        }
         mPresenter.destroy();
     }
 }
