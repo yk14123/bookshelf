@@ -90,4 +90,15 @@
         <item name="android:textColor">@color/bookshelf_content_text_color</item>
     </style>
 
+    <!--splash样式-->
+    <style name="ThemeSplash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@drawable/bg_splash</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+
 </resources>

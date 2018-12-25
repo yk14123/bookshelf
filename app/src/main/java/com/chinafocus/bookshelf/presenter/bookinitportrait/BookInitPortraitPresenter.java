@@ -6,7 +6,7 @@ import android.widget.Toast;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.bookinitportrait.BookInitPortraitModule;
 import com.chinafocus.bookshelf.ui.activity.BookInitPortraitActivity;
-import com.chinafocus.bookshelf.ui.activity.ShelfDetailActivity;
+import com.chinafocus.bookshelf.ui.activity.BookShelfSplashActivity;
 import com.chinafocus.bookshelf.utils.SpUtil;
 
 import java.lang.ref.WeakReference;
@@ -55,7 +55,7 @@ public class BookInitPortraitPresenter {
     private void allowEnter(BookInitPortraitActivity activity, String locationId) {
         SpUtil.setString(activity, BookShelfConstant.BOOK_INIT_LOCATION_ID, locationId);
         SpUtil.setString(activity, BookShelfConstant.BOOK_INIT_LOCATION_ID_TEMP, locationId);
-        activity.startActivity(new Intent(activity, ShelfDetailActivity.class));
+        activity.startActivity(new Intent(activity, BookShelfSplashActivity.class));
         activity.finish();
     }
 
@@ -65,30 +65,5 @@ public class BookInitPortraitPresenter {
             mViewWeakReference = null;
         }
     }
-
-//    public static class BookInitPortraitRunnable implements Runnable {
-//        private BookInitPortraitActivity mActivity;
-//
-//        public BookInitPortraitRunnable(BookInitPortraitActivity activity) {
-//            mActivity = activity;
-//        }
-//
-//        @Override
-//        public void run() {
-//            String locationId = mActivity.getEt_init_location().getText().toString();
-//            String locationIdConfirm = mActivity.getEt_init_location_confirm().getText().toString();
-//
-//            if (locationId.equals(locationIdConfirm) && locationId.length() > 5) {
-//                SpUtil.setString(mActivity, BookShelfConstant.BOOK_INIT_LOCATION_ID, locationId);
-//                SpUtil.setString(mActivity, BookShelfConstant.BOOK_INIT_LOCATION_ID_TEMP, locationId);
-//                mActivity.startActivity(new Intent(mActivity, ShelfDetailActivity.class));
-//
-//                mActivity.finish();
-//            } else {
-//                Toast.makeText(mActivity, "两次输入编号不一致或者长度要大于6", Toast.LENGTH_SHORT).show();
-//            }
-//            mActivity = null;
-//        }
-//    }
 
 }

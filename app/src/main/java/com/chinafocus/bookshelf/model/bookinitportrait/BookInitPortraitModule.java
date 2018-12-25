@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.ui.activity.BookInitPortraitActivity;
-import com.chinafocus.bookshelf.ui.activity.ShelfDetailActivity;
+import com.chinafocus.bookshelf.ui.activity.BookShelfSplashActivity;
 import com.chinafocus.bookshelf.utils.SpUtil;
 
 public class BookInitPortraitModule {
@@ -14,7 +14,7 @@ public class BookInitPortraitModule {
         String LocationId = SpUtil.getString(activity, BookShelfConstant.BOOK_INIT_LOCATION_ID);
 
         if (!TextUtils.isEmpty(LocationId)) {
-            activity.startActivity(new Intent(activity, ShelfDetailActivity.class));
+            activity.startActivity(new Intent(activity, BookShelfSplashActivity.class));
             activity.finish();
             return;
         }
