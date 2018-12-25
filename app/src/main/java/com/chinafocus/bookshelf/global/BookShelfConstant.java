@@ -17,11 +17,16 @@ public class BookShelfConstant {
     /**
      * 字体常量值定义
      */
-    public static final int SMALLER = 200;
-    public static final int NORMAL = 250;
-    public static final int LARGE = 300;
-    public static final int LARGER = 350;
-    public static final int LARGEST = 400;
+//    public static final int SMALLER = 200;
+//    public static final int NORMAL = 250;
+//    public static final int LARGE = 300;
+//    public static final int LARGER = 350;
+//    public static final int LARGEST = 400;
+    public static final int SMALLER = 250;
+    public static final int NORMAL = 300;
+    public static final int LARGE = 350;
+    public static final int LARGER = 400;
+    public static final int LARGEST = 450;
 
     /**
      * 统计点击次数

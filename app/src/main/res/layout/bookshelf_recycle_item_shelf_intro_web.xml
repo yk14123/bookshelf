@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentFrameLayout
+<com.zhy.android.percent.support.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#35000000">
+    android:background="#35000000"
+    android:fitsSystemWindows="true"
+    android:gravity="center_horizontal"
+    android:paddingStart="15dp"
+    android:paddingTop="15dp"
+    android:paddingEnd="15dp">
 
     <WebView
         android:id="@+id/wv_book_shelf_web"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_heightPercent="50%sh"
-        app:layout_marginLeftPercent="5%sw"
-        app:layout_marginRightPercent="5%sw"
-        app:layout_marginTopPercent="5%sw"/>
+        app:layout_heightPercent="50%sh"/>
 
-</com.zhy.android.percent.support.PercentFrameLayout>
+</com.zhy.android.percent.support.PercentRelativeLayout>
 

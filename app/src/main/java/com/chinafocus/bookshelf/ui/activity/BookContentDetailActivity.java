@@ -1,6 +1,7 @@
 package com.chinafocus.bookshelf.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
-import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.bean.BookContentRawBean;
+import com.chinafocus.bookshelf.global.BookShelfConstant;
+import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.BookContentDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.ui.adapter.BookContentDetailAdapter;
@@ -74,6 +75,17 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         LinearLayoutManager manager = new LinearLayoutManager(
                 this, LinearLayoutManager.VERTICAL, false);
         mRvBookContent.setLayoutManager(manager);
+
+        mRvBookContent.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect,
+                                       @NonNull View view,
+                                       @NonNull RecyclerView parent,
+                                       @NonNull RecyclerView.State state) {
+                outRect.top = 30;
+            }
+        });
+
         //取消RecyclerView的自动滑动效果 ---> 避免调整字体之后自动滑动到顶部
         mRvBookContent.setFocusableInTouchMode(false);
         //添加下拉底部加载下一步数据
@@ -138,9 +150,6 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
 
             mPageId = intent.getStringExtra(BookShelfConstant.PAGE);
             mPageId = mPresenter.formatUrl(mPageId);
-            if (!TextUtils.isEmpty(mPageId) && mPageId.contains("/")) {
-                mPageId = mPageId.replace("/", "%2F");
-            }
 
             Log.i("BookContent", "mPageId-!!0000000!!!->" + mPageId);
             Log.d(TAG, "getExtraFromIntent: mShelfId >>>" + mShelfId
@@ -157,8 +166,6 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         showRefreshLayout(false);
         showLoading();
         //初始化Presenter
-//        if (mPresenter == null)
-//            mPresenter = new BookContentDetailPresenter(this);
 //        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_DETAIL,
 //                new String[]{String.valueOf(mShelfId),
 //                        String.valueOf(mCategoryId),

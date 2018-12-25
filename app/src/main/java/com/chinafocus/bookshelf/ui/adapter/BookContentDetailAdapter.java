@@ -59,16 +59,15 @@ public class BookContentDetailAdapter extends RecyclerView.Adapter<BookContentDe
         if (bookContentResultBean != null) {
             String current = bookContentResultBean.getCurrent();
 
-//            String css = bookContentResultBean.getCss();
-//            Log.i("woyaosile", css);
-//     原版CSS样式    https://bookcases.oss-cn-beijing.aliyuncs.com/6213dbe617bd9942d528c7795f7ca079/css/stylesheet.css
 //            https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css
-            String css = "https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css";
+//            String css = "https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css";
             if (!TextUtils.isEmpty(current)) {
                 //加载本地文件
-                String linkCss = "<link rel=\"stylesheet\" href=\"" + css + "\" type=\"text/css\">";
-                Log.d(TAG, "onRefreshFinished: linkCss >>>" + linkCss);
-                String body = "<html><header>" + linkCss + "</header>" + current + "</body></html>";
+                String linkCss = "<link rel=\"stylesheet\" href=\"" + bookContentResultBean.getCss() + "\" type=\"text/css\">";
+                String linkRemote = "<link rel=\"stylesheet\" href=\"https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css\" type=\"text/css\">";
+//                String body = "<html><header>" + linkCss + linkRemote + "</header>" + current + "</body></html>";
+                String body = "<html><header>" + linkRemote + "</header>" + current + "</body></html>";
+
                 WebSettings webSettings = holder.mWebContent.getSettings(); //声明WebSettings子类
 
                 webSettings.setDomStorageEnabled(true);  //设置适应Html5的一些方法
@@ -105,7 +104,9 @@ public class BookContentDetailAdapter extends RecyclerView.Adapter<BookContentDe
                         handler.proceed();
                     }
                 });
-                holder.mWebContent.loadDataWithBaseURL(css, body, "text/html", "UTF-8", null);
+
+                holder.mWebContent.loadDataWithBaseURL(linkRemote, body, "text/html", "UTF-8", null);
+//                holder.mWebContent.loadDataWithBaseURL(linkCss, body, "text/html", "UTF-8", null);
             }
         }
     }
