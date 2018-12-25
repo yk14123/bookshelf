@@ -58,7 +58,7 @@ public class BookCategoryAdapter extends RecyclerView.Adapter<BookCategoryAdapte
             if (!TextUtils.isEmpty(cover)) {
                 Glide.with(mContext)
                         .load(cover)
-                        .apply(new RequestOptions()
+                        .apply(new RequestOptions().centerCrop()
                                 .placeholder(R.drawable.bookshelf_default_cover_port)
                                 .error(R.drawable.bookshelf_default_cover_port))
                         .into((holder.ivCategoryCover));

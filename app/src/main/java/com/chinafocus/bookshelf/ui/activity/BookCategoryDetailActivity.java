@@ -84,7 +84,7 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
         }
         //右側menu
         ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
-        mIvRightMenu.setVisibility(View.GONE);
+        mIvRightMenu.setVisibility(View.INVISIBLE);
     }
 
     /**
