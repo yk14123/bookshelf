@@ -35,18 +35,18 @@ public class BookInitPortraitPresenter {
         //首次进入
         if (preId == null) {
 
-            if (locationId.equals(locationIdConfirm) && locationId.length() > 5) {
+            if (locationId.equals(locationIdConfirm) && locationId.length() > 3) {
                 allowEnter(activity, locationId);
             } else {
-                Toast.makeText(activity, "两次输入编号不一致或者长度要大于6", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "两次输入编号不一致或者长度小于4位", Toast.LENGTH_SHORT).show();
             }
 
         } else {//调整后，二次进入
 
-            if (locationId.equals(locationIdConfirm) && locationId.length() > 5 && locationId.equals(preId)) {
+            if (locationId.equals(locationIdConfirm) && locationId.length() > 3 && locationId.equals(preId)) {
                 allowEnter(activity, locationId);
             } else {
-                Toast.makeText(activity, "此次输入的id必须和旧的id一致！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "此次输入的代码必须和旧的代码一致！", Toast.LENGTH_SHORT).show();
             }
         }
 

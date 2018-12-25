@@ -8,6 +8,7 @@
         android:type="linear"
         android:useLevel="true" />
     <!--圓角-->
-    <corners android:radius="@dimen/dp_8" />
+    <!--<corners android:radius="@dimen/dp_8" />-->
+    <corners android:radius="@dimen/dp_24" />
 
 </shape>

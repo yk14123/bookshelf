@@ -109,6 +109,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
     }
 
+    private int mCountShowExit;
 
     private void initControlExitLogo() {
         mTvVersionInfo = findViewById(R.id.tv_shelf_detail_version);
@@ -123,47 +124,52 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             @Override
             public void onClick(View v) {
 
-                String string = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
-                if (!TextUtils.isEmpty(string))
+                if (mCountShowExit < 3) {
+                    mExit_id.setText("");
+                    String string = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+                    if (!TextUtils.isEmpty(string))
 
-                    if (mExitDialog == null) {
-                        mExitDialog = new AlertDialog.Builder(ShelfDetailActivity.this)
-                                .setView(mLocation_exit_view)
-                                .setPositiveButton("确认关闭应用", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String s = mExit_id.getText().toString();
+                        if (mExitDialog == null) {
+                            mExitDialog = new AlertDialog.Builder(ShelfDetailActivity.this)
+                                    .setView(mLocation_exit_view)
+                                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mCountShowExit++;
 
-                                        if (s.equals("123")) {
+                                            String s = mExit_id.getText().toString();
 
-                                            SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "");
+                                            if (s.equals("123")) {
 
-                                            System.exit(0);
-                                        } else {
+                                                SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "");
 
-                                            Toast.makeText(getApplicationContext(), "退出密码不对，无法关闭应用程序", Toast.LENGTH_SHORT).show();
+                                                System.exit(0);
+                                            } else {
 
+                                                Toast.makeText(getApplicationContext(), "请再重新输入", Toast.LENGTH_SHORT).show();
+
+                                            }
                                         }
-                                    }
-                                })
-                                .setNegativeButton("取消退出应用", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mExitDialog.dismiss();
-                                    }
-                                })
-                                .create();
-                        //設置点击外部不可以消失
-                        mExitDialog.setCanceledOnTouchOutside(false);
-                        //设置不可以点击消失
-                        mExitDialog.setCancelable(false);
+                                    })
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mExitDialog.dismiss();
+                                        }
+                                    })
+                                    .create();
+                            //設置点击外部不可以消失
+                            mExitDialog.setCanceledOnTouchOutside(false);
+                            //设置不可以点击消失
+                            mExitDialog.setCancelable(false);
 
+                        }
+
+                    if (!mExitDialog.isShowing()) {
+                        mExitDialog.show();
                     }
 
-                if (!mExitDialog.isShowing()) {
-                    mExitDialog.show();
                 }
-
             }
         });
     }
@@ -173,28 +179,10 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
         TextView location_id = mLocation_exit_view.findViewById(R.id.tv_shelf_detail_exit_location);
         mExit_id = mLocation_exit_view.findViewById(R.id.et_shelf_detail_exit);
-//        Button bt_exit = mLocation_exit_view.findViewById(R.id.bt_shelf_detail_exit);
 
         String Id = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
-        location_id.setText("客户Id是：" + Id);
+        location_id.setText("您的代码是：" + Id);
 
-//        bt_exit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String s = mExit_id.getText().toString();
-//
-//                if (s.equals("123")) {
-//
-//                    SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "");
-//
-//                    System.exit(0);
-//                } else {
-//
-//                    Toast.makeText(getApplicationContext(), "退出密码不对，无法关闭应用程序", Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }
-//        });
 
     }
 
@@ -329,9 +317,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 mShelfCategoryAdapter.setShelfCategoryListener((shelfId, categoryId, categoryName) -> {
 
 //                    StatisticsType.postStatisticsNow(getApplicationContext(), "2", String.valueOf(categoryId));
-                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(),"2",String.valueOf(categoryId));
+                    StatisticsPresenter.getInstance().startStatistics(getApplicationContext(), "2", String.valueOf(categoryId));
                     //跳转书架页面
-                    UIHelper.startBookCategoryDetailActivity(ShelfDetailActivity.this,shelfId,categoryId,categoryName);
+                    UIHelper.startBookCategoryDetailActivity(ShelfDetailActivity.this, shelfId, categoryId, categoryName);
 
                 });
                 mRvCategory.setAdapter(mShelfCategoryAdapter);

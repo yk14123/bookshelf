@@ -18,13 +18,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean;
 import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
+import com.chinafocus.bookshelf.bean.TocResultBean;
+import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
-import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapter;
+import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapterYang;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
 import com.chinafocus.bookshelf.ui.widgets.ExpandableTextView;
+import com.chinafocus.bookshelf.utils.SplitListUtil;
+import com.chinafocus.bookshelf.utils.TocRawToResult;
 import com.chinafocus.bookshelf.utils.UIHelper;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentLinearLayout;
@@ -52,7 +56,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private PercentLinearLayout mLlErrorLayout;
     //目录列表容器
     private RecyclerView mRvMetaData;
-    private BookNodeAdapter mBookNodeAdapter;
+    private BookNodeAdapterYang mBookNodeAdapter;
     //滑动控件
     private NestedScrollView mNestedScrollView;
     //悬浮控件
@@ -75,9 +79,11 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     //图书封面
     private View mViewHeaderWrapper;
     private ImageView mIvBookCover;
-    private Disposable mTvExpandControlClicks;
     private TextView mTvCategoryTag;
     private ExpandableTextView mExpandText;
+    private List<List<TocResultBean>> mTocBeanTotalLists;
+
+    private int mTempCount = 1;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -105,9 +111,10 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         mIvBackTop = findViewById(R.id.iv_book_meta_back_top);
         mIvBackTop.setOnClickListener(this);
         //底部拖动View
-        mNestedScrollView = findViewById(R.id.nsv_book_meta_data);
+        mNestedScrollView = findViewById(R.id.nsv_book_meta_data_yang);
 
         mNestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+
             @Override
             public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
                 //判断当前NestedScrollView是否滑动到顶部
@@ -118,8 +125,27 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 //                    setFloatingButtonState(false);
                     mIvBackTop.setVisibility(View.VISIBLE);
                 }
+
+                if (i1 == (nestedScrollView.getChildAt(0).getMeasuredHeight() - nestedScrollView.getMeasuredHeight())) {
+                    // 底部
+                    Log.i("onLoadMore", "onLoadMore");
+                    //size 5
+                    //加载4次 1- 2- 3- 4
+                    //mTempCount
+                    if (mTocBeanTotalLists != null) {
+                        if (mTempCount < mTocBeanTotalLists.size()) {
+                            mBookNodeAdapter.addListAndNotify(mTocBeanTotalLists.get(mTempCount));
+                            mTempCount++;
+                        } else {
+                            Toast.makeText(getApplicationContext(), "本书已经全部加载完毕！", Toast.LENGTH_LONG).show();
+                        }
+                    }else {
+                        Toast.makeText(getApplicationContext(), "本书已经全部加载完毕！", Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         });
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -157,7 +183,9 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 //            requestNestedLayout();
         });
 
+
         mTvCategoryTag = findViewById(R.id.tv_book_meta_data_category_tag);
+
 
     }
 
@@ -180,11 +208,11 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private void getExtraFromIntent() {
         Intent intent = getIntent();
         if (intent != null) {
-//            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, 1);
-//            mBookId = intent.getIntExtra(BookShelfConstant.BOOK_ID, 1);
-//            mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, 1);
-//            mCategoryTagName = intent.getStringExtra(BookShelfConstant.CATEGORY_NAME);
-//            mBookName = intent.getStringExtra(BookShelfConstant.BOOK_NAME);
+            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, 1);
+            mBookId = intent.getIntExtra(BookShelfConstant.BOOK_ID, 1);
+            mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, 1);
+            mCategoryTagName = intent.getStringExtra(BookShelfConstant.CATEGORY_NAME);
+            mBookName = intent.getStringExtra(BookShelfConstant.BOOK_NAME);
             Log.d(TAG, "getExtraFromIntent: mShelfId >>>" + mShelfId
                     + " mBookId >>> " + mBookId + " mCategoryId >>> "
                     + mCategoryId + " mCategoryTagName >>> " + mCategoryTagName);
@@ -196,11 +224,11 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 //            mBookName = "习近平著作标题";
 //            mShelfId >>>2 mBookId >>> 185 mCategoryId >>> 16 mCategoryTagName >>> 习近平著作
 //            mShelfId >>>2 mBookId >>> 189 mCategoryId >>> 13 mCategoryTagName >>> 经史典集
-            mShelfId = 2;
-            mBookId = 189;
-            mCategoryId = 13;
-            mCategoryTagName = "经史典集";
-            mBookName = "经史典集标题";
+//            mShelfId = 2;
+//            mBookId = 189;
+//            mCategoryId = 13;
+//            mCategoryTagName = "经史典集";
+//            mBookName = "经史典集标题";
         }
     }
 
@@ -280,31 +308,43 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             }
 
 
+            /**
+             *  clean一下Toc数据
+             */
             List<TocBean> toc = dataBean.getToc();
-            //获取数据
-            ArrayList<TocBean> baseNodes = mPresenter.getTocList(toc, -1);
 
+            ArrayList<TocResultBean> tocResultList = new ArrayList<>();
+
+            TocRawToResult.cleanData(toc, tocResultList, 1);
+
+            Log.i("TocResultBean", "size-->" + tocResultList.size());
+
+            //获取数据
+//            ArrayList<TocBean> baseNodes = mPresenter.getTocList(toc, -1);
 
             /**
              * 客户端要做分页优化！！！
              */
-            ArrayList<TocBean> finalBaseNode;
-            if (baseNodes.size() > 99) {
-                List<TocBean> subBaseNodes = baseNodes.subList(0, 10);
-                finalBaseNode = new ArrayList<>(subBaseNodes);
-            } else {
-                finalBaseNode = baseNodes;
+            if (tocResultList.size() > 50) {
+
+                mTocBeanTotalLists = SplitListUtil.splitList(tocResultList, 50);
+
+                tocResultList = new ArrayList<>(mTocBeanTotalLists.get(0));
+
+                Log.i("SplitListUtil", "size-->" + mTocBeanTotalLists.size());
+
             }
 
             if (mBookNodeAdapter == null) {
-                mBookNodeAdapter = new BookNodeAdapter(this, finalBaseNode);
+                mBookNodeAdapter = new BookNodeAdapterYang(this, tocResultList);
             }
 
-            mBookNodeAdapter.setBookNodeClickListener(new BookNodeAdapter.OnBookNodeClickListener() {
-                @Override
-                public void onNodeClick(String label, String pageId, String title) {
 
-                    String str = mBookId + "!" + title;
+            mBookNodeAdapter.setBookNodeClickListener(new BookNodeAdapterYang.OnBookNodeClickListener() {
+                @Override
+                public void onNodeClick(String label, String pageId) {
+
+                    String str = mBookId + "!" + label;
 
                     Log.i("StatisticsType", "StatisticsType  last -->" + str);
 //                    StatisticsType.postStatisticsNow(getApplicationContext(), "4", str);
@@ -315,11 +355,14 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             });
 
             mRvMetaData.setAdapter(mBookNodeAdapter);
+
+
         } else {
             showRefreshLayout(true);
         }
         dismissLoading();
     }
+
 
     @SuppressLint("CheckResult")
     private void initBgView() {
@@ -349,9 +392,20 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     @Override
     public void onClick(View v) {
         if (v == mIvBackTop) {
+
             mNestedScrollView.fullScroll(View.FOCUS_UP);
-//            if (!isHeaderContentLoadMore)
-//                toggle();
+
+            mNestedScrollView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (mTocBeanTotalLists != null) {
+                        mTempCount = 1;
+                        mBookNodeAdapter.addReSetListAndNotify(mTocBeanTotalLists.get(0));
+                    }
+                }
+            }, 200);
+
         } else if (v == mLlErrorLayout) {
             mLlErrorLayout.setVisibility(View.GONE);
             loadBookMeta();
@@ -365,9 +419,6 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
             mViewHeaderWrapperClicks.dispose();
         }
 
-        if (mTvExpandControlClicks != null && mTvExpandControlClicks.isDisposed()) {
-            mTvExpandControlClicks.dispose();
-        }
         mPresenter.destroy();
     }
 }

@@ -15,9 +15,11 @@
         tools:src="@drawable/bookshelf_default_cover_port"/>
 
     <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nsv_book_meta_data"
+        android:id="@+id/nsv_book_meta_data_yang"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
         <include layout="@layout/bookshelf_include_cardview_item_yang"/>
     </android.support.v4.widget.NestedScrollView>
 

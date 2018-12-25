@@ -8,6 +8,7 @@ import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.ui.activity.BookCategoryDetailActivity;
 import com.chinafocus.bookshelf.ui.activity.BookContentDetailActivity;
 import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivity;
+import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivityYang;
 
 /**
  * 将Activity界面跳转的逻辑抽离
@@ -44,7 +45,8 @@ public class UIHelper {
     public static void startBookMetaActivity(Context context, int shelfId,
                                              int categoryId, int bookId, String bookName, String categoryTagName) {
         //跳轉圖書詳情頁
-        Intent intent = new Intent(context, BookMetaDataActivity.class);
+//        Intent intent = new Intent(context, BookMetaDataActivity.class);
+        Intent intent = new Intent(context, BookMetaDataActivityYang.class);
         intent.putExtra(BookShelfConstant.SHELF_ID, shelfId);
         intent.putExtra(BookShelfConstant.CATEGORY_ID, categoryId);
         intent.putExtra(BookShelfConstant.BOOK_ID, bookId);

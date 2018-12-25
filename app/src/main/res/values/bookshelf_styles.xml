@@ -72,6 +72,13 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <!--图书目录item字体样式-->
+    <style name="BookShelfItemTextAppearanceLevelOne" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/bookshelf_black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!--FontSetting字体样式-->
     <style name="BookShelfFontSettingTextStyle">
         <item name="android:paddingStart">@dimen/dp_15</item>

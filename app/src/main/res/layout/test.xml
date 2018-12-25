@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:paddingTop="60dp"
+    android:paddingBottom="60dp">
+
+    <View
+        android:layout_width="15dp"
+        android:layout_height="66dp"
+        android:layout_alignTop="@+id/tv_book_meta_data_catalog"
+        android:layout_alignBottom="@id/tv_book_meta_data_catalog"
+        android:layout_gravity="center_horizontal"
+        android:background="#9B704A"/>
+
+
+    <TextView
+        android:id="@+id/tv_book_meta_data_catalog"
+        android:layout_width="wrap_content"
+        android:layout_height="66dp"
+        android:layout_marginStart="30dp"
+        android:gravity="center"
+        android:text="@string/bookshelf_book_summary"
+        android:textColor="@color/bookshelf_title_text_color"
+        android:textSize="40sp"
+        android:textStyle="bold"/>
+</RelativeLayout>

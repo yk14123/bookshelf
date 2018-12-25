@@ -21,7 +21,7 @@ import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
-import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapterYang;
+import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapterYangRV;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
 import com.chinafocus.bookshelf.utils.UIHelper;
 import com.zhy.android.percent.support.PercentLinearLayout;
@@ -45,7 +45,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     private PercentLinearLayout mLlErrorLayout;
     //目录列表容器
     private RecyclerView mRvMetaData;
-    private BookNodeAdapterYang mBookNodeAdapter;
+    private BookNodeAdapterYangRV mBookNodeAdapter;
     //滑动控件
     private NestedScrollView mNestedScrollView;
     //悬浮控件
@@ -271,7 +271,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
 //            }
 
             if (mBookNodeAdapter == null) {
-                mBookNodeAdapter = new BookNodeAdapterYang(this, baseNodes, mHeaderContent);
+                mBookNodeAdapter = new BookNodeAdapterYangRV(this, baseNodes, mHeaderContent);
                 initBookNodeAdapter();
             }
             mRvMetaData.setAdapter(mBookNodeAdapter);
@@ -282,7 +282,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     }
 
     private void initBookNodeAdapter() {
-        mBookNodeAdapter.setOnDialogShowListener(new BookNodeAdapterYang.OnDialogShowListener() {
+        mBookNodeAdapter.setOnDialogShowListener(new BookNodeAdapterYangRV.OnDialogShowListener() {
             @Override
             public void onDialogShowClick(View v) {
                 if (!TextUtils.isEmpty(mCoverUrl)) {
@@ -297,7 +297,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
             }
         });
 
-        mBookNodeAdapter.setBookNodeClickListener(new BookNodeAdapterYang.OnBookNodeClickListener() {
+        mBookNodeAdapter.setBookNodeClickListener(new BookNodeAdapterYangRV.OnBookNodeClickListener() {
             @Override
             public void onNodeClick(String label, String pageId, String title) {
 

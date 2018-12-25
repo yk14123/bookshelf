@@ -39,15 +39,14 @@ public class BookInitPortraitActivity extends AppCompatActivity {
 
     public void initData(String preLocationId) {
         if (TextUtils.isEmpty(preLocationId)) {
-            mTv_location_temp_pre.setText("旧的客户id是：还未输入");
+            mTv_location_temp_pre.setText("您的代码是：还未输入");
         } else {
-            mTv_location_temp_pre.setText("旧的客户id是：" + preLocationId);
+            mTv_location_temp_pre.setText("您的代码是：" + preLocationId);
         }
 
         mBt_init_ok_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new BookInitPortraitPresenter.BookInitPortraitRunnable(BookInitPortraitActivity.this).run();
                 mPresenter.runClick();
             }
         });
