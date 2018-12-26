@@ -19,9 +19,7 @@ public class BookInitPortraitModule {
             return;
         }
 
-        String preLocationId = SpUtil.getString(activity, BookShelfConstant.BOOK_INIT_LOCATION_ID_TEMP);
-
-        activity.initData(preLocationId);
+        activity.initData();
     }
 
 }

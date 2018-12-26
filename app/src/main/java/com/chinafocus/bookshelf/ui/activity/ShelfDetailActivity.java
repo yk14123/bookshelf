@@ -88,6 +88,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
     private boolean mIsNetWorkErro;
     private String mAppVersion;
+    private String mExitPass;
 
     @SuppressLint("CheckResult")
     @Override
@@ -126,51 +127,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         mTvErrorExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mExit_id.setText("");
-                String string = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
-                if (!TextUtils.isEmpty(string))
-
-                    if (mExitDialog == null) {
-                        mExitDialog = new AlertDialog.Builder(ShelfDetailActivity.this)
-                                .setView(mLocation_exit_view)
-                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (!mIsNetWorkErro) {
-                                            mCountShowExit++;
-                                        }
-                                        String s = mExit_id.getText().toString();
-
-                                        if (s.equals("123")) {
-
-                                            SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "");
-
-                                            System.exit(0);
-                                        } else {
-
-                                            Toast.makeText(getApplicationContext(), "请再重新输入", Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mExitDialog.dismiss();
-                                    }
-                                })
-                                .create();
-                        //設置点击外部不可以消失
-                        mExitDialog.setCanceledOnTouchOutside(false);
-                        //设置不可以点击消失
-                        mExitDialog.setCancelable(false);
-
-                    }
-
-                if (!mExitDialog.isShowing()) {
-                    mExitDialog.show();
-                }
-
+                onErrorExit();
             }
         });
         //无数据视图
@@ -183,6 +140,53 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 loadShelfDetail();
             }
         });
+    }
+
+    private void onErrorExit() {
+
+        mExit_id.setText("");
+        String string = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+        if (!TextUtils.isEmpty(string))
+            mExitPass = string + "logout";
+
+        if (mExitDialog == null) {
+            mExitDialog = new AlertDialog.Builder(ShelfDetailActivity.this)
+                    .setView(mLocation_exit_view)
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (!mIsNetWorkErro) {
+                                mCountShowExit++;
+                            }
+                            String s = mExit_id.getText().toString();
+
+                            if (s.equals(mExitPass)) {
+
+                                System.exit(0);
+                            } else {
+
+                                Toast.makeText(getApplicationContext(), "请再重新输入", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mExitDialog.dismiss();
+                        }
+                    })
+                    .create();
+            //設置点击外部不可以消失
+            mExitDialog.setCanceledOnTouchOutside(false);
+            //设置不可以点击消失
+            mExitDialog.setCancelable(false);
+
+        }
+
+        if (!mExitDialog.isShowing()) {
+            mExitDialog.show();
+        }
     }
 
     /**
@@ -214,51 +218,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             public void onClick(View v) {
 
                 if (mCountShowExit < 3) {
-                    mExit_id.setText("");
-                    String string = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
-                    if (!TextUtils.isEmpty(string))
-
-                        if (mExitDialog == null) {
-                            mExitDialog = new AlertDialog.Builder(ShelfDetailActivity.this)
-                                    .setView(mLocation_exit_view)
-                                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if (!mIsNetWorkErro) {
-                                                mCountShowExit++;
-                                            }
-
-                                            String s = mExit_id.getText().toString();
-
-                                            if (s.equals("123")) {
-
-                                                SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "");
-
-                                                System.exit(0);
-                                            } else {
-
-                                                Toast.makeText(getApplicationContext(), "请再重新输入", Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        }
-                                    })
-                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            mExitDialog.dismiss();
-                                        }
-                                    })
-                                    .create();
-                            //設置点击外部不可以消失
-                            mExitDialog.setCanceledOnTouchOutside(false);
-                            //设置不可以点击消失
-                            mExitDialog.setCancelable(false);
-
-                        }
-
-                    if (!mExitDialog.isShowing()) {
-                        mExitDialog.show();
-                    }
+                    onErrorExit();
 
                 }
             }

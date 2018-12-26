@@ -6,14 +6,8 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:text="旧的客户id是："
-        android:id="@+id/tv_location_temp_pre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <EditText
-        android:hint="请输入要发货的位置代号"
+        android:hint="请输入要发货的位置代号，别出错！"
         android:id="@+id/et_init_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
