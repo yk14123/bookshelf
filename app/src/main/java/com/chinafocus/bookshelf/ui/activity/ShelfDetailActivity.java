@@ -3,6 +3,7 @@ package com.chinafocus.bookshelf.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -85,7 +86,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     private Disposable mErrorRetry_clicks;
     private TextView mTvErrorExit;
 
-    private boolean mIsNetWorkErro;
+    private boolean mIsNetWorkErro =true;
     private String mAppVersion;
     private String mExitPass;
     private String mOriginId;
@@ -117,8 +118,19 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         //初始化动画
         initAnim();
 
-        //初始化Presenter请求数据
-        loadShelfDetail();
+        showLoading();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (mIsNetWorkErro){
+
+                    //初始化Presenter请求数据
+                    loadShelfDetail();
+                    SystemClock.sleep(3000);
+                }
+            }
+        }).start();
+
 
     }
 
@@ -195,7 +207,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
      * 请求九宫格分类API接口数据
      */
     private void loadShelfDetail() {
-        showLoading();
+
         //初始化控制器
         if (mPresenter == null) {
             mPresenter = new ShelvesDetailPresenter(this);

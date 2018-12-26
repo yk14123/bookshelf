@@ -245,11 +245,17 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         if (mPresenter == null) {
             mPresenter = new BookMetaDataPresenter(this);
         }
+//        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_METADATA,
+//                new String[]{String.valueOf(mShelfId),
+//                        String.valueOf(mCategoryId),
+//                        String.valueOf(mBookId),
+//                        mOriginId});
+
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_METADATA,
                 new String[]{String.valueOf(mShelfId),
                         String.valueOf(mCategoryId),
                         String.valueOf(mBookId),
-                        mOriginId});
+                        "expressreader"});
     }
 
     /**
