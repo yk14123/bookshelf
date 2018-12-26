@@ -2,7 +2,7 @@ package com.chinafocus.bookshelf.model.base.network;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -25,8 +25,7 @@ public interface ApiService {
      * @return 获取相关书柜
      */
     @GET("api/shelves")
-    @Headers("corigin:expressreader")
-    Observable<String> getShelves();
+    Observable<String> getShelves(@Header("corigin") String origin);
 
 
     /**
@@ -36,8 +35,7 @@ public interface ApiService {
      * @return 书柜展示内容
      */
     @GET("api/shelves/{shelfId}/categories")
-    @Headers("corigin:expressreader")
-    Observable<String> getShelvesDetail(@Path("shelfId") String id);
+    Observable<String> getShelvesDetail(@Path("shelfId") String id, @Header("corigin") String origin);
 
     /**
      * 获取分类书种类的信息
@@ -47,9 +45,7 @@ public interface ApiService {
      * @return 图书种类细节
      */
     @GET("api/shelves/{shelfId}/categories/{categoryId}/books")
-    @Headers("corigin:expressreader")
-    Observable<String> getBookCategoryDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId);
-
+    Observable<String> getBookCategoryDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Header("corigin") String origin);
 
 
     /**
@@ -61,8 +57,7 @@ public interface ApiService {
      * @return 书的大纲目录展示
      */
     @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/metadata")
-    @Headers("corigin:expressreader")
-    Observable<String> getBookMetadata(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId);
+    Observable<String> getBookMetadata(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Header("corigin") String origin);
 
     /**
      * 书的每一页具体内容
@@ -74,12 +69,12 @@ public interface ApiService {
      * @return 书的每一页具体内容
      */
     @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/page/{page}")
-    @Headers("corigin:expressreader")
-    Observable<String> getBookContentDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Path("page") String page);
+    Observable<String> getBookContentDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Path("page") String page, @Header("corigin") String origin);
 
     /**
      * 书的每一页具体内容--加密版本
-     *  https://book.expressreader.cn/api/shelves/3/categories/26/books/285/page/aes/Chapter2.xhtml#ebookNote_3
+     * https://book.expressreader.cn/api/shelves/3/categories/26/books/285/page/aes/Chapter2.xhtml#ebookNote_3
+     *
      * @param id         书柜id
      * @param categoryId 书的类别id
      * @param bookId     具体书的id
@@ -87,6 +82,5 @@ public interface ApiService {
      * @return 书的每一页具体内容
      */
     @GET("api/shelves/{shelfId}/categories/{categoryId}/books/{bookId}/page/aes/{page}")
-    @Headers("corigin:expressreader")
-    Observable<String> getBookContentAESDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Path("page") String page);
+    Observable<String> getBookContentAESDetail(@Path("shelfId") String id, @Path("categoryId") String categoryId, @Path("bookId") String bookId, @Path("page") String page, @Header("corigin") String origin);
 }

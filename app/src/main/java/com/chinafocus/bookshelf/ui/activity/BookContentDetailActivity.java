@@ -20,6 +20,7 @@ import com.chinafocus.bookshelf.presenter.shelves.BookContentDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.ui.adapter.BookContentDetailAdapter;
 import com.chinafocus.bookshelf.ui.dialog.FontSettingDialog;
+import com.chinafocus.bookshelf.utils.SpUtil;
 import com.zhy.android.percent.support.PercentLinearLayout;
 
 import java.util.List;
@@ -58,12 +59,15 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
     //字体调节对话框
     private FontSettingDialog mFontDialog;
 
+    private String mOriginId;
 
     @Override
     protected void initView() {
         //初始化Presenter
         if (mPresenter == null)
             mPresenter = new BookContentDetailPresenter(this);
+
+        mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
 
         getExtraFromIntent();
         setContentView(R.layout.bookshelf_activity_book_content_detail);
@@ -174,7 +178,7 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_AES_DETAIL,
                 new String[]{String.valueOf(mShelfId),
                         String.valueOf(mCategoryId),
-                        String.valueOf(mBookId), pageId});
+                        String.valueOf(mBookId), pageId, mOriginId});
     }
 
 

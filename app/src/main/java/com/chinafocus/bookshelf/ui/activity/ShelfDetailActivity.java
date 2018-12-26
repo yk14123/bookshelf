@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,11 +88,15 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     private boolean mIsNetWorkErro;
     private String mAppVersion;
     private String mExitPass;
+    private String mOriginId;
 
     @SuppressLint("CheckResult")
     @Override
     protected void initView() {
         setContentView(R.layout.bookshelf_activity_detail);
+
+        mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+
         //设置当前的版本号
         initControlExitLogo();
         //root
@@ -145,9 +148,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     private void onErrorExit() {
 
         mExit_id.setText("");
-        String string = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
-        if (!TextUtils.isEmpty(string))
-            mExitPass = string + "logout";
+
+        mExitPass = mOriginId + "logout";
 
         if (mExitDialog == null) {
             mExitDialog = new AlertDialog.Builder(ShelfDetailActivity.this)
@@ -197,8 +199,10 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         //初始化控制器
         if (mPresenter == null) {
             mPresenter = new ShelvesDetailPresenter(this);
+
         }
-        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{"2"});
+//        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{"2", mOriginId});
+        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{"2", "expressreader"});
     }
 
 
@@ -231,9 +235,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         TextView location_id = mLocation_exit_view.findViewById(R.id.tv_shelf_detail_exit_location);
         mExit_id = mLocation_exit_view.findViewById(R.id.et_shelf_detail_exit);
 
-        String Id = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
-        location_id.setText("您的代码是：" + Id);
-
+        location_id.setText("您的代码是：" + mOriginId);
 
     }
 

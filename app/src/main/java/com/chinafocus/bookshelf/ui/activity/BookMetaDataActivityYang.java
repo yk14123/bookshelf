@@ -27,6 +27,7 @@ import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapterYang;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
 import com.chinafocus.bookshelf.ui.widgets.ExpandableTextView;
+import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.SplitListUtil;
 import com.chinafocus.bookshelf.utils.TocRawToResult;
 import com.chinafocus.bookshelf.utils.UIHelper;
@@ -82,7 +83,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
     private TextView mTvCategoryTag;
     private ExpandableTextView mExpandText;
     private List<List<TocResultBean>> mTocBeanTotalLists;
-
+    private String mOriginId;
     private int mTempCount = 1;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -91,6 +92,9 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         getExtraFromIntent();
         setContentView(R.layout.bookshelf_activity_book_meta_data_yang);
         initNavMenu();
+
+        mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+
         //无数据视图
         mLlErrorLayout = findViewById(R.id.ll_bookshelf_reconnect_net);
         mLlErrorLayout.setOnClickListener(this);
@@ -139,7 +143,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
                         } else {
                             Toast.makeText(getApplicationContext(), "本书已经全部加载完毕！", Toast.LENGTH_LONG).show();
                         }
-                    }else {
+                    } else {
                         Toast.makeText(getApplicationContext(), "本书已经全部加载完毕！", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -244,7 +248,8 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_METADATA,
                 new String[]{String.valueOf(mShelfId),
                         String.valueOf(mCategoryId),
-                        String.valueOf(mBookId)});
+                        String.valueOf(mBookId),
+                        mOriginId});
     }
 
     /**

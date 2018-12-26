@@ -19,6 +19,7 @@ import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.BookCategoryAdapter;
 import com.chinafocus.bookshelf.ui.widgets.LinearItemDecoration;
+import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.UIHelper;
 import com.zhy.android.percent.support.PercentLinearLayout;
 
@@ -48,10 +49,15 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
     //错误视图
     private PercentLinearLayout mLlErrorLayout;
 
+    private String mOriginId;
+
     @Override
     protected void initView() {
         getExtraFromIntent();
         setContentView(R.layout.bookshelf_activity_book_category_detail);
+
+        mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+
         //初始化actionBar
         initNavMenu();
 
@@ -83,7 +89,7 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
             mPresenter = new BookCategoryDetailPresenter(this);
         }
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CATEGORY_DETAIL,
-                new String[]{String.valueOf(mShelfId), String.valueOf(mCategoryId)});
+                new String[]{String.valueOf(mShelfId), String.valueOf(mCategoryId), mOriginId});
     }
 
     private void initRvBookCategoryList() {
