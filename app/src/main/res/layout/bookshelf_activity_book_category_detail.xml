@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.android.percent.support.PercentLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,11 +10,27 @@
     <include
         layout="@layout/bookshelf_include_app_toolbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_book_category_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_book_category_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!--无网络视图-->
+        <include
+            android:id="@+id/ll_bookshelf_reconnect_net"
+            layout="@layout/bookshelf_include_app_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
 
 </com.zhy.android.percent.support.PercentLinearLayout>
+
