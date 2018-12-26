@@ -44,7 +44,7 @@ class LocalShelvesSource {
             @Override
             public void accept(String rawResult) throws Exception {
                 if (rawResult != null && rawResult.length() > 0) {
-                    LruMap.getInstance().put(key, rawResult, true);
+                    LruMap.getInstance().put(key, rawResult, false);
                 }
             }
         });
