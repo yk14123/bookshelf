@@ -41,7 +41,8 @@ abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContract.IPres
             public void onError(Throwable e) {
                 IShelvesMvpContract.IView iView = mViewWeakReference.get();
                 if (iView != null)
-                    iView.showTips("网络不好，刷新错误。错误类型是 --> " + e.getMessage());
+//                    iView.showTips("网络不好，刷新错误。错误类型是 --> " + e.getMessage());
+                    iView.showTips("网络不好，请稍后重试");
             }
 
             @Override

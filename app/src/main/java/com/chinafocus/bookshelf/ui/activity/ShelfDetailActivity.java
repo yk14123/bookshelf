@@ -24,8 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.bean.ShelvesCategoryResultBean;
+import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesDetailPresenter;
@@ -36,6 +36,7 @@ import com.chinafocus.bookshelf.utils.ManifestUtils;
 import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.UIHelper;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.zhy.android.percent.support.PercentFrameLayout;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.util.List;
@@ -81,6 +82,13 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     private View mLocation_exit_view;
     private EditText mExit_id;
 
+    private PercentFrameLayout mLlErrorLayout;
+    private Disposable mErrorRetry_clicks;
+    private TextView mTvErrorExit;
+
+    private boolean mIsNetWorkErro;
+    private String mAppVersion;
+
     @SuppressLint("CheckResult")
     @Override
     protected void initView() {
@@ -89,6 +97,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         initControlExitLogo();
         //root
         mRlShelfRoot = findViewById(R.id.rl_shelf_detail_root);
+
+        //网络错误重试
+        initErrorRetry();
 
         //习近平的书柜
         initLogo();
@@ -102,19 +113,97 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         //初始化动画
         initAnim();
 
-        //初始化Presenter
-        mPresenter = new ShelvesDetailPresenter(this);
-        //请求数据
-        requestShelfDetail();
+        //初始化Presenter请求数据
+        loadShelfDetail();
 
     }
+
+    private void initErrorRetry() {
+        mTvErrorExit = findViewById(R.id.tv_shelf_detail_version_no_net);
+
+        mTvErrorExit.setText(mAppVersion);
+
+        mTvErrorExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mExit_id.setText("");
+                String string = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+                if (!TextUtils.isEmpty(string))
+
+                    if (mExitDialog == null) {
+                        mExitDialog = new AlertDialog.Builder(ShelfDetailActivity.this)
+                                .setView(mLocation_exit_view)
+                                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (!mIsNetWorkErro) {
+                                            mCountShowExit++;
+                                        }
+                                        String s = mExit_id.getText().toString();
+
+                                        if (s.equals("123")) {
+
+                                            SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "");
+
+                                            System.exit(0);
+                                        } else {
+
+                                            Toast.makeText(getApplicationContext(), "请再重新输入", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mExitDialog.dismiss();
+                                    }
+                                })
+                                .create();
+                        //設置点击外部不可以消失
+                        mExitDialog.setCanceledOnTouchOutside(false);
+                        //设置不可以点击消失
+                        mExitDialog.setCancelable(false);
+
+                    }
+
+                if (!mExitDialog.isShowing()) {
+                    mExitDialog.show();
+                }
+
+            }
+        });
+        //无数据视图
+        mLlErrorLayout = findViewById(R.id.rl_shelf_detail_error_bg);
+
+        mErrorRetry_clicks = RxView.clicks(mLlErrorLayout).throttleFirst(1, TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                //mLlErrorLayout.setVisibility(View.GONE);
+                loadShelfDetail();
+            }
+        });
+    }
+
+    /**
+     * 请求九宫格分类API接口数据
+     */
+    private void loadShelfDetail() {
+        showLoading();
+        //初始化控制器
+        if (mPresenter == null) {
+            mPresenter = new ShelvesDetailPresenter(this);
+        }
+        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{"2"});
+    }
+
 
     private int mCountShowExit;
 
     private void initControlExitLogo() {
         mTvVersionInfo = findViewById(R.id.tv_shelf_detail_version);
-        String appVersion = ManifestUtils.getVersionName(this);
-        mTvVersionInfo.setText(appVersion);
+        mAppVersion = ManifestUtils.getVersionName(this);
+        mTvVersionInfo.setText(mAppVersion);
         mTvVersionInfo.setVisibility(View.VISIBLE);
 
         //初始化退出dialog自定义View
@@ -135,7 +224,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                                     .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            mCountShowExit++;
+                                            if (!mIsNetWorkErro) {
+                                                mCountShowExit++;
+                                            }
 
                                             String s = mExit_id.getText().toString();
 
@@ -285,18 +376,13 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
     }
 
-    /**
-     * 请求九宫格分类API接口数据
-     */
-    private void requestShelfDetail() {
-        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{"2"});
-    }
 
     @SuppressLint("CheckResult")
     @Override
     public void onRefreshFinished(String refreshType, List<ShelvesCategoryResultBean> result) {
         ShelvesCategoryResultBean resultBean = result.get(0);
         if (resultBean != null) {
+            showRefreshLayout(false);
             /**
              * 设置ShelfDetailActivityBg来源
              * 竖屏设备：九宫格背景图片，来自本地
@@ -326,12 +412,23 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             } else {
                 mShelfCategoryAdapter.setCategoryEntity(resultBean.getCategories());
             }
+        } else {
+            showRefreshLayout(true);
         }
+        dismissLoading();
     }
 
     @Override
     public void showTips(String message) {
+        dismissLoading();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        showRefreshLayout(true);
+    }
 
+    private void showRefreshLayout(boolean showRefresh) {
+        mIsNetWorkErro = showRefresh;
+        mLlErrorLayout.setVisibility(showRefresh ? View.VISIBLE : View.GONE);
+        mRlShelfRoot.setVisibility(showRefresh ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -427,6 +524,10 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         if (mIvCopyright_clicks != null && mIvCopyright_clicks.isDisposed()) {
             mIvCopyright_clicks.dispose();
         }
+        if (mErrorRetry_clicks != null && mErrorRetry_clicks.isDisposed()) {
+            mErrorRetry_clicks.dispose();
+        }
+
         mPresenter.destroy();
         super.onDestroy();
     }
