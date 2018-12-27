@@ -2,8 +2,8 @@ package com.chinafocus.bookshelf.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
-import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -86,17 +86,24 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
     private Disposable mErrorRetry_clicks;
     private TextView mTvErrorExit;
 
-    private boolean mIsNetWorkErro =true;
+    private boolean mIsNetWorkErro = true;
     private String mAppVersion;
     private String mExitPass;
     private String mOriginId;
 
+    //书柜id
+    private int mShelfId;
+
     @SuppressLint("CheckResult")
     @Override
     protected void initView() {
+
+        getExtraFromIntent();
+
         setContentView(R.layout.bookshelf_activity_detail);
 
         mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+
 
         //设置当前的版本号
         initControlExitLogo();
@@ -118,20 +125,15 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         //初始化动画
         initAnim();
 
-        showLoading();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (mIsNetWorkErro){
+        loadShelfDetail();
 
-                    //初始化Presenter请求数据
-                    loadShelfDetail();
-                    SystemClock.sleep(3000);
-                }
-            }
-        }).start();
+    }
 
-
+    private void getExtraFromIntent() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, -1);
+        }
     }
 
     private void initErrorRetry() {
@@ -207,14 +209,16 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
      * 请求九宫格分类API接口数据
      */
     private void loadShelfDetail() {
-
+        showLoading();
         //初始化控制器
         if (mPresenter == null) {
             mPresenter = new ShelvesDetailPresenter(this);
 
         }
-//        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{"2", mOriginId});
-        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{"2", "expressreader"});
+
+        Log.i("ShelfDetailActivity", "mShelfId-->" + mShelfId + "mOriginId-->" + mOriginId);
+        mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{String.valueOf(mShelfId), mOriginId});
+
     }
 
 

@@ -15,14 +15,14 @@ public class BookShelfSplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.bookshelf_activity_splash);
-        //延迟2S跳转
+        //延迟3S跳转
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(BookShelfSplashActivity.this, ShelfDetailActivity.class);
+                Intent intent = new Intent(BookShelfSplashActivity.this, ShelvesActivity.class);
                 startActivity(intent);
                 finish();
             }
-        }, 2000);
+        }, 3000);
     }
 }

@@ -9,6 +9,7 @@ import com.chinafocus.bookshelf.ui.activity.BookCategoryDetailActivity;
 import com.chinafocus.bookshelf.ui.activity.BookContentDetailActivity;
 import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivity;
 import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivityYang;
+import com.chinafocus.bookshelf.ui.activity.ShelfDetailActivity;
 
 /**
  * 将Activity界面跳转的逻辑抽离
@@ -18,6 +19,17 @@ import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivityYang;
  * create at 2018/12/4 11:38
  */
 public class UIHelper {
+
+    /**
+     * 跳转九宫格页面 see {@link ShelfDetailActivity}
+     *
+     * @param shelfId 书柜标识
+     */
+    public static void startShelfDetailActivity(Context context, int shelfId) {
+        Intent intent = new Intent(context, ShelfDetailActivity.class);
+        intent.putExtra(BookShelfConstant.SHELF_ID, shelfId);
+        context.startActivity(intent);
+    }
 
     /**
      * 跳转图书分类内容详情页面 see {@link BookCategoryDetailActivity}

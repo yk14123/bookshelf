@@ -175,15 +175,11 @@ public class BookContentDetailActivity extends BaseActivity<BookContentRawBean.B
 //                        String.valueOf(mCategoryId),
 //                        String.valueOf(mBookId), pageId});
 
-//        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_AES_DETAIL,
-//                new String[]{String.valueOf(mShelfId),
-//                        String.valueOf(mCategoryId),
-//                        String.valueOf(mBookId), pageId, mOriginId});
-
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CONTENT_AES_DETAIL,
                 new String[]{String.valueOf(mShelfId),
                         String.valueOf(mCategoryId),
-                        String.valueOf(mBookId), pageId, "expressreader"});
+                        String.valueOf(mBookId), pageId, mOriginId});
+
     }
 
 

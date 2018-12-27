@@ -27,7 +27,7 @@
             app:layout_maxHeightPercent="14.81%sw"
             app:layout_marginTopPercent ="17.3%h"
             app:layout_maxWidthPercent="14.81%sw"
-            tools:src="@drawable/bookshelf_category_14"/>
+            tools:src="@drawable/bookshelf_category_4"/>
 
         <TextView
             android:id="@+id/tv_shelf_category_item_name"

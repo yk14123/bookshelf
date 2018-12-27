@@ -48,24 +48,28 @@ class ShelvesRepository extends AbstractShelvesRepository {
     private String getCacheKey(String category, String[] parms) {
         String key = category;
 
-        if (category.equals("getShelvesDetail")) {
+        if (category.equals("getShelves")) {
             key = category + "&" + parms[0];
         }
 
-        if (category.equals("getBookCategoryDetail")) {
+        if (category.equals("getShelvesDetail")) {
             key = category + "&" + parms[0] + "&" + parms[1];
         }
 
-        if (category.equals("getBookMetadata")) {
+        if (category.equals("getBookCategoryDetail")) {
             key = category + "&" + parms[0] + "&" + parms[1] + "&" + parms[2];
         }
 
-        if (category.equals("getBookContentDetail")) {
+        if (category.equals("getBookMetadata")) {
             key = category + "&" + parms[0] + "&" + parms[1] + "&" + parms[2] + "&" + parms[3];
         }
 
+        if (category.equals("getBookContentDetail")) {
+            key = category + "&" + parms[0] + "&" + parms[1] + "&" + parms[2] + "&" + parms[3] + "&" + parms[4];
+        }
+
         if (category.equals("getBookContentAESDetail")) {
-            key = category + "&" + parms[0] + "&" + parms[1] + "&" + parms[2] + "&" + parms[3];
+            key = category + "&" + parms[0] + "&" + parms[1] + "&" + parms[2] + "&" + parms[3] + "&" + parms[4];
         }
         return key;
     }

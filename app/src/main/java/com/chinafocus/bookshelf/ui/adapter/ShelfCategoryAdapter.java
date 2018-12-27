@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,9 @@ public class ShelfCategoryAdapter extends RecyclerView.Adapter<ShelfCategoryAdap
         if (categoriesFinalBean != null) {
             //logo图标
             int categoryId = categoriesFinalBean.getCategoryId();
-            String resName = "bookshelf_category_" + categoryId;
+            String resName = "bookshelf_category_" + position;
+
+            Log.i("bookshelf_category_", "bookshelf_category_ -- >" + resName);
             Glide.with(mContext)
                     .load(getDrawableRes(resName))
                     .into((holder.ivCategoryLogo));

@@ -88,12 +88,8 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
         if (mPresenter == null) {
             mPresenter = new BookCategoryDetailPresenter(this);
         }
-//        mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CATEGORY_DETAIL,
-//                new String[]{String.valueOf(mShelfId), String.valueOf(mCategoryId), mOriginId});
-
         mPresenter.refresh(IShelvesMvpContract.REFRESH_BOOK_CATEGORY_DETAIL,
-                new String[]{String.valueOf(mShelfId), String.valueOf(mCategoryId), "expressreader"});
-
+                new String[]{String.valueOf(mShelfId), String.valueOf(mCategoryId), mOriginId});
 
     }
 
