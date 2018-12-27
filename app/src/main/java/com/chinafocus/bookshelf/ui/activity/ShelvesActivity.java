@@ -3,6 +3,7 @@ package com.chinafocus.bookshelf.ui.activity;
 import android.content.DialogInterface;
 import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,6 +62,7 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
             public void run() {
                 while (mIsNetWorkErro) {
 
+                    Log.i("ShelvesActivity", "ShelvesActivity   start  network");
                     //初始化Presenter请求数据
                     loadShelfId();
                     SystemClock.sleep(3000);
@@ -86,11 +88,12 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
         if (resultBean != null) {
             showRefreshLayout(false);
             int shelfId = resultBean.get(0).getShelfId();
-
+            Log.i("ShelvesActivity", "ShelvesActivity   start  network   Success");
             UIHelper.startShelfDetailActivity(this, shelfId);
             finish();
         } else {
             showRefreshLayout(true);
+            Log.i("ShelvesActivity", "ShelvesActivity   start  network   resultBean=null");
         }
 
     }
@@ -98,7 +101,9 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
 
     @Override
     public void showTips(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Log.i("ShelvesActivity", "ShelvesActivity   start  network   fail");
+//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "网络自动重连中...", Toast.LENGTH_SHORT).show();
         showRefreshLayout(true);
     }
 
@@ -114,6 +119,7 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
         if (mErrorRetry_clicks != null && mErrorRetry_clicks.isDisposed()) {
             mErrorRetry_clicks.dispose();
         }
+        mIsNetWorkErro = false;
         mPresenter.destroy();
     }
 

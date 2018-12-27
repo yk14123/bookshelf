@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.chinafocus.bookshelf.ui.activity.BookInitPortraitActivity;
-
 public class MyBootReceiver extends BroadcastReceiver
 {
     public MyBootReceiver()
@@ -17,9 +15,9 @@ public class MyBootReceiver extends BroadcastReceiver
     {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
         {
-            Intent i = new Intent(context, BookInitPortraitActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
+//            Intent i = new Intent(context, BookInitPortraitActivity.class);
+//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            context.startActivity(i);
         }
     }
 }
