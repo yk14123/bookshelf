@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/iv_book_cover_show"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:contentDescription="@string/bookshelf_content_description"
-    android:scaleType="fitXY" />
+<com.zhy.android.percent.support.PercentFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/iv_book_cover_show"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/bookshelf_content_description"
+        android:scaleType="fitCenter"
+        app:layout_heightPercent="100%sh"
+        android:background="@color/bookshelf_black"
+        app:layout_widthPercent="100%sw"/>
+
+</com.zhy.android.percent.support.PercentFrameLayout>
+
 

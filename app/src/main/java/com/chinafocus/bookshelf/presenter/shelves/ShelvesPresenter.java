@@ -2,11 +2,10 @@ package com.chinafocus.bookshelf.presenter.shelves;
 
 
 import com.chinafocus.bookshelf.bean.ShelvesRawBean;
-import com.chinafocus.bookshelf.bean.ShelvesResultBean;
 
 import java.util.List;
 
-public class ShelvesPresenter extends AbstractShelvesPresenter<List<ShelvesResultBean>> {
+public class ShelvesPresenter extends AbstractShelvesPresenter<List<ShelvesRawBean.ShelvesResultBean>> {
 
 
     public ShelvesPresenter(IShelvesMvpContract.IView view) {
@@ -14,7 +13,7 @@ public class ShelvesPresenter extends AbstractShelvesPresenter<List<ShelvesResul
     }
 
     @Override
-    protected List<ShelvesResultBean> rawToResultFromGson(String s) {
+    protected List<ShelvesRawBean.ShelvesResultBean> rawToResultFromGson(String s) {
         ShelvesRawBean shelvesRawBean = mGson.fromJson(s, ShelvesRawBean.class);
 
         return shelvesRawBean.getData();

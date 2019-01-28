@@ -2,6 +2,7 @@ package com.chinafocus.bookshelf.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapterYangRV;
 import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
+import com.chinafocus.bookshelf.ui.widgets.MyOverByRecyclerView;
 import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.UIHelper;
 import com.zhy.android.percent.support.PercentLinearLayout;
@@ -40,13 +42,15 @@ import java.util.List;
  * create at 2018/11/27 13:06
  */
 public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultBean> implements View.OnClickListener {
-    private static final String TAG = "BookMeta";
+    private static final String TAG = "YangRV";
     private PercentRelativeLayout mRlAppBar;
     private BookMetaDataPresenter mPresenter;
     //错误视图
     private PercentLinearLayout mLlErrorLayout;
     //目录列表容器
-    private RecyclerView mRvMetaData;
+//    private RecyclerView mRvMetaData;
+    private MyOverByRecyclerView mRvMetaData;
+
     private BookNodeAdapterYangRV mBookNodeAdapter;
     //滑动控件
     private NestedScrollView mNestedScrollView;
@@ -73,6 +77,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     private ArrayList<String> mHeaderContent = new ArrayList<>();
 
     private String mOriginId;
+    private boolean mIsSmoothMoveTop;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -81,7 +86,10 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
         getExtraFromIntent();
         setContentView(R.layout.bookshelf_activity_book_meta_data_yang_rv);
 
+//        SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, "expressreader");
+
         mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+
 
         initNavMenu();
         //无数据视图
@@ -93,12 +101,14 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
         initViewHeaderWrapper();
         //初始化图书信息HeaderExpand标题及内容
 //        initExpandText();
+
+        //返回顶部
+        iniRollbackTop();
+
         //初始化多级目录信息
         initRvMetaData();
 
 
-        //返回顶部
-        iniRollbackTop();
         //加载数据
         loadBookMeta();
 
@@ -107,21 +117,6 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     private void iniRollbackTop() {
         mIvBackTop = findViewById(R.id.iv_book_meta_back_top_rv_yang);
         mIvBackTop.setOnClickListener(this);
-        //底部拖动View
-
-//        mNestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
-//                //判断当前NestedScrollView是否滑动到顶部
-//                if (mNestedScrollView.getScrollY() == 0) {
-////                    setFloatingButtonState(true);
-//                    mIvBackTop.setVisibility(View.GONE);
-//                } else {
-////                    setFloatingButtonState(false);
-//                    mIvBackTop.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
     }
 
     private void initViewHeaderWrapper() {
@@ -129,6 +124,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initRvMetaData() {
         mRvMetaData = findViewById(R.id.rv_book_meta_data_yang_rv);
         LinearLayoutManager manager = new LinearLayoutManager(
@@ -136,9 +132,100 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
         manager.setSmoothScrollbarEnabled(true);
 
         mRvMetaData.setLayoutManager(manager);
-//        mRvMetaData.setHasFixedSize(true);//当前条目固定的情况下，设置此属性，提高RecyclerView的性能
-//        mRvMetaData.setFocusable(false);//取消RecyclerView获取焦点事件，避免NestedScrollView无法滑动到顶部的问题
-//        mRvMetaData.setNestedScrollingEnabled(false);//禁止RecyclerView的滑动事件，交给NestedScrollView
+
+        mRvMetaData.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if (layoutManager != null) {
+                    int position = layoutManager.findFirstVisibleItemPosition();
+
+                    mIsSmoothMoveTop = position < 30;
+
+                    View firstVisibleChildView = layoutManager.findViewByPosition(position);
+                    if (firstVisibleChildView != null) {
+                        int itemHeight = firstVisibleChildView.getHeight();
+                        int i = (position) * itemHeight - firstVisibleChildView.getTop();
+                        if (i > 0) {
+                            mIvBackTop.setVisibility(View.VISIBLE);
+                        } else {
+                            mIvBackTop.setVisibility(View.GONE);
+                        }
+                    }
+
+                }
+            }
+        });
+
+
+//        mRvMetaData.setOnTouchListener(new View.OnTouchListener() {
+//
+//            private static final int MOVE_VERTIFY = 10;
+//            //可以延伸到屏幕的四分之一
+//            private static final int DEFAULT_DEVIDE = 3;
+//
+//            //recyclerView_thumbnail的padding
+//            private int paddingTop;
+//            private int paddingBottom;
+//            private int paddingLeft;
+//            private int paddingRight;
+//
+//            float downTouch;
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+////                downY = event.getY();
+//////                    Log.d("zbv","downY="+downY);
+//                        break;
+//                    case MotionEvent.ACTION_MOVE:
+//                        //这样写是因为无法监听到down事件所以第一次move事件的坐标作为down
+//
+//                        if (mIsCanOverTouch) {
+//                            //消除第一次downX和moveX不一致
+//                            downTouch = event.getY();
+//                            mIsCanOverTouch = false;
+//                            return false;
+//                        }
+//                        float moveTouch = 0;
+//                        moveTouch = event.getY();
+//                        if (!mRvMetaData.canScrollVertically(-1)) {
+//                            if ((moveTouch - downTouch) >= MOVE_VERTIFY) {
+//                                int deltY = (int) (moveTouch - downTouch) / DEFAULT_DEVIDE;
+//                                mRvMetaData.setPadding(mRvMetaData.getPaddingLeft(), mRvMetaData.getPaddingTop() + deltY, mRvMetaData.getPaddingRight(),
+//                                        mRvMetaData.getPaddingBottom());
+//                            } else if ((moveTouch - downTouch) <= -MOVE_VERTIFY) {
+//                                mRvMetaData.setPadding(mRvMetaData.getPaddingLeft(), paddingTop, mRvMetaData.getPaddingRight(), paddingBottom);
+//                            }
+//                        } else if (!mRvMetaData.canScrollVertically(1)) {
+//                            if ((downTouch - moveTouch) >= MOVE_VERTIFY) {
+//                                int deltY = (int) (downTouch - moveTouch) / DEFAULT_DEVIDE;
+//                                mRvMetaData.setPadding(mRvMetaData.getPaddingLeft(), mRvMetaData.getPaddingTop(), mRvMetaData.getPaddingRight(),
+//                                        mRvMetaData.getPaddingBottom() + deltY);
+//                            } else if ((downTouch - moveTouch) <= -MOVE_VERTIFY) {
+//                                mRvMetaData.setPadding(mRvMetaData.getPaddingLeft(), paddingTop, mRvMetaData.getPaddingRight(), paddingBottom);
+//                            }
+//                        } else {
+//                            mRvMetaData.setPadding(mRvMetaData.getPaddingLeft(), paddingTop, mRvMetaData.getPaddingRight(), paddingBottom);
+//                        }
+//
+//                        //防止在既不是顶部也不是底部时的闪烁
+//                        downTouch = moveTouch;
+//                        break;
+//                    case MotionEvent.ACTION_CANCEL:
+//                    case MotionEvent.ACTION_UP:
+//                        mRvMetaData.setPadding(mRvMetaData.getPaddingLeft(), paddingTop, mRvMetaData.getPaddingRight(), paddingBottom);
+//                        mIsCanOverTouch = true;
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
 
     }
 
@@ -148,27 +235,28 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     private void getExtraFromIntent() {
         Intent intent = getIntent();
         if (intent != null) {
-//            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, 1);
-//            mBookId = intent.getIntExtra(BookShelfConstant.BOOK_ID, 1);
-//            mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, 1);
-//            mCategoryTagName = intent.getStringExtra(BookShelfConstant.CATEGORY_NAME);
-//            mBookName = intent.getStringExtra(BookShelfConstant.BOOK_NAME);
+            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, 1);
+            mBookId = intent.getIntExtra(BookShelfConstant.BOOK_ID, 1);
+            mCategoryId = intent.getIntExtra(BookShelfConstant.CATEGORY_ID, 1);
+            mCategoryTagName = intent.getStringExtra(BookShelfConstant.CATEGORY_NAME);
+            mBookName = intent.getStringExtra(BookShelfConstant.BOOK_NAME);
             Log.d(TAG, "getExtraFromIntent: mShelfId >>>" + mShelfId
                     + " mBookId >>> " + mBookId + " mCategoryId >>> "
                     + mCategoryId + " mCategoryTagName >>> " + mCategoryTagName);
 
 //            mShelfId = 2;
-//            mBookId = 185;
-//            mCategoryId = 16;
+//            mBookId = 102;
+//            mCategoryId = 17;
 //            mCategoryTagName = "习近平著作";
 //            mBookName = "习近平著作标题";
 //            mShelfId >>>2 mBookId >>> 185 mCategoryId >>> 16 mCategoryTagName >>> 习近平著作
 //            mShelfId >>>2 mBookId >>> 189 mCategoryId >>> 13 mCategoryTagName >>> 经史典集
-            mShelfId = 2;
-            mBookId = 189;
-            mCategoryId = 13;
-            mCategoryTagName = "经史典集";
-            mBookName = "经史典集标题";
+
+//            mShelfId = 2;
+//            mBookId = 181;
+//            mCategoryId = 14;
+//            mCategoryTagName = "经史典集";
+//            mBookName = "经史典集标题";
         }
     }
 
@@ -221,11 +309,14 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
 
             //图书封面
             mCoverUrl = dataBean.getCover();
+
+            Log.i(TAG, "mCoverUrl-->" + mCoverUrl);
+
             initBgView();
 
 
             //图书名称
-            String mBookTitle = dataBean.getTitle();
+            String mBookTitle = dataBean.getName();
             if (!TextUtils.isEmpty(mBookTitle)) {
                 if (!TextUtils.isEmpty(mCategoryTagName)) {
 //                    mTvBookTitle.setContentAndTag(mBookTitle, mCategoryTagName);
@@ -264,11 +355,11 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
 
             List<TocBean> toc = dataBean.getToc();
             //获取数据
-            ArrayList<TocBean> baseNodes = mPresenter.getTocList(toc, -1);
+            ArrayList<TocBean> mBaseNodes = mPresenter.getTocList(toc, -1);
 
-            /**
-             * 客户端要做分页优化！！！
-             */
+//            /**
+//             * 客户端要做分页优化！！！
+//             */
 //            ArrayList<TocBean> finalBaseNode;
 //            if (baseNodes.size() > 99) {
 //                List<TocBean> subBaseNodes = baseNodes.subList(0, 10);
@@ -278,7 +369,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
 //            }
 
             if (mBookNodeAdapter == null) {
-                mBookNodeAdapter = new BookNodeAdapterYangRV(this, baseNodes, mHeaderContent);
+                mBookNodeAdapter = new BookNodeAdapterYangRV(this, mBaseNodes, mHeaderContent);
                 initBookNodeAdapter();
             }
             mRvMetaData.setAdapter(mBookNodeAdapter);
@@ -323,7 +414,6 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     @SuppressLint("CheckResult")
     private void initBgView() {
         RequestOptions requestOptions = new RequestOptions()
-                .centerCrop()
                 .placeholder(R.drawable.bookshelf_default_cover_port)
                 .error(R.drawable.bookshelf_default_cover_port);
 
@@ -348,9 +438,11 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     @Override
     public void onClick(View v) {
         if (v == mIvBackTop) {
-//            mNestedScrollView.fullScroll(View.FOCUS_UP);
-//            if (!isHeaderContentLoadMore)
-//                toggle();
+            if (mIsSmoothMoveTop) {
+                mRvMetaData.smoothScrollToPosition(0);
+            } else {
+                mRvMetaData.scrollToPosition(0);
+            }
         } else if (v == mLlErrorLayout) {
             mLlErrorLayout.setVisibility(View.GONE);
             loadBookMeta();

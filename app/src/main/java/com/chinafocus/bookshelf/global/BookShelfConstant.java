@@ -23,21 +23,24 @@ public class BookShelfConstant {
 //    public static final int LARGER = 350;
 //    public static final int LARGEST = 400;
 //手机版本
-//    public static final int SMALLER = 250;
-//    public static final int NORMAL = 300;
-//    public static final int LARGE = 350;
-//    public static final int LARGER = 400;
-//    public static final int LARGEST = 450;
-//竖屏版本
-    public static final int SMALLER = 150;
-    public static final int NORMAL = 200;
-    public static final int LARGE = 250;
-    public static final int LARGER = 300;
-    public static final int LARGEST = 350;
+    public static final int SMALLER = 200;
+    public static final int NORMAL = 300;
+    public static final int LARGE = 400;
+    public static final int LARGER = 500;
+    public static final int LARGEST = 600;
+////竖屏版本
+//    public static final int SMALLER = 150;
+//    public static final int NORMAL = 200;
+//    public static final int LARGE = 250;
+//    public static final int LARGER = 300;
+//    public static final int LARGEST = 350;
 
     /**
      * 统计点击次数
      */
     public static final String BOOK_INIT_LOCATION_ID = "book_init_location_id";
     public static final String BOOK_CLIENT_UUID = "book_client_uuid";
+    public static final String HAS_SHELF_DETAIL_CACHE = "has_shelf_detail_cache";
+
+    public static final String SHELF_ID_TEMP = "shelfId_temp";
 }

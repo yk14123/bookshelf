@@ -29,7 +29,6 @@ public class BookInitPortraitActivity extends AppCompatActivity {
         setContentView(R.layout.bookshelf_activity_book_init);
 
         initView();
-
         mPresenter = new BookInitPortraitPresenter();
         mPresenter.initData(this);
     }

@@ -3,85 +3,49 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.chinafocus.bookshelf">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
-    <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <application
-        android:name=".global.BookShelfApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/bookshelf_ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/bookshelf_ic_launcher"
-        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
-        <receiver
-            android:name=".broadcast.MyBootReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.chinafocus.bookshelf.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
-        </provider>
-
-        <activity android:name=".ui.activity.ShelvesActivity"/>
-        <activity
-            android:name=".ui.activity.ShelfDetailActivity"
-            android:theme="@style/AppCompatNoActionBar">
-        </activity>
-        <activity
-            android:name=".ui.activity.BookCategoryDetailActivity"
-            android:theme="@style/AppCompatNoActionBar"/>
-        <activity
-            android:name=".ui.activity.BookMetaDataActivity"
-            android:theme="@style/AppCompatNoActionBar"/>
-        <activity
-            android:name=".ui.activity.BookContentDetailActivity"
-            android:theme="@style/AppCompatNoActionBar"/>
-
-        <activity android:name=".ui.activity.BookMetaDataActivityYang">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
-        <activity android:name=".ui.activity.BookInitPortraitActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".ui.activity.BookMetaDataActivityYangRV">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
+        <activity android:name=".ui.activity.BookInitPortraitActivity"
+                  android:theme="@style/BookShelfAppCompatNoActionBar"/>
 
         <activity
             android:name=".ui.activity.BookShelfSplashActivity"
-            android:theme="@style/ThemeSplash">
-        </activity>
+            android:theme="@style/BookShelfThemeSplash"/>
+
+        <activity android:name=".ui.activity.ShelvesActivity"
+                  android:theme="@style/BookShelfAppCompatNoActionBar"/>
+
+        <activity
+            android:name=".ui.activity.ShelfDetailActivity"
+            android:theme="@style/BookShelfAppCompatNoActionBar"/>
+
+        <activity
+            android:name=".ui.activity.BookShelfCopyrightActivity"
+            android:theme="@style/BookShelfAppCompatNoActionBar"/>
+
+        <activity
+            android:name=".ui.activity.BookCategoryDetailActivity"
+            android:theme="@style/BookShelfAppCompatNoActionBar"/>
+
+        <activity
+            android:name=".ui.activity.BookMetaDataActivity"
+            android:theme="@style/BookShelfAppCompatNoActionBar"/>
+
+        <activity android:name=".ui.activity.BookMetaDataActivityYang"
+                  android:theme="@style/BookShelfAppCompatNoActionBar"/>
+
+        <activity android:name=".ui.activity.BookMetaDataActivityYangRV"
+                  android:theme="@style/BookShelfAppCompatNoActionBar"/>
+
+        <activity
+            android:name=".ui.activity.BookContentDetailActivity"
+            android:theme="@style/BookShelfAppCompatNoActionBar"/>
 
     </application>
 

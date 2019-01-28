@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.chinafocus.bookshelf.global.BookShelfConstant;
+
 @SuppressLint("ApplySharedPref")
 public class SpUtil {
 
@@ -18,31 +20,31 @@ public class SpUtil {
 
     public static boolean getBoolean(Context context, String key) {
         if (sSp == null)
-            sSp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+            sSp = context.getSharedPreferences(BookShelfConstant.BOOKSHELF_CONFIG, Context.MODE_PRIVATE);
         return sSp.getBoolean(key, false);
     }
 
     public static void setInt(Context context, String key, int b) {
         if (sSp == null)
-            sSp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+            sSp = context.getSharedPreferences(BookShelfConstant.BOOKSHELF_CONFIG, Context.MODE_PRIVATE);
         sSp.edit().putInt(key, b).commit();
     }
 
     public static int getInt(Context context, String key, int defValue) {
         if (sSp == null)
-            sSp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+            sSp = context.getSharedPreferences(BookShelfConstant.BOOKSHELF_CONFIG, Context.MODE_PRIVATE);
         return sSp.getInt(key, defValue);
     }
 
     public static void setString(Context context, String key, String b) {
         if (sSp == null)
-            sSp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+            sSp = context.getSharedPreferences(BookShelfConstant.BOOKSHELF_CONFIG, Context.MODE_PRIVATE);
         sSp.edit().putString(key, b).commit();
     }
 
     public static String getString(Context context, String key) {
         if (sSp == null)
-            sSp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+            sSp = context.getSharedPreferences(BookShelfConstant.BOOKSHELF_CONFIG, Context.MODE_PRIVATE);
         return sSp.getString(key, null);
     }
 }

@@ -43,7 +43,7 @@ public class FontSettingDialog extends AlertDialog implements View.OnClickListen
     private OnFontOptionListener onFontOptionListener;
 
     public FontSettingDialog(@NonNull Context context) {
-        this(context, R.style.AppCompatTransparentDialog);
+        this(context, R.style.BookShelfAppCompatTransparentDialog);
     }
 
     private FontSettingDialog(@NonNull Context context, int themeResId) {

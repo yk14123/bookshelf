@@ -1,151 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.android.percent.support.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_book_category_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/dp_15">
+    android:paddingTop="@dimen/dp_15"
+    android:paddingLeft="@dimen/dp_15">
 
     <ImageView
         android:id="@+id/iv_book_category_item_cover"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/dp_15"
         android:contentDescription="@string/bookshelf_content_description"
-        app:layout_heightPercent="21%sh"
-        app:layout_widthPercent="28%sw"
-        tools:background="@drawable/bookshelf_default_cover_port" />
+        app:layout_heightPercent="31.73%sw"
+        app:layout_widthPercent="24%sw"
+        tools:background="@drawable/bookshelf_default_cover_port"/>
 
 
     <TextView
         android:id="@+id/tv_book_category_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/iv_book_category_item_cover"
         android:layout_toEndOf="@+id/iv_book_category_item_cover"
-        android:gravity="center"
-        android:maxLines="1"
         android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="#333333"
-        android:textSize="40sp"
-        tools:text="现当代文学" />
+        app:layout_marginStartPercent="3.2%sw"
+        app:layout_marginLeftPercent="3.2%sw"
+        app:layout_marginTopPercent="1.33%sw"
+        app:layout_textSizePercent="4%sw"
+        tools:text="现当代文学"/>
 
     <TextView
         android:id="@+id/tv_book_category_item_summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tv_book_category_item_name"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/iv_book_category_item_cover"
         android:ellipsize="end"
+        android:lineSpacingExtra="1dp"
+        android:paddingEnd="@dimen/dp_15"
         android:maxLines="3"
-        android:lineSpacingExtra="30dp"
         android:textColor="#666666"
-        android:textSize="25sp"
-        tools:text="《马列主义经典作家文库著作单行本: 共 产宣言》是马克思、 恩格斯为共产主义同盟写的纲领. 在这个纲领性文献中，马克" />
+        app:layout_marginStartPercent="3.2%sw"
+        app:layout_marginLeftPercent="3.2%sw"
+        app:layout_marginTopPercent="4%sw"
+        app:layout_textSizePercent="3.47%sw"
+        tools:text="《马列主义经典作家文库著作单行本: 共 产宣言》是马克思、 恩格斯为共产主义同盟写的纲领. 在这个纲领性文献中，马克"/>
 
-    <LinearLayout
-        android:gravity="center_vertical"
+    <com.zhy.android.percent.support.PercentRelativeLayout
         android:layout_width="wrap_content"
-        android:layout_alignBottom="@+id/iv_book_category_item_cover"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_book_category_item_summary"
         android:layout_toEndOf="@+id/iv_book_category_item_cover"
-        android:layout_height="wrap_content">
+        app:layout_marginStartPercent="3.2%sw"
+        app:layout_marginLeftPercent="3.2%sw"
+        app:layout_marginTopPercent="3.73%sw">
 
         <ImageView
             android:id="@+id/iv_book_category_item_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerVertical="true"
             android:background="@drawable/bookshelf_author_icon"
             android:contentDescription="@string/bookshelf_content_description"
-           />
+            app:layout_heightPercent="2.67%sw"
+            app:layout_widthPercent="2.67%sw"
+            />
 
         <TextView
             android:id="@+id/tv_book_category_item_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/iv_book_category_item_author"
             android:textColor="#999999"
-            android:textSize="25sp"
-            tools:text="作者名" />
+            app:layout_marginLeftPercent="1.6%sw"
+            app:layout_textSizePercent="2.93%sw"
+            tools:text="作者名"/>
 
-    </LinearLayout>
+    </com.zhy.android.percent.support.PercentRelativeLayout>
 
+    <View
+        android:layout_below="@id/iv_book_category_item_cover"
+        android:background="@color/bookshelf_detail_category_item_color"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/dp_17"
+        android:layout_height="1dp"/>
 
 </com.zhy.android.percent.support.PercentRelativeLayout>
-<!--手机适配-->
-<!--<com.zhy.android.percent.support.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-                                                       <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-                                                       <!--xmlns:tools="http://schemas.android.com/tools"-->
-                                                       <!--android:id="@+id/rl_book_category_root"-->
-                                                       <!--android:layout_width="match_parent"-->
-                                                       <!--android:layout_height="wrap_content"-->
-                                                       <!--android:padding="@dimen/dp_15">-->
-
-<!--<ImageView-->
-    <!--android:id="@+id/iv_book_category_item_cover"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_marginEnd="@dimen/dp_15"-->
-    <!--android:contentDescription="@string/bookshelf_content_description"-->
-    <!--app:layout_heightPercent="21%sh"-->
-    <!--app:layout_widthPercent="28%sw"-->
-    <!--tools:background="@drawable/bookshelf_default_cover_port" />-->
-
-
-<!--<TextView-->
-    <!--android:id="@+id/tv_book_category_item_name"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignTop="@+id/iv_book_category_item_cover"-->
-    <!--android:layout_toEndOf="@+id/iv_book_category_item_cover"-->
-    <!--android:gravity="center"-->
-    <!--android:maxLines="1"-->
-    <!--android:ellipsize="end"-->
-    <!--android:textColor="#333333"-->
-    <!--android:textSize="@dimen/sp_15"-->
-    <!--tools:text="现当代文学" />-->
-
-<!--<TextView-->
-    <!--android:id="@+id/tv_book_category_item_summary"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:layout_toEndOf="@+id/iv_book_category_item_cover"-->
-    <!--android:ellipsize="end"-->
-    <!--android:maxLines="3"-->
-    <!--android:lineSpacingExtra="30dp"-->
-    <!--android:textColor="#666666"-->
-    <!--android:textSize="@dimen/sp_13"-->
-    <!--tools:text="《马列主义经典作家文库著作单行本: 共 产宣言》是马克思、 恩格斯为共产主义同盟写的纲领. 在这个纲领性文献中，马克" />-->
-
-<!--<ImageView-->
-    <!--android:id="@+id/iv_book_category_item_author"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_alignBottom="@+id/iv_book_category_item_cover"-->
-    <!--android:layout_toEndOf="@+id/iv_book_category_item_cover"-->
-    <!--android:background="@drawable/bookshelf_author_icon"-->
-    <!--android:contentDescription="@string/bookshelf_content_description"-->
-    <!--app:layout_heightPercent="4%w"-->
-    <!--app:layout_widthPercent="4%w" />-->
-
-<!--<TextView-->
-    <!--android:id="@+id/tv_book_category_item_author"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignTop="@+id/iv_book_category_item_author"-->
-    <!--android:layout_alignBottom="@+id/iv_book_category_item_cover"-->
-    <!--android:layout_marginStart="@dimen/dp_8"-->
-    <!--android:layout_toEndOf="@+id/iv_book_category_item_author"-->
-    <!--android:gravity="center"-->
-    <!--android:textColor="#999999"-->
-    <!--android:textSize="@dimen/sp_11"-->
-    <!--tools:text="现当代文学" />-->
-
-<!--</com.zhy.android.percent.support.PercentRelativeLayout>-->

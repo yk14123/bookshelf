@@ -4,6 +4,7 @@ public class StatisticsTypeFactory {
 
     public static IStatisticsType getStatisticsManager() {
 
-        return new StatisticsType();
+//        return new StatisticsType();
+        return new StatisticsTypeNew();
     }
 }

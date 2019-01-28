@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
@@ -64,19 +63,20 @@ public class BookCoverDialog extends PopupWindow {
         //设置背景
         setBackgroundDrawable(new ColorDrawable(0));
         //设置动画
-        setAnimationStyle(R.style.ActivityScaleAnimation);
+        setAnimationStyle(R.style.BookShelfActivityScaleAnimation);
         //设置宽高
-        int height = screenHeight - stateBarHeight - parent.getHeight();
+//        int height = screenHeight - stateBarHeight - parent.getHeight();
 //        setHeight(height);
-        setHeight(screenHeight);
-        setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+//        setHeight(screenHeight);
+//        setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+//        setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     public void setImageUrl(@NonNull String imgUrl) {
         //设置图片
         Glide.with(mContext)
                 .load(imgUrl)
-                .apply(new RequestOptions().centerCrop()
+                .apply(new RequestOptions()
                         .error(R.drawable.bookshelf_default_cover_port)
                         .placeholder(R.drawable.bookshelf_default_cover_port))
                 .into(mIvBookCover);

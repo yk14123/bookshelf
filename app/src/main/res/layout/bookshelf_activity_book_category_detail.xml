@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.BookCategoryDetailActivity">
 
     <include
@@ -12,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <FrameLayout
+    <com.zhy.android.percent.support.PercentFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -29,7 +31,22 @@
             android:layout_height="match_parent"
             android:visibility="gone"/>
 
-    </FrameLayout>
+        <!--悬浮按钮-->
+        <ImageView
+            android:id="@+id/iv_book_category_back_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_51"
+            android:contentDescription="@string/bookshelf_content_description"
+            android:src="@drawable/bookshelf_back_top"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            app:layout_heightPercent="7.5%sw"
+            app:layout_widthPercent="7.5%sw"/>
+
+    </com.zhy.android.percent.support.PercentFrameLayout>
 
 
 </com.zhy.android.percent.support.PercentLinearLayout>

@@ -1,6 +1,7 @@
 package com.chinafocus.bookshelf.presenter.shelves;
 
 import com.chinafocus.bookshelf.model.base.shelvesrepository.ShelvesRepositoryFactory;
+import com.chinafocus.bookshelf.utils.LogUtil;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
@@ -62,7 +63,7 @@ abstract class AbstractShelvesPresenter<TT> implements IShelvesMvpContract.IPres
                 .map(new Function<String, TT>() {
                     @Override
                     public TT apply(String s) throws Exception {
-
+                        LogUtil.veryLongForI("网络不好，请稍后重试",s);
                         return rawToResultFromGson(s);
                     }
                 })

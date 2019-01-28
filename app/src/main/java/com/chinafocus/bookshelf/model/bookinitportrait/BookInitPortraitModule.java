@@ -18,7 +18,6 @@ public class BookInitPortraitModule {
             activity.finish();
             return;
         }
-
         activity.initData();
     }
 

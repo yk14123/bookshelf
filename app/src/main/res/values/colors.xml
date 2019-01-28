@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="test">#0000ff</color>
+    <color name="bookshelf_white">#FFFFFF</color>
+    <color name="bookshelf_black">#000000</color>
+    <color name="bookshelf_grey">#F9F9F9</color>
+    <color name="bookshelf_transparent">#00000000</color>
+    <color name="bookshelf_line_color">#EEEEEE</color>
+    <!--文本标题顔色-->
+    <color name="bookshelf_title_text_color">#FF333333</color>
+    <!--文本内容顔色-->
+    <color name="bookshelf_content_text_color">#FF666666</color>
+    <!--提示性文本顔色-->
+    <color name="bookshelf_tip_text_color">#999999</color>
+
+    <!--状态栏顔色-->
+    <color name="bookshelf_status_bar">#000000</color>
+    <!--推荐语和简介顔色-->
+    <color name="bookshelf_metadata_tag_color">#f39b4d</color>
+    <!--九宫格圆形图片背景色-->
+    <color name="bookshelf_detail_category_bg_color">#00000000</color>
+    <!--分类页面分割item线的颜色-->
+    <color name="bookshelf_detail_category_item_color">#FFEEEEEE</color>
+
+</resources>

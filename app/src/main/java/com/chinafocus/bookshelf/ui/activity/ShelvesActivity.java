@@ -1,7 +1,7 @@
 package com.chinafocus.bookshelf.ui.activity;
 
 import android.content.DialogInterface;
-import android.os.SystemClock;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -10,11 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.bean.ShelvesResultBean;
+import com.chinafocus.bookshelf.bean.ShelvesRawBean;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesPresenter;
+import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
 import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.UIHelper;
@@ -28,7 +29,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 
-public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
+public class ShelvesActivity extends BaseActivity<ShelvesRawBean.ShelvesResultBean> {
 
     private IShelvesMvpContract.IPresenter mPresenter;
     private String mOriginId;
@@ -51,24 +52,27 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
 
         setContentView(R.layout.bookshelf_activity_shelves_home);
 
-        mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+        getExtraFromIntent();
 
         initExitDialogView();
         //网络错误重试
         initErrorRetry();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (mIsNetWorkErro) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (mIsNetWorkErro) {
+//
+//                    Log.i("ShelvesActivity", "ShelvesActivity   start  network");
+//                    //初始化Presenter请求数据
+//                    loadShelfId();
+//                    SystemClock.sleep(3000);
+//                }
+//            }
+//        }).start();
 
-                    Log.i("ShelvesActivity", "ShelvesActivity   start  network");
-                    //初始化Presenter请求数据
-                    loadShelfId();
-                    SystemClock.sleep(3000);
-                }
-            }
-        }).start();
+
+        loadShelfId();
 
     }
 
@@ -84,10 +88,13 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
 
 
     @Override
-    public void onRefreshFinished(String refreshType, List<ShelvesResultBean> resultBean) {
+    public void onRefreshFinished(String refreshType, List<ShelvesRawBean.ShelvesResultBean> resultBean) {
         if (resultBean != null) {
             showRefreshLayout(false);
             int shelfId = resultBean.get(0).getShelfId();
+
+            StatisticsPresenter.getInstance().startStatistics(getApplicationContext(), "1", String.valueOf(shelfId));
+
             Log.i("ShelvesActivity", "ShelvesActivity   start  network   Success");
             UIHelper.startShelfDetailActivity(this, shelfId);
             finish();
@@ -98,12 +105,22 @@ public class ShelvesActivity extends BaseActivity<ShelvesResultBean> {
 
     }
 
+    private void getExtraFromIntent() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            mOriginId = intent.getStringExtra(BookShelfConstant.BOOK_INIT_LOCATION_ID);
+            String client_uuid = intent.getStringExtra(BookShelfConstant.BOOK_CLIENT_UUID);
+            SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, mOriginId);
+            SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_CLIENT_UUID, client_uuid);
+        }
+    }
+
 
     @Override
     public void showTips(String message) {
         Log.i("ShelvesActivity", "ShelvesActivity   start  network   fail");
-//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "网络自动重连中...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "网络错误或者客户代码无效", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "网络自动重连中...", Toast.LENGTH_SHORT).show();
         showRefreshLayout(true);
     }
 

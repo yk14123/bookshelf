@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.android.percent.support.PercentLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_book_meta_item_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/bookshelf_white"
     android:orientation="vertical">
 
     <TextView
@@ -18,11 +20,11 @@
         android:textStyle="bold"
         app:layout_heightPercent="15%w"
         app:layout_textSizePercent="4.2%w"
-        tools:text="@string/app_name" />
+        tools:text="@string/app_name"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/bookshelf_line_color"
-        app:layout_heightPercent="0.4%w" />
+        android:layout_height="1dp"
+        android:background="@color/bookshelf_line_color"/>
+    
 </com.zhy.android.percent.support.PercentLinearLayout>

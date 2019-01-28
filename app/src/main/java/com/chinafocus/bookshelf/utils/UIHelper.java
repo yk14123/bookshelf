@@ -8,7 +8,7 @@ import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.ui.activity.BookCategoryDetailActivity;
 import com.chinafocus.bookshelf.ui.activity.BookContentDetailActivity;
 import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivity;
-import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivityYang;
+import com.chinafocus.bookshelf.ui.activity.BookMetaDataActivityYangRV;
 import com.chinafocus.bookshelf.ui.activity.ShelfDetailActivity;
 
 /**
@@ -58,7 +58,7 @@ public class UIHelper {
                                              int categoryId, int bookId, String bookName, String categoryTagName) {
         //跳轉圖書詳情頁
 //        Intent intent = new Intent(context, BookMetaDataActivity.class);
-        Intent intent = new Intent(context, BookMetaDataActivityYang.class);
+        Intent intent = new Intent(context, BookMetaDataActivityYangRV.class);
         intent.putExtra(BookShelfConstant.SHELF_ID, shelfId);
         intent.putExtra(BookShelfConstant.CATEGORY_ID, categoryId);
         intent.putExtra(BookShelfConstant.BOOK_ID, bookId);

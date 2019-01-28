@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_splash"
+    android:fitsSystemWindows="true"
     >
 
 
@@ -32,6 +32,7 @@
             android:text="退出"
             android:textColor="#000"
             android:textSize="20sp"
+            android:visibility="gone"
             app:layout_marginLeftPercent="80%sw"
             app:layout_marginTopPercent="85%sh"
             tools:text="1.2.11"/>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.android.percent.support.PercentFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <com.zhy.android.percent.support.PercentFrameLayout
         android:id="@+id/fl_book_meta_content"
@@ -16,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/bookshelf_content_description"
-            tools:src="@drawable/bookshelf_default_cover_port" />
+            tools:src="@drawable/bookshelf_default_cover_port"/>
 
         <!--拖拽布局-->
         <android.support.design.widget.CoordinatorLayout
@@ -28,7 +30,7 @@
                 layout="@layout/bookshelf_include_book_meta_bottom_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_behavior="com.chinafocus.bookshelf.ui.widgets.BottomViewDragBehavior" />
+                app:layout_behavior="com.chinafocus.bookshelf.ui.widgets.BottomViewDragBehavior"/>
         </android.support.design.widget.CoordinatorLayout>
 
         <!--悬浮按钮-->
@@ -42,7 +44,7 @@
             android:src="@drawable/bookshelf_back_top"
             android:visibility="gone"
             app:layout_heightPercent="7.5%w"
-            app:layout_widthPercent="7.5%w" />
+            app:layout_widthPercent="7.5%w"/>
 
     </com.zhy.android.percent.support.PercentFrameLayout>
 
@@ -52,12 +54,12 @@
         layout="@layout/bookshelf_include_app_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <!--顶层标题栏-->
     <include
         layout="@layout/bookshelf_include_app_toolbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
 </com.zhy.android.percent.support.PercentFrameLayout>

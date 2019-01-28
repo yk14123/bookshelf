@@ -229,7 +229,7 @@ public class BookMetaDataActivity extends BaseActivity<BookMetadataResultBean> i
         if (dataBean != null) {
             showRefreshLayout(false);
             //图书名称
-            String mBookTitle = dataBean.getTitle();
+            String mBookTitle = dataBean.getName();
             if (!TextUtils.isEmpty(mBookTitle)) {
                 if (!TextUtils.isEmpty(mCategoryTagName)) {
                     mTvBookTitle.setContentAndTag(mBookTitle, mCategoryTagName);

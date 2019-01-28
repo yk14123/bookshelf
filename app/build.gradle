@@ -1,13 +1,14 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+//apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.chinafocus.bookshelf"
+//        applicationId "com.chinafocus.bookshelf"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
-        versionName "2.1.2"
+        versionCode 3
+        versionName "2.3.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
 //        flavorDimensions "versionCode"
@@ -34,7 +35,7 @@ android {
             // Zipalign优化
             zipAlignEnabled true
             // 移除无用的resource文件
-            shrinkResources true
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
@@ -152,10 +153,6 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
     //Material design
     implementation 'com.android.support:design:28.0.0'
-    //内存泄漏检测
-//    implementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
-    //    implementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
     //percent Layout
     implementation 'com.zhy:percent-support-extends:1.1.1'
-    implementation 'com.ms-square:expandableTextView:0.1.4'
 }

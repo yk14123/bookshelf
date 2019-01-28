@@ -1,9 +1,12 @@
 package com.chinafocus.bookshelf.model.base.activity;
 
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.chinafocus.bookshelf.model.base.statusbar.StatusBarCompat;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.utils.ProgressBarUtils;
 
@@ -16,6 +19,11 @@ public abstract class BaseActivity<T> extends AppCompatActivity implements IShel
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //禁止屏幕旋转
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        StatusBarCompat.setStatusBarColor(this,Color.TRANSPARENT,true);
 
         initView();
     }

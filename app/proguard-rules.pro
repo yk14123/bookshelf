@@ -20,6 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keep class com.chinafocus.bookshelf.model.base.sdkconfig.**{*;}
 
 #--------------------------1.实体类---------------------------------
 

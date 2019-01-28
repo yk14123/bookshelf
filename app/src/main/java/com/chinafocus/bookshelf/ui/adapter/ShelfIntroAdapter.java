@@ -15,7 +15,12 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import com.chinafocus.bookshelf.R;
+import com.chinafocus.bookshelf.ui.widgets.MyNoTouchWebView;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 书柜简介数据适配器
@@ -34,6 +39,9 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private int[] mShelfImages;
 
+    private List<Integer> mList;
+    private boolean isFirstRunning = true;
+
     public ShelfIntroAdapter(Context context) {
         this.mContext = context;
         this.mShelfImages = new int[]{
@@ -41,6 +49,12 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 R.drawable.bookshelf_case_intro2,
                 R.drawable.bookshelf_case_intro3,
                 R.drawable.bookshelf_case_intro4};
+
+        mList = new ArrayList<>();
+        mList.add(R.drawable.bookshelf_deceit_image_intro);
+        mList.add(R.drawable.bookshelf_deceit_image_intro);
+        mList.add(R.drawable.bookshelf_deceit_image_intro);
+        mList.add(R.drawable.bookshelf_deceit_image_intro);
     }
 
     @Override
@@ -69,8 +83,8 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof WebViewHolder) {
             //適配WebView
             WebViewHolder webViewHolder = (WebViewHolder) holder;
-            webViewHolder.wvShelfWeb.setVerticalScrollBarEnabled(false);//不能垂直滑动
-            webViewHolder.wvShelfWeb.setHorizontalScrollBarEnabled(false);//不能水平滑动
+//            webViewHolder.wvShelfWeb.setVerticalScrollBarEnabled(false);//不能垂直滑动
+//            webViewHolder.wvShelfWeb.setHorizontalScrollBarEnabled(false);//不能水平滑动
             //設置WebView默認的白色背景為透明色
             webViewHolder.wvShelfWeb.setBackgroundColor(0);
             webViewHolder.wvShelfWeb.setWebViewClient(new WebViewClient() {
@@ -78,6 +92,21 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                     handler.proceed();
                     super.onReceivedSslError(view, handler, error);
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if (isFirstRunning) {
+                        isFirstRunning = false;
+                        mList = Arrays.asList(
+                                R.drawable.bookshelf_case_intro1,
+                                R.drawable.bookshelf_case_intro2,
+                                R.drawable.bookshelf_case_intro3,
+                                R.drawable.bookshelf_case_intro4
+                        );
+                        notifyDataSetChanged();
+                    }
                 }
             });
             WebSettings webSettings = webViewHolder.wvShelfWeb.getSettings(); //声明WebSettings子类
@@ -89,13 +118,16 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             webSettings.setSupportZoom(false); //支持缩放，默认为true。是下面那个的前提。
             webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
             webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
-            webSettings.setTextZoom(150);   //设置显示的字体大小
+            webSettings.setTextZoom(320);   //设置显示的字体大小
             //加载本地文件
             webViewHolder.wvShelfWeb.loadUrl("file:///android_asset/bookcaseIntro.html");
+//            webViewHolder.wvShelfWeb.loadDataWithBaseURL(null,"file:///android_asset/bookcaseIntro.html","text/html", "UTF-8", null);
         } else if (holder instanceof ImageHolder) {
             ImageHolder imageHolder = (ImageHolder) holder;
             Log.d(TAG, "onBindViewHolder: current position >>> " + position);
-            imageHolder.ivShelfImage.setBackgroundResource(mShelfImages[position - 1]);
+//            imageHolder.ivShelfImage.setBackgroundResource(mShelfImages[position - 1]);
+            imageHolder.ivShelfImage.setImageDrawable(mContext.getResources().getDrawable(mList.get(position - 1)));
+
         }
     }
 
@@ -127,7 +159,7 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * 书柜WEB页面holder
      */
     class WebViewHolder extends RecyclerView.ViewHolder {
-        private WebView wvShelfWeb;
+        private MyNoTouchWebView wvShelfWeb;
 
         WebViewHolder(View itemView) {
             super(itemView);

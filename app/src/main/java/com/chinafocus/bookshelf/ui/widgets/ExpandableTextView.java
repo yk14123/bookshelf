@@ -362,7 +362,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
                     expandDrawable = getDrawable(context, R.drawable.bookshelf_back_top);
                 }
                 if (collapseDrawable == null) {
-                    collapseDrawable = getDrawable(context, R.drawable.bookshelf_icon_back);
+                    collapseDrawable = getDrawable(context, R.drawable.bookshelf_icon_back_black);
                 }
                 expandIndicatorController = new ImageButtonExpandController(expandDrawable, collapseDrawable);
                 break;

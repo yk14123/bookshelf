@@ -1,6 +1,7 @@
 package com.chinafocus.bookshelf.ui.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,7 +19,6 @@ import com.chinafocus.bookshelf.presenter.shelves.BookCategoryDetailPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.BookCategoryAdapter;
-import com.chinafocus.bookshelf.ui.widgets.LinearItemDecoration;
 import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.UIHelper;
 import com.zhy.android.percent.support.PercentLinearLayout;
@@ -51,6 +51,8 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
 
     private String mOriginId;
 
+    private ImageView mIvBackTop;
+
     @Override
     protected void initView() {
         getExtraFromIntent();
@@ -71,12 +73,24 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
             }
         });
 
+        iniRollbackTop();
+
         //初始化RecyclerView
         initRvBookCategoryList();
 
         Log.i("MyLog", "BookCategoryDetailActivity  onCreate");
         //初始化presenter控制器
         loadBookCategory();
+    }
+
+    private void iniRollbackTop() {
+        mIvBackTop = findViewById(R.id.iv_book_category_back_top);
+        mIvBackTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRvBookCategory.smoothScrollToPosition(0);
+            }
+        });
     }
 
     /**
@@ -99,7 +113,32 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
                 this, LinearLayoutManager.VERTICAL, false);
         mRvBookCategory.setLayoutManager(manager);
         mRvBookCategory.setHasFixedSize(true);
-        mRvBookCategory.addItemDecoration(new LinearItemDecoration());
+//        mRvBookCategory.addItemDecoration(new LinearItemDecoration(){
+//            @Override
+//            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+//                super.getItemOffsets(outRect, view, parent, state);
+//                outRect.left = ScreenUtils.dip2Px(BookCategoryDetailActivity.this,15);
+//            }
+//        });
+
+        mRvBookCategory.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int position = layoutManager.findFirstVisibleItemPosition();
+                View firstVisibleChildView = layoutManager.findViewByPosition(position);
+                int itemHeight = firstVisibleChildView.getHeight();
+                int i = (position) * itemHeight - firstVisibleChildView.getTop();
+                if (i > 0) {
+                    mIvBackTop.setVisibility(View.VISIBLE);
+                } else {
+                    mIvBackTop.setVisibility(View.GONE);
+                }
+
+            }
+        });
     }
 
     /**
@@ -139,7 +178,7 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
         if (bookCategoryDetailResultBean != null) {
             showRefreshLayout(false);
             List<BookCategoryDetailResultBean.BooksCategoryDetailFinalBean> books
-                    = bookCategoryDetailResultBean.getBooks();
+                    = bookCategoryDetailResultBean.getEpubs();
             if (mBookCategoryAdapter == null) {
                 mBookCategoryAdapter = new BookCategoryAdapter(this, books);
                 mRvBookCategory.setAdapter(mBookCategoryAdapter);

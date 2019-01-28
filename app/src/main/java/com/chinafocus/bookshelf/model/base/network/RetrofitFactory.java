@@ -1,7 +1,5 @@
 package com.chinafocus.bookshelf.model.base.network;
 
-import com.chinafocus.bookshelf.global.BookShelfApplication;
-
 import javax.net.ssl.SSLSocketFactory;
 
 import okhttp3.OkHttpClient;
@@ -13,10 +11,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 class RetrofitFactory {
 
     static Retrofit getDownloadService() {
-        SSLSocketFactory sslSocketFactory = HttpsUtils.setCertificatesFromFile(BookShelfApplication.sContext, "expressreader.cn.crt");
+//        SSLSocketFactory sslSocketFactory = HttpsUtils.setCertificatesFromFile(BookShelfApplication.sContext, "expressreader.cn.crt");
 
         //证书无效处理
-        sslSocketFactory = null;
+        SSLSocketFactory sslSocketFactory = null;
 
         OkHttpClient client;
         if (sslSocketFactory != null) {
@@ -44,6 +42,19 @@ class RetrofitFactory {
         return new Retrofit.Builder()
                 .baseUrl(ApiConstant.BASE_APK_SHELVES)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(new OkHttpClient.Builder()
+                        .sslSocketFactory(HttpsUtils.getSLLContext().getSocketFactory())
+                        .hostnameVerifier(HttpsUtils.hostnameVerifier)
+                        .build())
+                .build();
+    }
+
+    static Retrofit getNewDownloadService() {
+
+        return new Retrofit.Builder()
+                .baseUrl(ApiConstant.BASE_URL_SHELVES_NEW)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(new OkHttpClient.Builder()
                         .sslSocketFactory(HttpsUtils.getSLLContext().getSocketFactory())

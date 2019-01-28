@@ -1,29 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.android.percent.support.PercentLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".ui.activity.BookCategoryDetailActivity">
 
     <include
         layout="@layout/bookshelf_include_app_toolbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_book_content_detail"
+    <com.zhy.android.percent.support.PercentFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="@dimen/dp_10"
-        android:paddingEnd="@dimen/dp_10" />
+        android:layout_height="match_parent">
 
-    <!--无网络视图-->
-    <include
-        android:id="@+id/ll_bookshelf_reconnect_net"
-        layout="@layout/bookshelf_include_app_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_book_content_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingEnd="@dimen/dp_10"/>
+
+        <!--无网络视图-->
+        <include
+            android:id="@+id/ll_bookshelf_reconnect_net"
+            layout="@layout/bookshelf_include_app_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+
+        <!--悬浮按钮-->
+        <ImageView
+            android:id="@+id/iv_book_content_back_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_51"
+            android:contentDescription="@string/bookshelf_content_description"
+            android:src="@drawable/bookshelf_back_top"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            app:layout_heightPercent="7.5%sw"
+            app:layout_widthPercent="7.5%sw"/>
+
+
+    </com.zhy.android.percent.support.PercentFrameLayout>
+
+
 
 </com.zhy.android.percent.support.PercentLinearLayout>

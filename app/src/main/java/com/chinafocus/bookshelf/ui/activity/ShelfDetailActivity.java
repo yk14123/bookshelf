@@ -4,37 +4,58 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.chinafocus.bookshelf.R;
-import com.chinafocus.bookshelf.bean.ShelvesCategoryResultBean;
+import com.chinafocus.bookshelf.bean.ShelvesCategoryRawBean;
+import com.chinafocus.bookshelf.bean.ShelvesRawBean;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
+import com.chinafocus.bookshelf.model.base.lru.LruMap;
+import com.chinafocus.bookshelf.model.base.network.ApiManager;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesDetailPresenter;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.ShelfCategoryAdapter;
 import com.chinafocus.bookshelf.ui.adapter.ShelfIntroAdapter;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
+import com.chinafocus.bookshelf.utils.ScreenUtils;
 import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.UIHelper;
+import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentFrameLayout;
 import com.zhy.android.percent.support.PercentRelativeLayout;
@@ -42,8 +63,11 @@ import com.zhy.android.percent.support.PercentRelativeLayout;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 书柜九宮格页面-->习近平的书柜
@@ -52,7 +76,7 @@ import io.reactivex.functions.Consumer;
  * @version 1.0
  * create at 2018/11/26
  */
-public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean> {
+public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryRawBean.ShelvesCategoryResultBean> {
     private static final String TAG = "ShelfDetailActivity";
     //連接器
     private IShelvesMvpContract.IPresenter mPresenter;
@@ -93,16 +117,29 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
     //书柜id
     private int mShelfId;
+    private ImageView mCloseIcon;
+    private RelativeLayout mRlCopyright_close;
+    private ImageView mCopyrightHeader;
 
     @SuppressLint("CheckResult")
     @Override
     protected void initView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.setStatusBarColor(Color.TRANSPARENT);
+        }
+
 
         getExtraFromIntent();
 
         setContentView(R.layout.bookshelf_activity_detail);
 
-        mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
+//        mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
 
 
         //设置当前的版本号
@@ -113,6 +150,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         //网络错误重试
         initErrorRetry();
 
+        initBack();
+
         //习近平的书柜
         initLogo();
         //书柜分类九宫格
@@ -121,19 +160,84 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         initRvShelfIntro();
         //易阅通
         initCopyright();
+        //替换易阅通关闭图标
+        initCloseTag();
 
         //初始化动画
         initAnim();
 
-        loadShelfDetail();
+
+    }
+
+    private void initBack() {
+        ImageView imageView = findViewById(R.id.iv_shelf_detail_back);
+        imageView.setOnClickListener(v -> finish());
+    }
+
+    private void initCloseTag() {
+        mCloseIcon = findViewById(R.id.iv_shelf_detail_copyright_close);
+
+        mCloseIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startViewAnimation();
+            }
+        });
 
     }
 
     private void getExtraFromIntent() {
         Intent intent = getIntent();
         if (intent != null) {
-            mShelfId = intent.getIntExtra(BookShelfConstant.SHELF_ID, -1);
+            mOriginId = intent.getStringExtra(BookShelfConstant.BOOK_INIT_LOCATION_ID);
+            String client_uuid = intent.getStringExtra(BookShelfConstant.BOOK_CLIENT_UUID);
+
+            SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID, mOriginId);
+            SpUtil.setString(getApplicationContext(), BookShelfConstant.BOOK_CLIENT_UUID, client_uuid);
+
+            loadMoreShelfDetail();
         }
+    }
+
+    private void loadMoreShelfDetail() {
+        ApiManager.getInstance().getNewService().getShelves(mOriginId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Gson gson = new Gson();
+                        ShelvesRawBean shelvesRawBean = gson.fromJson(s, ShelvesRawBean.class);
+                        mShelfId = shelvesRawBean.getData().get(0).getShelfId();
+
+                        LruMap.getInstance().put(BookShelfConstant.SHELF_ID_TEMP, mShelfId);
+
+                        StatisticsPresenter.getInstance().startStatistics(getApplicationContext(), "1", String.valueOf(mShelfId));
+                        loadShelfDetail();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Object tempId = LruMap.getInstance().get(BookShelfConstant.SHELF_ID_TEMP);
+                        if (tempId == null) {
+                            Toast.makeText(ShelfDetailActivity.this, "客户代码错误或者网络错误", Toast.LENGTH_SHORT).show();
+                            showRefreshLayout(true);
+                        } else {
+                            loadShelfDetail();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     private void initErrorRetry() {
@@ -154,7 +258,8 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             @Override
             public void accept(Object o) throws Exception {
                 //mLlErrorLayout.setVisibility(View.GONE);
-                loadShelfDetail();
+//                loadShelfDetail();
+                loadMoreShelfDetail();
             }
         });
     }
@@ -215,8 +320,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             mPresenter = new ShelvesDetailPresenter(this);
 
         }
+        mShelfId = (int) LruMap.getInstance().get(BookShelfConstant.SHELF_ID_TEMP);
 
-        Log.i("ShelfDetailActivity", "mShelfId-->" + mShelfId + "mOriginId-->" + mOriginId);
+        Log.i("ShelfDetailActivity", "loadShelfDetail -- >mShelfId-->" + mShelfId + "mOriginId-->" + mOriginId);
         mPresenter.refresh(IShelvesMvpContract.REFRESH_SHELVES_DETAIL, new String[]{String.valueOf(mShelfId), mOriginId});
 
     }
@@ -228,7 +334,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         mTvVersionInfo = findViewById(R.id.tv_shelf_detail_version);
         mAppVersion = ManifestUtils.getVersionName(this);
         mTvVersionInfo.setText(mAppVersion);
-        mTvVersionInfo.setVisibility(View.VISIBLE);
+//        mTvVersionInfo.setVisibility(View.VISIBLE);
 
         //初始化退出dialog自定义View
         initExitDialogView();
@@ -259,6 +365,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         //初始化CopyrightDialog
         initCopyrightDialog();
         mIvCopyright = findViewById(R.id.iv_shelf_detail_copyright);
+
         mIvCopyright_clicks = RxView.clicks(mIvCopyright).throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(new Consumer<Object>() {
                     @Override
@@ -272,10 +379,16 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                         //点击copyRight弹出版权信息对话框
                         if (!mCopyrightDialog.isShowing()) {
                             mCopyrightDialog.show();
+
+                            WindowManager.LayoutParams params = mCopyrightDialog.getWindow().getAttributes();
+                            params.width = (int) (ShelfDetailActivity.this.getWindowManager().getDefaultDisplay().getWidth() * 0.695);
+//                            params.height = (int) (ShelfDetailActivity.this.getWindowManager().getDefaultDisplay().getWidth() * 0.695 * 1.512);
+                            mCopyrightDialog.getWindow().setAttributes(params);
                         }
                     }
                 });
     }
+
 
     private void initCopyrightDialog() {
         if (mCopyrightDialog == null) {
@@ -283,6 +396,11 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
             mSvCopyrightContent = mContentView.findViewById(R.id.sv_shelf_detail_copyright);
             mTvCopyrightContent = mContentView.findViewById(R.id.tv_shelf_detail_copyright_content);
+
+            mCopyrightHeader = mContentView.findViewById(R.id.iv_book_shelf_detail_copyright_header);
+
+            mRlCopyright_close = mContentView.findViewById(R.id.rl_shelf_dialog_copyright_close);
+            mRlCopyright_close.setOnClickListener(v -> mCopyrightDialog.dismiss());
 
             String string = getString(R.string.bookshelf_dialog_copyright_info);
             setCopyrightDialogContent(string);
@@ -297,8 +415,15 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             mCopyrightDialog.setCancelable(true);
 
             Window window = mCopyrightDialog.getWindow();
-            if (window != null)
+            if (window != null) {
                 window.setBackgroundDrawableResource(android.R.color.transparent);
+                WindowManager.LayoutParams lp = window.getAttributes();
+                window.setGravity(Gravity.CENTER);
+
+//                lp.y = (int) (ScreenUtils.getScreenHeight(getApplicationContext()) * 0.104);
+//
+//                window.setAttributes(lp);
+            }
         }
     }
 
@@ -313,7 +438,31 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         SpannableString spannableString = new SpannableString(string);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#3481C7"));
         spannableString.setSpan(colorSpan, 4, 19, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        //新增点击跳转
+        mTvCopyrightContent.setMovementMethod(LinkMovementMethod.getInstance());
+        spannableString.setSpan(new MyClickableSpan(), 4, 19, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mTvCopyrightContent.setText(spannableString);
+    }
+
+    private class MyClickableSpan extends ClickableSpan {
+
+        @Override
+        public void onClick(View widget) {
+            startActivity(new Intent(getApplicationContext(), BookShelfCopyrightActivity.class));
+
+            //由第三方游览器接管跳转url
+//            Uri uri = Uri.parse("http://www.cnpereading.com/");
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//            startActivity(intent);
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+//            super.updateDrawState(ds);
+//            ds.setColor(Color.parseColor("#3481C7"));
+            ds.setUnderlineText(false);//去除超链接的下划线
+        }
     }
 
     private void initLogo() {
@@ -340,8 +489,10 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
         mRvCategory = findViewById(R.id.rv_shelf_detail_category);
         GridLayoutManager manager = new GridLayoutManager(getApplicationContext(), 3);
         mRvCategory.setLayoutManager(manager);
-        mRvCategory.setHasFixedSize(true);
+
+//        mRvCategory.setPadding(0, 0, 0, getNavigationBarHeight());
     }
+
 
     private void initRvShelfIntro() {
         mRvShelfIntro = findViewById(R.id.rv_shelf_detail_intro);
@@ -357,27 +508,48 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
 
     @SuppressLint("CheckResult")
     @Override
-    public void onRefreshFinished(String refreshType, List<ShelvesCategoryResultBean> result) {
-        ShelvesCategoryResultBean resultBean = result.get(0);
-        if (resultBean != null) {
+    public void onRefreshFinished(String refreshType, List<ShelvesCategoryRawBean.ShelvesCategoryResultBean> result) {
+        if (result != null) {
             showRefreshLayout(false);
+
+            SpUtil.setBoolean(getApplicationContext(), BookShelfConstant.HAS_SHELF_DETAIL_CACHE, true);
+
             /**
              * 设置ShelfDetailActivityBg来源
              * 竖屏设备：九宫格背景图片，来自本地
              * 手机设备：如九宫格背景图片需要来自网络，则启用（已实现）
              */
+            ShelvesCategoryRawBean.ShelvesCategoryResultBean resultBean = result.get(0);
             String bg = resultBean.getBg();
-//            RequestOptions requestOptions = new RequestOptions();
-//            requestOptions.centerCrop().diskCacheStrategy(DiskCacheStrategy.RESOURCE);
-//            Glide.with(ShelfDetailActivity.this).load(bg).apply(requestOptions).into(new SimpleTarget<Drawable>(1080,1920) {
-//                @Override
-//                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-//                    mRlShelfRoot.setBackground(resource);
-//                }
-//            });
+            String logoUrl = resultBean.getLogo();
+
+            try {
+                Glide.with(ShelfDetailActivity.this)
+                        .load(logoUrl)
+                        .into(mIvLogo);
+
+                Glide.with(ShelfDetailActivity.this)
+                        .load(R.drawable.bookshelf_detail_copyright)
+                        .into(mIvCopyright);
+
+                RequestOptions requestOptions = new RequestOptions();
+                requestOptions.centerCrop().diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+                Glide.with(ShelfDetailActivity.this).load(bg).apply(requestOptions)
+                        .into(new SimpleTarget<Drawable>(ScreenUtils.getScreenWidth(ShelfDetailActivity.this), ScreenUtils.getScreenHeight(ShelfDetailActivity.this)) {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                mRlShelfRoot.setBackground(resource);
+                            }
+                        });
+            } catch (Exception e) {
+
+            }
+
+
+            Log.i("ShelfDetailActivity", "ShelfDetailActivity success!");
 
             if (mShelfCategoryAdapter == null) {
-                mShelfCategoryAdapter = new ShelfCategoryAdapter(ShelfDetailActivity.this, resultBean.getCategories());
+                mShelfCategoryAdapter = new ShelfCategoryAdapter(ShelfDetailActivity.this, result, mShelfId);
                 mShelfCategoryAdapter.setShelfCategoryListener((shelfId, categoryId, categoryName) -> {
 
 //                    StatisticsType.postStatisticsNow(getApplicationContext(), "2", String.valueOf(categoryId));
@@ -388,7 +560,7 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 });
                 mRvCategory.setAdapter(mShelfCategoryAdapter);
             } else {
-                mShelfCategoryAdapter.setCategoryEntity(resultBean.getCategories());
+                mShelfCategoryAdapter.setCategoryEntity(result);
             }
         } else {
             showRefreshLayout(true);
@@ -427,6 +599,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 public void onAnimationEnd(Animation animation) {
                     mRvCategory.setVisibility(View.GONE);
                     mRvShelfIntro.startAnimation(mShelfIntro_Translate_in);
+
+                    mCloseIcon.setVisibility(View.VISIBLE);
+                    mIvCopyright.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -465,6 +640,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
                 public void onAnimationEnd(Animation animation) {
                     mRvShelfIntro.setVisibility(View.GONE);
                     mRvCategory.startAnimation(mCategory_Scale_in);
+
+                    mCloseIcon.setVisibility(View.GONE);
+                    mIvCopyright.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -506,7 +684,9 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryResultBean>
             mErrorRetry_clicks.dispose();
         }
 
-        mPresenter.destroy();
+        if (mPresenter != null) {
+            mPresenter.destroy();
+        }
         super.onDestroy();
     }
 }

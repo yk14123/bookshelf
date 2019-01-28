@@ -227,10 +227,10 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
 //            mCategoryTagName = "习近平著作";
 //            mBookName = "习近平著作标题";
 //            mShelfId >>>2 mBookId >>> 185 mCategoryId >>> 16 mCategoryTagName >>> 习近平著作
-//            mShelfId >>>2 mBookId >>> 189 mCategoryId >>> 13 mCategoryTagName >>> 经史典集
+//            mShelfId >>>2 mBookId >>> 181 mCategoryId >>> 14 mCategoryTagName >>> 经史典集
 //            mShelfId = 2;
-//            mBookId = 189;
-//            mCategoryId = 13;
+//            mBookId = 181;
+//            mCategoryId = 14;
 //            mCategoryTagName = "经史典集";
 //            mBookName = "经史典集标题";
         }
@@ -289,7 +289,7 @@ public class BookMetaDataActivityYang extends BaseActivity<BookMetadataResultBea
         if (dataBean != null) {
             showRefreshLayout(false);
             //图书名称
-            String mBookTitle = dataBean.getTitle();
+            String mBookTitle = dataBean.getName();
             if (!TextUtils.isEmpty(mBookTitle)) {
                 if (!TextUtils.isEmpty(mCategoryTagName)) {
 //                    mTvBookTitle.setContentAndTag(mBookTitle, mCategoryTagName);

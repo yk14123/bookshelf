@@ -6,7 +6,6 @@ import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.base.statistics.IStatisticsType;
 import com.chinafocus.bookshelf.model.base.statistics.StatisticsTypeFactory;
 import com.chinafocus.bookshelf.utils.SpUtil;
-import com.chinafocus.bookshelf.utils.UUIDUtil;
 
 public class StatisticsPresenter {
 
@@ -32,7 +31,7 @@ public class StatisticsPresenter {
      */
     private void initCpuId(Context context) {
 
-        mCpuSerialID = UUIDUtil.getCPUSerialID();
+        mCpuSerialID = SpUtil.getString(context, BookShelfConstant.BOOK_CLIENT_UUID);
 
 //        if (mCpuSerialID.equals("0000000000000000")) {
 //            Toast.makeText(context, "cpuId获取失败 -- >" + mCpuSerialID, Toast.LENGTH_SHORT).show();

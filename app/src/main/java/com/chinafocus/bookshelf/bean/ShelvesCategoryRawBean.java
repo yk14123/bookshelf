@@ -1,5 +1,7 @@
 package com.chinafocus.bookshelf.bean;
 
+import java.util.ArrayList;
+
 public class ShelvesCategoryRawBean {
 
     /**
@@ -9,7 +11,7 @@ public class ShelvesCategoryRawBean {
      */
 
     private int code;
-    private ShelvesCategoryResultBean data;
+    private ArrayList<ShelvesCategoryResultBean> data;
     private String msg;
 
     public int getCode() {
@@ -20,11 +22,11 @@ public class ShelvesCategoryRawBean {
         this.code = code;
     }
 
-    public ShelvesCategoryResultBean getData() {
+    public ArrayList<ShelvesCategoryResultBean> getData() {
         return data;
     }
 
-    public void setData(ShelvesCategoryResultBean data) {
+    public void setData(ArrayList<ShelvesCategoryResultBean> data) {
         this.data = data;
     }
 
@@ -34,5 +36,115 @@ public class ShelvesCategoryRawBean {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    /**
+     * 九宫格内容展示
+     */
+    public static class ShelvesCategoryResultBean {
+
+        /**
+         * parent : 2
+         * bg : https://bookcases.oss-cn-beijing.aliyuncs.com/imgs/bg.jpg
+         * customerId : 1
+         * icon : https://bookcases.oss-cn-beijing.aliyuncs.com/imgs/contemporaryIcon.png
+         * name : 现当代文学
+         * description : 描述5
+         * logo : https://bookcases.oss-cn-beijing.aliyuncs.com/imgs/bookcaseLogo.png
+         * id : 15
+         * categoryId : 15
+         * queue : 1
+         */
+
+        private int parent;
+        private String bg;
+        private int customerId;
+        private String icon;
+        private String name;
+        private String description;
+        private String logo;
+        private int id;
+        private int categoryId;
+        private int queue;
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public int getParent() {
+            return parent;
+        }
+
+        public void setParent(int parent) {
+            this.parent = parent;
+        }
+
+        public String getBg() {
+            return bg;
+        }
+
+        public void setBg(String bg) {
+            this.bg = bg;
+        }
+
+        public int getCustomerId() {
+            return customerId;
+        }
+
+        public void setCustomerId(int customerId) {
+            this.customerId = customerId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getLogo() {
+            return logo;
+        }
+
+        public void setLogo(String logo) {
+            this.logo = logo;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getCategoryId() {
+            return categoryId;
+        }
+
+        public void setCategoryId(int categoryId) {
+            this.categoryId = categoryId;
+        }
+
+        public int getQueue() {
+            return queue;
+        }
+
+        public void setQueue(int queue) {
+            this.queue = queue;
+        }
     }
 }

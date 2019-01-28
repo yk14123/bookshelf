@@ -21,8 +21,8 @@ public class BookContentDetailPresenter extends AbstractShelvesPresenter<List<Bo
         if (bookContentRawBean != null) {
             BookContentRawBean.BookContentResultBean data = bookContentRawBean.getData();
 
-            String currentRaw = data.getCurrent();
             try {
+                String currentRaw = data.getCurrent();
                 String currentResult = JMDESUtil.decode(currentRaw);
                 data.setCurrent(currentResult);
                 result.add(data);

@@ -4,16 +4,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_shelf_category_root"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:background="@color/bookshelf_transparent"
+    android:padding="3dp">
 
     <com.zhy.android.percent.support.PercentRelativeLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_gravity="center"
+        android:gravity="center_vertical"
         android:background="#21000000"
-        app:layout_heightPercent="19.27%sh"
+        app:layout_heightPercent="18.65%sh"
         app:layout_widthPercent="25.93%sw">
 
         <ImageView
@@ -22,22 +24,21 @@
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/bookshelf_content_description"
+            android:scaleType="centerCrop"
             app:layout_heightPercent="14.81%sw"
             app:layout_widthPercent="14.81%sw"
             app:layout_maxHeightPercent="14.81%sw"
-            app:layout_marginTopPercent ="17.3%h"
-            app:layout_maxWidthPercent="14.81%sw"
-            tools:src="@drawable/bookshelf_category_4"/>
+            app:layout_maxWidthPercent="14.81%sw"/>
 
         <TextView
             android:id="@+id/tv_shelf_category_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/iv_shelf_category_item_logo"
             android:layout_centerHorizontal="true"
-            android:gravity="center"
+            app:layout_marginTopPercent="2.17%sh"
             android:textColor="@color/bookshelf_white"
-            app:layout_marginTopPercent="72%h"
-            app:layout_textSizePercent="10%h"
+            android:textSize="14sp"
             tools:text="现当代文学"/>
 
     </com.zhy.android.percent.support.PercentRelativeLayout>

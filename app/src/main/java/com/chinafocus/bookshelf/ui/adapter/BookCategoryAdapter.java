@@ -64,7 +64,7 @@ public class BookCategoryAdapter extends RecyclerView.Adapter<BookCategoryAdapte
                         .into((holder.ivCategoryCover));
             }
             //圖書名稱
-            String title = finalBean.getTitle();
+            String title = finalBean.getName();
             if (!TextUtils.isEmpty(title)) {
                 holder.tvCategoryName.setText(title);
             }
@@ -81,7 +81,7 @@ public class BookCategoryAdapter extends RecyclerView.Adapter<BookCategoryAdapte
             //设置root的点击事件
             holder.rlCategoryRoot.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onBookItemClick(finalBean.getBookId(), title);
+                    listener.onBookItemClick(finalBean.getEpubMappingId(), title);
                 }
             });
         }
