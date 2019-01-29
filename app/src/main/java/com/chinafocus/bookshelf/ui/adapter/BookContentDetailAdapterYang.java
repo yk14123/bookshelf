@@ -19,6 +19,7 @@ import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.bean.BookContentRawBean.BookContentResultBean;
 import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.ui.widgets.MyNoTouchWebView;
+import com.chinafocus.bookshelf.utils.LogUtil;
 import com.chinafocus.bookshelf.utils.SpUtil;
 
 import java.util.List;
@@ -102,15 +103,29 @@ public class BookContentDetailAdapterYang extends RecyclerView.Adapter<RecyclerV
         void onLoadMore();
     }
 
-
     private void initBindBookContent(@NonNull RecyclerView.ViewHolder holder, int position) {
         BookContentResultBean bookContentResultBean = mBookContents.get(position);
         if (bookContentResultBean != null) {
             String current = bookContentResultBean.getCurrent();
 
+
 //            https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css
 //            String css = "https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css";
             if (!TextUtils.isEmpty(current)) {
+
+
+                if (current.contains("\uE003")) {
+                    current = current.replace("\uE003", " ");
+                }
+                if (current.contains("\uE10B")) {
+                    current = current.replace("\uE10B", " ");
+                }
+                if (current.contains("\uE011")) {
+                    current = current.replace("\uE011", " ");
+                }
+
+                LogUtil.veryLongForI("BookContentDetailAdapterYang", current);
+
                 //加载本地文件
                 String linkCss = "<link rel=\"stylesheet\" href=\"" + bookContentResultBean.getCss() + "\" type=\"text/css\">";
                 String linkRemote = "<link rel=\"stylesheet\" href=\"https://book-common.oss-cn-beijing.aliyuncs.com/css/common.css\" type=\"text/css\">";
