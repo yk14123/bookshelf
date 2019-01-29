@@ -65,9 +65,9 @@ public class BookCoverDialog extends PopupWindow {
         //设置动画
         setAnimationStyle(R.style.BookShelfActivityScaleAnimation);
         //设置宽高
-//        int height = screenHeight - stateBarHeight - parent.getHeight();
+        int height = screenHeight - stateBarHeight - parent.getHeight();
 //        setHeight(height);
-//        setHeight(screenHeight);
+        setHeight(height);
 //        setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
 //        setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
     }

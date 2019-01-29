@@ -46,6 +46,7 @@ import com.chinafocus.bookshelf.global.BookShelfConstant;
 import com.chinafocus.bookshelf.model.base.activity.BaseActivity;
 import com.chinafocus.bookshelf.model.base.lru.LruMap;
 import com.chinafocus.bookshelf.model.base.network.ApiManager;
+import com.chinafocus.bookshelf.model.base.statusbar.StatusBarCompat;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.shelves.ShelvesDetailPresenter;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
@@ -134,7 +135,6 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryRawBean.She
 //            window.setStatusBarColor(Color.TRANSPARENT);
         }
 
-
         getExtraFromIntent();
 
         setContentView(R.layout.bookshelf_activity_detail);
@@ -167,6 +167,21 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryRawBean.She
         initAnim();
 
 
+    }
+
+    /**
+     * 初始化通用的ActionBar布局
+     */
+    private void initNavMenu() {
+        //Back键
+        ImageView mIvBack = findViewById(R.id.iv_bookshelf_left_menu);
+        mIvBack.setOnClickListener(v -> finish());
+        //初始化标题
+        TextView mTvCategoryName = findViewById(R.id.tv_bookshelf_title);
+        mTvCategoryName.setVisibility(View.INVISIBLE);
+        //右側menu
+        ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
+        mIvRightMenu.setVisibility(View.INVISIBLE);
     }
 
     private void initBack() {
@@ -579,6 +594,13 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryRawBean.She
         mIsNetWorkErro = showRefresh;
         mLlErrorLayout.setVisibility(showRefresh ? View.VISIBLE : View.GONE);
         mRlShelfRoot.setVisibility(showRefresh ? View.GONE : View.VISIBLE);
+
+        if (mLlErrorLayout.getVisibility()==View.VISIBLE){
+            StatusBarCompat.setStatusBarColor(this,Color.TRANSPARENT,true);
+            initNavMenu();
+        }else {
+            StatusBarCompat.setStatusBarColor(this,Color.TRANSPARENT,false);
+        }
     }
 
     /**

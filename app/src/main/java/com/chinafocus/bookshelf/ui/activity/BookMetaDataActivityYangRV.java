@@ -2,6 +2,7 @@ package com.chinafocus.bookshelf.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +27,6 @@ import com.chinafocus.bookshelf.presenter.shelves.BookMetaDataPresenter;
 import com.chinafocus.bookshelf.presenter.shelves.IShelvesMvpContract;
 import com.chinafocus.bookshelf.presenter.statistics.StatisticsPresenter;
 import com.chinafocus.bookshelf.ui.adapter.BookNodeAdapterYangRV;
-import com.chinafocus.bookshelf.ui.dialog.BookCoverDialog;
 import com.chinafocus.bookshelf.ui.widgets.MyOverByRecyclerView;
 import com.chinafocus.bookshelf.utils.SpUtil;
 import com.chinafocus.bookshelf.utils.UIHelper;
@@ -58,7 +60,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     private ImageView mIvBackTop;
 
     private String mCoverUrl;
-    private BookCoverDialog mBookCoverDialog;
+    //    private BookCoverDialog mBookCoverDialog;
     //图书名
     private String mBookName;
     //当前图书书柜id
@@ -78,6 +80,9 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
 
     private String mOriginId;
     private boolean mIsSmoothMoveTop;
+    private ImageView mBookCoverBg;
+
+    private Animation mBookCoverBg_Scale_out, mBookCoverBg_Scale_in;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -90,12 +95,16 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
 
         mOriginId = SpUtil.getString(getApplicationContext(), BookShelfConstant.BOOK_INIT_LOCATION_ID);
 
+        //初始化BookCoverBg展示动画
+        initAnimBg();
 
         initNavMenu();
         //无数据视图
         mLlErrorLayout = findViewById(R.id.ll_bookshelf_reconnect_net);
         mLlErrorLayout.setOnClickListener(this);
 
+        //点击展示整个图书封面
+        initBookCoverBg();
 
         //封面点击事件
         initViewHeaderWrapper();
@@ -112,6 +121,44 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
         //加载数据
         loadBookMeta();
 
+    }
+
+    private void initAnimBg() {
+        mBookCoverBg_Scale_out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bookshelf_view_scale_out);
+        mBookCoverBg_Scale_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bookshelf_view_scale_in);
+    }
+
+    private void initBookCoverBg() {
+        mBookCoverBg = findViewById(R.id.iv_book_meta_data_show);
+
+        mBookCoverBg.setOnClickListener(v -> handleBookCoverBgAnimOut(mBookCoverBg, mBookCoverBg_Scale_out, 200));
+
+        handleBookCoverBgAnimOut(mBookCoverBg, mBookCoverBg_Scale_out, 0);
+
+    }
+
+    private void handleBookCoverBgAnimOut(ImageView view, Animation animation, long time) {
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.clearAnimation();
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        //等会这里设置0试试
+        animation.setDuration(time);
+
+        view.startAnimation(animation);
     }
 
     private void iniRollbackTop() {
@@ -281,11 +328,16 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
      */
     private void initNavMenu() {
         mRlAppBar = findViewById(R.id.tb_book_category_bar);
+
+        mRlAppBar.setOnClickListener(v -> Log.i("abc", "abc"));
+
         //Back键
         ImageView mIvBack = findViewById(R.id.iv_bookshelf_left_menu);
         mIvBack.setOnClickListener(v -> {
-            if (mBookCoverDialog != null && mBookCoverDialog.isShowing()) {
-                mBookCoverDialog.dismiss();
+            if (mBookCoverBg.getVisibility() == View.VISIBLE) {
+
+                handleBookCoverBgAnimOut(mBookCoverBg, mBookCoverBg_Scale_out, 200);
+
             } else finish();
         });
         //初始化标题
@@ -293,9 +345,12 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
         TextView mTvBookNavTitle = findViewById(R.id.tv_bookshelf_title);
         if (!TextUtils.isEmpty(mBookName))
             mTvBookNavTitle.setText(mBookName);
+
+        mTvBookNavTitle.setOnClickListener(v -> Log.i("abc", "abc"));
         //右側menu
         ImageView mIvRightMenu = findViewById(R.id.iv_bookshelf_right_menu);
         mIvRightMenu.setVisibility(View.INVISIBLE);
+//        mIvRightMenu.setOnClickListener(v -> Log.i("abc", "abc"));
     }
 
 
@@ -312,8 +367,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
 
             Log.i(TAG, "mCoverUrl-->" + mCoverUrl);
 
-            initBgView();
-
+            initBgView(mIvBookCover);
 
             //图书名称
             String mBookTitle = dataBean.getName();
@@ -379,19 +433,57 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
         dismissLoading();
     }
 
+    @Override
+    public void onBackPressed() {
+
+
+        if (mBookCoverBg.getVisibility() == View.VISIBLE) {
+            handleBookCoverBgAnimOut(mBookCoverBg, mBookCoverBg_Scale_out, 200);
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
     private void initBookNodeAdapter() {
         mBookNodeAdapter.setOnDialogShowListener(new BookNodeAdapterYangRV.OnDialogShowListener() {
             @Override
             public void onDialogShowClick(View v) {
-                if (!TextUtils.isEmpty(mCoverUrl)) {
-                    if (mBookCoverDialog == null) {
-                        mBookCoverDialog = new BookCoverDialog(BookMetaDataActivityYangRV.this, mRlAppBar);
-                        mBookCoverDialog.setImageUrl(mCoverUrl);
+//                if (!TextUtils.isEmpty(mCoverUrl)) {
+//                    if (mBookCoverDialog == null) {
+//                        mBookCoverDialog = new BookCoverDialog(BookMetaDataActivityYangRV.this, mRlAppBar);
+//                        mBookCoverDialog.setImageUrl(mCoverUrl);
+//                    }
+//                    if (!mBookCoverDialog.isShowing()) {
+//                        mBookCoverDialog.show();
+//                    }
+//                }
+
+                //点击放大背景图
+                mBookCoverBg_Scale_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        mBookCoverBg.setVisibility(View.VISIBLE);
+                        mBookCoverBg.setBackgroundColor(Color.BLACK);
+                        initBgView(mBookCoverBg);
                     }
-                    if (!mBookCoverDialog.isShowing()) {
-                        mBookCoverDialog.show();
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mBookCoverBg.clearAnimation();
                     }
-                }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                //等会这里设置0试试
+                mBookCoverBg_Scale_in.setDuration(200);
+
+                mBookCoverBg.startAnimation(mBookCoverBg_Scale_in);
+
+
             }
         });
 
@@ -412,7 +504,7 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
     }
 
     @SuppressLint("CheckResult")
-    private void initBgView() {
+    private void initBgView(ImageView view) {
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.bookshelf_default_cover_port)
                 .error(R.drawable.bookshelf_default_cover_port);
@@ -420,7 +512,9 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
         Glide.with(this)
                 .load(mCoverUrl)
                 .apply(requestOptions)
-                .into(mIvBookCover);
+                .into(view);
+
+//        mIvBookCover
     }
 
     @Override
