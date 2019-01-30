@@ -545,7 +545,16 @@ public class BookMetaDataActivityYangRV extends BaseActivity<BookMetadataResultB
 
     @Override
     protected void onDestroy() {
+
+        if (mBookNodeAdapter != null) {
+            mBookNodeAdapter.clear();
+        }
+
+        if (mPresenter != null) {
+            mPresenter.destroy();
+        }
+
         super.onDestroy();
-        mPresenter.destroy();
+
     }
 }

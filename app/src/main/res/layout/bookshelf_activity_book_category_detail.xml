@@ -21,6 +21,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_book_category_list"
             android:layout_width="match_parent"
+            android:splitMotionEvents="false"
             android:layout_height="wrap_content"/>
 
         <!--无网络视图-->

@@ -91,15 +91,14 @@ public class BookContentDetailAdapterYang extends RecyclerView.Adapter<RecyclerV
 
     }
 
+    private ILoadMoreListener mLoadMore;
 
-    private ILoadMore mLoadMore;
-
-    public void addOnLoadMoreFromFootView(ILoadMore loadMore) {
+    public void addOnLoadMoreFromFootView(ILoadMoreListener loadMore) {
         mLoadMore = loadMore;
     }
 
     @FunctionalInterface
-    public interface ILoadMore {
+    public interface ILoadMoreListener {
         void onLoadMore();
     }
 

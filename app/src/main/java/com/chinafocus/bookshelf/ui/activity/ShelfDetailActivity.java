@@ -595,11 +595,11 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryRawBean.She
         mLlErrorLayout.setVisibility(showRefresh ? View.VISIBLE : View.GONE);
         mRlShelfRoot.setVisibility(showRefresh ? View.GONE : View.VISIBLE);
 
-        if (mLlErrorLayout.getVisibility()==View.VISIBLE){
-            StatusBarCompat.setStatusBarColor(this,Color.TRANSPARENT,true);
+        if (mLlErrorLayout.getVisibility() == View.VISIBLE) {
+            StatusBarCompat.setStatusBarColor(this, Color.TRANSPARENT, true);
             initNavMenu();
-        }else {
-            StatusBarCompat.setStatusBarColor(this,Color.TRANSPARENT,false);
+        } else {
+            StatusBarCompat.setStatusBarColor(this, Color.TRANSPARENT, false);
         }
     }
 
@@ -694,8 +694,12 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryRawBean.She
     @Override
     protected void onDestroy() {
         //去除View动画
-        mRvCategory.clearAnimation();
-        mRvShelfIntro.clearAnimation();
+        if (mRvCategory != null) {
+            mRvCategory.clearAnimation();
+        }
+        if (mRvShelfIntro != null) {
+            mRvShelfIntro.clearAnimation();
+        }
         if (mIvLogo_clicks != null && mIvLogo_clicks.isDisposed()) {
             mIvLogo_clicks.dispose();
         }
@@ -708,6 +712,10 @@ public class ShelfDetailActivity extends BaseActivity<ShelvesCategoryRawBean.She
 
         if (mPresenter != null) {
             mPresenter.destroy();
+        }
+
+        if (mShelfCategoryAdapter != null) {
+            mShelfCategoryAdapter.clear();
         }
         super.onDestroy();
     }

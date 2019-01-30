@@ -212,7 +212,14 @@ public class BookCategoryDetailActivity extends BaseActivity<BookCategoryDetailR
 
     @Override
     protected void onDestroy() {
+        if (mPresenter != null) {
+            mPresenter.destroy();
+        }
+
+        if (mBookCategoryAdapter != null) {
+            mBookCategoryAdapter.clear();
+        }
+
         super.onDestroy();
-        mPresenter.destroy();
     }
 }

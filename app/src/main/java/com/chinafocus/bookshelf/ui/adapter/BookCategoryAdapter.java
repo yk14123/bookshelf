@@ -15,9 +15,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.bean.BookCategoryDetailRawBean;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentRelativeLayout;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 分类图书列表数据适配器
@@ -33,6 +38,7 @@ public class BookCategoryAdapter extends RecyclerView.Adapter<BookCategoryAdapte
     private List<BookCategoryDetailRawBean.BookCategoryDetailResultBean.BooksCategoryDetailFinalBean> mCategoryEntity;
     //回调
     private OnBookItemListener listener;
+    private Disposable mRlCategoryRootClicks;
 
 
     public BookCategoryAdapter(Context context, List<BookCategoryDetailRawBean.BookCategoryDetailResultBean.BooksCategoryDetailFinalBean> mCategoryEntity) {
@@ -78,12 +84,30 @@ public class BookCategoryAdapter extends RecyclerView.Adapter<BookCategoryAdapte
             if (!TextUtils.isEmpty(author)) {
                 holder.tvCategoryAuthor.setText(author);
             }
-            //设置root的点击事件
-            holder.rlCategoryRoot.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onBookItemClick(finalBean.getEpubMappingId(), title);
-                }
-            });
+
+            mRlCategoryRootClicks = RxView.clicks(holder.rlCategoryRoot).throttleFirst(1, TimeUnit.SECONDS)
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object o) throws Exception {
+                            if (listener != null) {
+                                listener.onBookItemClick(finalBean.getEpubMappingId(), title);
+                            }
+                        }
+                    });
+
+
+//            //设置root的点击事件
+//            holder.rlCategoryRoot.setOnClickListener(v -> {
+//                if (listener != null) {
+//                    listener.onBookItemClick(finalBean.getEpubMappingId(), title);
+//                }
+//            });
+        }
+    }
+
+    public void clear() {
+        if (mRlCategoryRootClicks != null && mRlCategoryRootClicks.isDisposed()) {
+            mRlCategoryRootClicks.dispose();
         }
     }
 

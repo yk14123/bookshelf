@@ -24,9 +24,14 @@ import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.bean.ShelvesCategoryRawBean;
 import com.chinafocus.bookshelf.utils.ManifestUtils;
 import com.chinafocus.bookshelf.utils.ScreenUtils;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.zhy.android.percent.support.PercentFrameLayout;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * ShelfDetail书柜首页分类标签数据适配器
@@ -44,6 +49,7 @@ public class ShelfCategoryAdapter extends RecyclerView.Adapter<ShelfCategoryAdap
     private OnShelfCategoryListener listener;
 
     private int mShelfId;
+    private Disposable mLlCategoryRootClicks;
 
     public ShelfCategoryAdapter(Context context, List<ShelvesCategoryRawBean.ShelvesCategoryResultBean> mCategoryEntity, int mShelfId) {
         this.mContext = context;
@@ -99,13 +105,31 @@ public class ShelfCategoryAdapter extends RecyclerView.Adapter<ShelfCategoryAdap
                 holder.tvCategoryName.setText(name);
             }
 
-            //设置root的点击事件
-            holder.llCategoryRoot.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onShelfCategoryClick(mShelfId,
-                            categoryId, name);
-                }
-            });
+
+            mLlCategoryRootClicks = RxView.clicks(holder.llCategoryRoot).throttleFirst(1, TimeUnit.SECONDS)
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object o) throws Exception {
+                            if (listener != null) {
+                                listener.onShelfCategoryClick(mShelfId,
+                                        categoryId, name);
+                            }
+                        }
+                    });
+
+//            //设置root的点击事件
+//            holder.llCategoryRoot.setOnClickListener(v -> {
+//                if (listener != null) {
+//                    listener.onShelfCategoryClick(mShelfId,
+//                            categoryId, name);
+//                }
+//            });
+        }
+    }
+
+    public void clear() {
+        if (mLlCategoryRootClicks != null && mLlCategoryRootClicks.isDisposed()) {
+            mLlCategoryRootClicks.dispose();
         }
     }
 

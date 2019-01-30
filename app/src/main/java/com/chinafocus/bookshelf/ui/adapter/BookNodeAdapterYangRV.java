@@ -25,8 +25,13 @@ import com.chinafocus.bookshelf.R;
 import com.chinafocus.bookshelf.bean.BookMetadataRawBean.BookMetadataResultBean.TocBean;
 import com.chinafocus.bookshelf.ui.widgets.ExpandableTextView;
 import com.chinafocus.bookshelf.utils.ScreenUtils;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 
 public class BookNodeAdapterYangRV extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -44,6 +49,7 @@ public class BookNodeAdapterYangRV extends RecyclerView.Adapter<RecyclerView.Vie
     private static int sTagColor;
     private final int mFirstRetract;
     private static int sTagTextSize;
+    private Disposable mLlBookMetaRootClicks;
 
     public BookNodeAdapterYangRV(Context mContext, ArrayList<TocBean> mTocBeans, ArrayList<String> mHeaderContent) {
         this.mContext = mContext;
@@ -297,12 +303,30 @@ public class BookNodeAdapterYangRV extends RecyclerView.Adapter<RecyclerView.Vie
                 bookNodeHolder.tvCaptureTitle.setText(label);
                 Log.d(TAG, "onBindViewHolder: label >>> " + label + "  level >>> " + level);
             }
-            //设置点选回调事件
-            bookNodeHolder.llBookMetaRoot.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onNodeClick(baseNode.getLabel(), baseNode.getFull(), baseNode.getTitle());
-                }
-            });
+
+
+            mLlBookMetaRootClicks = RxView.clicks(bookNodeHolder.llBookMetaRoot).throttleFirst(1, TimeUnit.SECONDS)
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object o) throws Exception {
+                            if (listener != null) {
+                                listener.onNodeClick(baseNode.getLabel(), baseNode.getFull(), baseNode.getTitle());
+                            }
+                        }
+                    });
+
+//            //设置点选回调事件
+//            bookNodeHolder.llBookMetaRoot.setOnClickListener(v -> {
+//                if (listener != null) {
+//                    listener.onNodeClick(baseNode.getLabel(), baseNode.getFull(), baseNode.getTitle());
+//                }
+//            });
+        }
+    }
+
+    public void clear() {
+        if (mLlBookMetaRootClicks != null && mLlBookMetaRootClicks.isDisposed()) {
+            mLlBookMetaRootClicks.dispose();
         }
     }
 
