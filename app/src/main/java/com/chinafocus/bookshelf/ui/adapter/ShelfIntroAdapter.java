@@ -55,6 +55,7 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mList.add(R.drawable.bookshelf_deceit_image_intro);
         mList.add(R.drawable.bookshelf_deceit_image_intro);
         mList.add(R.drawable.bookshelf_deceit_image_intro);
+        mList.add(R.drawable.bookshelf_deceit_image_intro);
     }
 
     @Override
@@ -103,7 +104,8 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 R.drawable.bookshelf_case_intro1,
                                 R.drawable.bookshelf_case_intro2,
                                 R.drawable.bookshelf_case_intro3,
-                                R.drawable.bookshelf_case_intro4
+                                R.drawable.bookshelf_case_intro4,
+                                R.drawable.bookshelf_deceit_image_intro_bottom
                         );
                         notifyDataSetChanged();
                     }
@@ -140,7 +142,7 @@ public class ShelfIntroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 6;
     }
 
     /**

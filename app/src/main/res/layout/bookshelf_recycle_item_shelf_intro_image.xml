@@ -11,7 +11,8 @@
         android:id="@+id/iv_book_shelf_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         android:layout_gravity="center_horizontal"
         android:contentDescription="@string/bookshelf_content_description"
         app:layout_widthPercent="73.5%sw"/>
